@@ -1,0 +1,21 @@
+/* --- Estilos específicos para el Mapa --- */
+
+.mapa-contenedor {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Forzar la altura del contenedor de Leaflet */
+.leaflet-container {
+    height: 300px;
+    width: 100%;
+}
+
+/* Opcional: Estilo del marcador si quieres personalizarlo */
+.leaflet-marker-icon {
+    filter: hue-rotate(90deg); /* Ejemplo: cambiar el color del marcador a verde */
+}

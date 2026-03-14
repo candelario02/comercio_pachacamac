@@ -1,0 +1,83 @@
+.admin-layout { 
+    display: flex; 
+    min-height: 100vh; 
+    background-color: var(--gris-fondo);
+}
+
+.sidebar { 
+    width: 260px; 
+    background-color: var(--cian-institucional); 
+    color: white; 
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title { 
+    font-size: 1.4rem; 
+    margin-bottom: 40px; 
+    text-align: center; 
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar-nav button { 
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%; 
+    padding: 18px; 
+    background: transparent; 
+    border: none; 
+    color: white; 
+    font-size: 1rem;
+    cursor: pointer; 
+    transition: background 0.3s ease;
+    border-radius: 8px; 
+    margin-bottom: 5px;
+}
+
+.sidebar-nav button:hover { 
+    background-color: rgba(255, 255, 255, 0.15); 
+}
+
+.logout-btn {
+    margin-top: auto; 
+    color: #dc1414 !important;
+}
+
+.admin-content { 
+    flex: 1; 
+    padding: 40px; 
+}
+/* Estilos para el Badge de Notificación */
+.btn-notificacion {
+    position: relative; /* Para que el badge se posicione respecto al botón */
+}
+
+.badge-notificacion {
+    background-color: #ff4d4d; /* Rojo vibrante */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 15px; /* Ajustado al padding del botón */
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border: 2px solid var(--cian-institucional); 
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-50%) scale(1.1); }
+    100% { transform: translateY(-50%) scale(1); }
+}
+

@@ -1,0 +1,39 @@
+/* LayoutFondo.css - Solo estilos específicos para el Layout */
+
+.layout-wrapper { 
+    position: relative; 
+    height: 100vh; 
+    width: 100vw; 
+    display: flex;
+    flex-direction: column;
+}
+
+.fondo-slider {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: -1; 
+}
+
+.fondo-slider .swiper, 
+.fondo-slider .swiper-wrapper, 
+.fondo-slider .swiper-slide {
+    height: 100%;
+}
+
+.fondo-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contenido-dinamico {
+    position: relative;
+    z-index: 1;
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}

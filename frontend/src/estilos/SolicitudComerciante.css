@@ -1,0 +1,132 @@
+
+/* 1. Contenedor Principal (Layout) */
+.formulario-solicitud {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.formulario-solicitud h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+/* 2. Bloques de Sección (Organización) */
+.bloque {
+    background: #f9f9f9;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.bloque h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #28a745;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+/* 3. Formularios (Inputs y Selects) */
+.bloque input, 
+.bloque select {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box; /* Crucial para evitar desbordamientos */
+    font-size: 1rem;
+}
+
+.bloque input:focus, 
+.bloque select:focus {
+    border-color: #28a745;
+    outline: none;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+}
+
+/* 4. Estilos para el Mapa e Instrucciones */
+.instruccion {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.coordenadas-info {
+    margin-top: 15px;
+    padding: 12px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 6px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* 5. Botón de Acción */
+.btn-enviar {
+    width: 100%;
+    padding: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s;
+}
+
+.btn-enviar:hover {
+    background-color: #218838;
+}
+
+.btn-enviar:disabled {
+    background-color: #a5d6a7;
+    cursor: not-allowed;
+}
+
+/* 6. Estado de Carga Global */
+.cargando {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #555;
+}
+/* Estilo para el contenedor del checkbox */
+.contenedor-check-carnet {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f0f7f4;
+    border-radius: 6px;
+    border: 1px solid #c8e6c9;
+}
+
+.contenedor-check-carnet label {
+    font-size: 0.95rem;
+    color: #2c3e50;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.subir-archivo-info {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #555;
+    font-style: italic;
+}
+.bloque-carnet {
+    margin-bottom: 20px;
+    padding: 10px 0;
+}

@@ -1,0 +1,62 @@
+.dashboard-container {
+    padding: 20px 40px; /* Reducido arriba para ganar espacio */
+    text-align: center;
+    min-height: 100vh;
+    background-color: var(--gris-fondo);
+}
+
+.dashboard-title {
+    color: var(--cian-institucional);
+    margin-bottom: 40px; /* Más espacio entre título y tarjetas */
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.kpi-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.kpi-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--blanco);
+    padding: 25px;
+    border-radius: 15px;
+    border-top: 5px solid var(--cian-institucional);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    min-width: 220px;
+}
+
+.kpi-card h3 {
+    margin: 10px 0 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.kpi-card p {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--verde-pachacamac);
+}
+
+.kpi-icon {
+    font-size: 2.5rem;
+    color: var(--cian-institucional);
+}
+
+.dashboard-chart-placeholder {
+    margin-top: 20px;
+    min-height: 300px;
+    border: 2px dashed #ddd;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}

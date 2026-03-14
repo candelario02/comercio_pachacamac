@@ -1,0 +1,27 @@
+/* frontend/src/estilos/PortalComerciante.css */
+
+.portal-container {
+    background-color: var(--gris-fondo); /* Usando tu variable global */
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.portal-header {
+    background-color: var(--blanco);
+    border-bottom: 3px solid var(--verde-pachacamac); /* Identidad institucional */
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.portal-header h1 {
+    color: var(--cian-institucional); /* El cian que definiste */
+}
+
+.btn-cerrar-sesion {
+    background-color: var(--dorado-mun);
+    color: var(--blanco);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}

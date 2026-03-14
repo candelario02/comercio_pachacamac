@@ -1,0 +1,76 @@
+/* --- Estilos aislados para ListaPublicaRubrosActividad --- */
+.lista-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.titulo-seccion { 
+    color: #333; 
+    margin-bottom: 30px; 
+    text-align: center;
+}
+
+.scroll-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rubro-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
+.rubro-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.rubro-card h2 {
+    color: #007bff;
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.actividad-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.actividad-item p { margin: 0; padding-right: 10px; }
+.actividad-item:last-child { border-bottom: none; }
+
+.badge-sanidad {
+    background: #e7f3ff;
+    color: #0066cc;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.loading-container, .error-container {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+}
+
+.sin-datos { font-style: italic; color: #888; text-align: center; }

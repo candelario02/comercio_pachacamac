@@ -1,0 +1,18 @@
+/* Globales.css */
+:root {
+  --cian-institucional: #00bcd4;
+  --verde-pachacamac: #2d5a27;
+  --dorado-mun: #b8860b; 
+  --blanco: #ffffff;
+  --gris-fondo: #f4f7f7;
+  --texto-oscuro: #333333;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body, html { 
+    height: 100%; 
+    width: 100%; 
+    overflow-x: hidden;
+    font-family: Arial, sans-serif; /* Recomendado definir fuente aquí */
+}

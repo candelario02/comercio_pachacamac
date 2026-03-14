@@ -1,0 +1,77 @@
+.navbar-turquesa {
+    background-color: var(--cian-institucional); /* Usando tu variable global */
+    width: 100%;
+    z-index: 10;
+    position: relative;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar-logo img {
+    height: 45px;
+    width: auto;
+}
+
+.navbar-logo span {
+    color: var(--blanco); /* Usando variable */
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.navbar-links a {
+    color: var(--blanco);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.navbar-links a:hover {
+    color: var(--dorado-mun);
+}
+
+.btn-acceso {
+    background-color: var(--blanco) !important;
+    color: var(--cian-institucional) !important;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.btn-solicitud {
+    background-color: var(--blanco); /* O puedes usar var(--dorado-mun) */
+    color: var(--verde-pachacamac);
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 10px; /* Separación del botón Acceder */
+    font-weight: bold;
+    border: 2px solid var(--verde-pachacamac);
+}
+.btn-solicitud:hover {
+    background-color: var(--verde-pachacamac);
+    color: var(--blanco);
+}

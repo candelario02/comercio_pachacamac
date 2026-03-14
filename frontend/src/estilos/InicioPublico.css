@@ -1,0 +1,60 @@
+/* InicioPublico.css - Estilos aislados para Inicio */
+
+.inicio-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.accesos-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    padding: 20px 20px 40px 20px; 
+    background-color: var(--cian-institucional); /* Color institucional */
+    flex-wrap: wrap;
+    margin-top: auto; /* Anclaje al pie */
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+}
+
+.acceso-item-dark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.acceso-icono-circle-cian {
+    width: 80px;
+    height: 80px;
+    background-color: var(--blanco);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.acceso-item-dark:hover .acceso-icono-circle-cian {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.acceso-icono-circle-cian .icono { 
+    font-size: 2.5rem; 
+    line-height: 1;
+}
+
+.acceso-titulo-dark {
+    color: var(--blanco) !important;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}

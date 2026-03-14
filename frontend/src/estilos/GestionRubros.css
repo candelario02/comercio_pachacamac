@@ -1,0 +1,21 @@
+/* --- Estilos aislados para GestionRubros --- */
+.gestion-container { margin-top: -10px; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-left: 20px; margin-right: 20px; }
+
+.header-acciones { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
+.header-acciones h3 { flex: 1; text-align: center; margin: 0; }
+
+.formulario-fijo { background: #fff; padding: 20px; margin: 0 auto 20px auto; border: 1px solid #ddd; border-radius: 8px; max-width: 600px; text-align: center; }
+.form-inputs { display: flex; gap: 10px; justify-content: center; align-items: center; }
+
+.btn-secondary { background-color: #607d8b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+.btn-base { padding: 8px 15px; border-radius: 5px; cursor: pointer; border: none; margin: 0 5px; }
+.btn-edit { background-color: #ff9800; color: white; }
+.btn-delete { background-color: #f44336; color: white; }
+.btn-nuevo { background-color: #00bcd4; color: white; }
+.btn-update { background-color: #2196f3; color: white; }
+.btn-cancelar { background-color: #757575; color: white; }
+
+.tabla-base { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+.tabla-base th, .tabla-base td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+.tabla-base tr:nth-child(even) { background-color: #f2f2f2; }
+.acciones-container { display: flex; gap: 5px; }
