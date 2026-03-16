@@ -16,7 +16,7 @@ import GestionExpedientes from './paginas/gestion/GestionExpedientes';
 import GestionFormalizados from './paginas/gestion/GestionFormalizados';
 
 import PortalComerciante from './paginas/PortalComerciante';
-import './estilos/globales.css';
+import "./estilos/Globales.css"
 
 function App() {
   return (
