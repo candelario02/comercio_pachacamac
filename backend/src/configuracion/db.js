@@ -1,12 +1,9 @@
 const { Pool } = require('pg');
 require('dotenv').config(); 
 
+// Usamos DATABASE_URL que configuramos en Render/Neon
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
@@ -18,11 +15,12 @@ pool.on('error', (err) => {
   process.exit(-1);
 });
 
+// Prueba de conexión
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error('❌ Error crítico: No se pudo conectar a la base de datos de Pachacámac:', err.stack);
+    console.error('❌ Error crítico: No se pudo conectar a la base de datos de Pachacámac:', err);
   } else {
-    console.log('✅ Conexión exitosa: La base de datos está lista para recibir datos.');
+    console.log('✅ Conexión exitosa a Neon: La base de datos está lista.');
   }
 });
 
