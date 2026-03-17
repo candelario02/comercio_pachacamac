@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { BASE_URL } from '../api/apiConfig'; 
 
-const API_URL = 'http://localhost:5000/api/admin';
+
+const API_URL = `${BASE_URL}/admin`; 
 
 const getHeaders = () => ({ 
     headers: { 
@@ -9,7 +11,10 @@ const getHeaders = () => ({
     } 
 });
 
+
 export const obtenerActividades = () => axios.get(`${API_URL}/actividades`, getHeaders());
 
 export const gestionarActividad = (payload) => axios.post(`${API_URL}/gestionar-actividad`, payload, getHeaders());
-export const obtenerActividadesPublicas = () => axios.get('http://localhost:5000/api/publico/actividades');
+
+
+export const obtenerActividadesPublicas = () => axios.get(`${BASE_URL}/publico/actividades`);
