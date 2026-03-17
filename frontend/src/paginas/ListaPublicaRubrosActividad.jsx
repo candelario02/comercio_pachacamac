@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '../api/apiConfig'; 
 import '../estilos/ListaPublicaRubrosActividad.css';
 
 const ListaPublicaRubrosActividad = () => {
@@ -8,8 +9,10 @@ const ListaPublicaRubrosActividad = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/publico/info-completa')
+        
+        axios.get(`${BASE_URL}/publico/info-completa`)
             .then(res => {
+             
                 const mapa = {};
                 res.data.forEach(item => {
                     if (!mapa[item.rubro_id]) {
@@ -36,6 +39,7 @@ const ListaPublicaRubrosActividad = () => {
             });
     }, []);
 
+    
     if (loading) return <div className="loading-container"><p>Cargando información municipal...</p></div>;
     if (error) return <div className="error-container"><p>{error}</p></div>;
 

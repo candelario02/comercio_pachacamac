@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTachometerAlt, FaListUl, FaBriefcase, FaSignOutAlt, FaFileAlt, FaIdCard } from 'react-icons/fa';
 
-
+// 1. IMPORTAMOS LA BASE DINÁMICA
+import { BASE_URL } from '../api/apiConfig'; 
 import '../../estilos/AdminLayout.css';
 
 const AdminLayout = ({ children }) => {
@@ -11,32 +12,28 @@ const AdminLayout = ({ children }) => {
     const [pendientes, setPendientes] = useState(0);
 
     useEffect(() => {
-        // Función para obtener el conteo de la base de datos
         const obtenerConteo = async () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const res = await axios.get('http://localhost:5000/api/admin/estadisticas', {
+                // 2. CAMBIAMOS LA URL FIJA POR LA VARIABLE
+                const res = await axios.get(`${BASE_URL}/admin/estadisticas`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 
-                // Actualizamos el estado con el valor de 'pendientes' que viene del backend
                 setPendientes(res.data.pendientes || 0);
             } catch (error) {
                 console.error("Error al actualizar notificaciones:", error);
             }
         };
 
-        // Ejecución inmediata al cargar
         obtenerConteo();
-
-        // Intervalo profesional de 1 minuto (60000ms)
         const intervaloId = setInterval(obtenerConteo, 60000);
-
-        // Limpieza al desmontar el componente para evitar fugas de memoria
         return () => clearInterval(intervaloId);
     }, []);
+
+    // ... el resto del return se queda exactamente igual
 
     return (
         <div className="admin-layout">

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
 import { FaUsers, FaClock, FaCheckCircle } from 'react-icons/fa'; 
+
+// 1. IMPORTAMOS LA BASE DINÁMICA
+import { BASE_URL } from '../api/apiConfig';
 import '../estilos/DashboardAdmin.css';
 
 const DashboardAdmin = () => {
@@ -13,12 +16,16 @@ const DashboardAdmin = () => {
         const cargarDatosReales = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const respuesta = await axios.get('http://localhost:5000/api/admin/estadisticas', {
+                
+                // 2. CAMBIAMOS LA URL FIJA POR LA VARIABLE `${BASE_URL}`
+                const respuesta = await axios.get(`${BASE_URL}/admin/estadisticas`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+                
                 setStats(respuesta.data);
             } catch (error) {
                 console.error("Error cargando estadísticas:", error);
+                // Si el token expiró o es inválido, mandamos al login
                 if (error.response?.status === 401) navigate('/login');
             } finally {
                 setLoading(false);
@@ -52,6 +59,7 @@ const DashboardAdmin = () => {
             </div>
             
             <div className="dashboard-chart-placeholder">
+                {/* Aquí irán tus gráficos más adelante */}
             </div>
         </div>
     );
