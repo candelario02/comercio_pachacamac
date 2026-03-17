@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FaTachometerAlt, FaListUl, FaBriefcase, FaSignOutAlt, FaFileAlt, FaIdCard } from 'react-icons/fa';
 
 // 1. IMPORTAMOS LA BASE DINÁMICA
-import { BASE_URL } from '../api/apiConfig'; 
+import { BASE_URL } from '../../api/apiConfig';
 import '../../estilos/AdminLayout.css';
 
 const AdminLayout = ({ children }) => {
