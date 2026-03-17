@@ -3,15 +3,15 @@ const jwt = require('jsonwebtoken');
 const pool = require('../configuracion/db');
 
 const login = async (req, res) => {
-    // 1. Mantenemos la limpieza de datos para evitar errores invisibles
+    // 1. Limpieza de datos (Trimming) para evitar errores por espacios invisibles
     const correo = req.body.correo ? req.body.correo.trim().toLowerCase() : '';
     const contrasena = req.body.contrasena ? req.body.contrasena.trim() : '';
 
     try {
-        // 2. Consulta original mediante el Stored Procedure
+        // 2. Consulta a la base de datos mediante el Stored Procedure original
         const usuarioRes = await pool.query('SELECT * FROM obtener_usuario_login($1)', [correo]);
 
-        // 3. Verificación de existencia (Funcionalidad original)
+        // 3. Verificación de existencia del usuario
         if (usuarioRes.rows.length === 0) {
             return res.status(401).json({ 
                 success: false, 
@@ -21,12 +21,12 @@ const login = async (req, res) => {
 
         const usuario = usuarioRes.rows[0];
 
-        // 🟢 LOG DE DEPURACIÓN (Mantenlo para ver qué llega de la DB)
-        console.log("--- DEBUG DATA BASE ---");
-        console.log("Columnas recibidas:", Object.keys(usuario));
-        console.log("Hash en DB:", usuario.contrasena);
-
-        // 4. Verificación de estado de cuenta (Funcionalidad original - NO SE QUITA)
+        // 🟢 AUDITORÍA TÉCNICA (Visualiza esto en los logs de Render)
+        console.log("--- INICIO AUDITORÍA LOGIN ---");
+        console.log("Usuario encontrado:", correo);
+        console.log("Columnas recibidas de DB:", Object.keys(usuario));
+        
+        // 4. Verificación de estado de cuenta (Funcionalidad Administrativa)
         if (!usuario.cuenta_activa) {
             return res.status(403).json({ 
                 success: false, 
@@ -34,10 +34,14 @@ const login = async (req, res) => {
             });
         }
 
-        // 5. Validación de Contraseña con Bcrypt
+        // 5. Validación Profesional de Contraseña (Bcrypt)
         const hashDB = usuario.contrasena ? usuario.contrasena.trim() : '';
-        const esValida = await bcrypt.compare(contrasena, hashDB);
         
+        // Logs detallados para descartar errores de longitud o caracteres
+        console.log("Longitud clave ingresada:", contrasena.length);
+        console.log("Longitud hash en DB:", hashDB.length);
+        
+        const esValida = await bcrypt.compare(contrasena, hashDB);
         console.log("¿Bcrypt validó la clave?:", esValida);
         
         if (!esValida) {
@@ -47,16 +51,16 @@ const login = async (req, res) => {
             });
         }
 
-        // 6. Validación de Clave Secreta para JWT (Seguridad de Render)
+        // 6. Validación de Clave Secreta para JWT (Seguridad de Servidor)
         if (!process.env.JWT_SECRET) {
-            console.error('❌ ERROR: JWT_SECRET no definida en Render.');
+            console.error('❌ ERROR: JWT_SECRET no está definida en las variables de entorno.');
             return res.status(500).json({
                 success: false,
-                mensaje: "Error de configuración interna en el servidor."
+                mensaje: "Error de configuración interna en el servidor de seguridad."
             });
         }
 
-        // 7. Generación del Token (Mantenemos la carga de ID y ROL original)
+        // 7. Generación del Token de Acceso (Carga de ID y ROL original)
         const token = jwt.sign(
             { 
                 id: usuario.id, 
@@ -66,7 +70,7 @@ const login = async (req, res) => {
             { expiresIn: '8h' }
         );
 
-        // 8. Respuesta Exitosa Completa
+        // 8. Respuesta Exitosa Profesional
         res.status(200).json({
             success: true,
             mensaje: `Bienvenido al sistema, acceso concedido.`,
@@ -79,7 +83,7 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
-        // Log detallado para auditoría en Render
+        // Log detallado para depuración en Render
         console.error('❌ Error Crítico en AuthControlador:', {
             mensaje: error.message,
             stack: error.stack,
@@ -88,7 +92,7 @@ const login = async (req, res) => {
         
         res.status(500).json({ 
             success: false, 
-            mensaje: "Error interno en el servidor de autenticación." 
+            mensaje: "Error interno en el servidor de autenticación. Por favor, intente más tarde." 
         });
     }
 };
