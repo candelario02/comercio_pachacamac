@@ -1,5 +1,5 @@
 const solicitudServicio = require('../servicios/solicitudServicio');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const registrarSolicitud = async (req, res) => {
     try {
