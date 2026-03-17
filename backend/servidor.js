@@ -11,13 +11,15 @@ const app = express();
 
 // CONFIGURACIÓN DE CORS PROFESIONAL
 app.use(cors({
-    // Agregamos tu URL real de Vercel y mantenemos localhost para tus pruebas
     origin: [
-        'http://localhost:5173', 
-        'https://comercio-pachacamac-9hg6.vercel.app' // Tu URL real según la captura
+        'http://localhost:5173',                      // Vite (Puerto estándar)
+        'http://localhost:10000',                     // Tu nuevo puerto de Backend/Proxy
+        'http://127.0.0.1:5173',                      // IP local alternativa
+        'https://comercio-pachacamac-9hg6.vercel.app' // Tu URL real de Vercel
     ], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'] // Recomendado para que no fallen los tokens
 }));
 
 app.use(express.json());
