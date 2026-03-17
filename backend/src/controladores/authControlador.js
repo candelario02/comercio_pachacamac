@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const pool = require('../configuracion/db');
 
 const login = async (req, res) => {
-    // 1. Limpieza de datos (Trimming) para evitar errores por espacios invisibles
+    // 1. Limpieza de datos (Trimming)
     const correo = req.body.correo ? req.body.correo.trim().toLowerCase() : '';
     const { contrasena } = req.body;
 
@@ -21,7 +21,12 @@ const login = async (req, res) => {
 
         const usuario = usuarioRes.rows[0];
 
-        // 4. Verificación de estado de cuenta (Seguridad administrativa)
+        // 🟢 [DEBUG] Verifica qué columnas devuelve tu Stored Procedure
+        console.log("--- DEBUG DATA BASE ---");
+        console.log("Columnas recibidas:", Object.keys(usuario));
+        console.log("Hash en DB:", usuario.contrasena);
+
+        // 4. Verificación de estado de cuenta
         if (!usuario.cuenta_activa) {
             return res.status(403).json({ 
                 success: false, 
@@ -30,9 +35,11 @@ const login = async (req, res) => {
         }
 
         // 5. Validación Profesional de Contraseña (Bcrypt)
-        // Usamos .trim() en el hash de la DB por si el tipo de dato en Postgres es CHAR
         const hashDB = usuario.contrasena ? usuario.contrasena.trim() : '';
+        
+        // 🟢 [DEBUG] Comparación técnica
         const esValida = await bcrypt.compare(contrasena, hashDB);
+        console.log("¿Bcrypt validó la clave?:", esValida);
         
         if (!esValida) {
             return res.status(401).json({ 
@@ -41,9 +48,9 @@ const login = async (req, res) => {
             });
         }
 
-        // 6. Validación de Clave Secreta para JWT (Seguridad de Servidor)
+        // 6. Validación de Clave Secreta para JWT
         if (!process.env.JWT_SECRET) {
-            console.error('❌ ERROR: JWT_SECRET no está definida en las variables de entorno de Render.');
+            console.error('❌ ERROR: JWT_SECRET no definida en Render.');
             return res.status(500).json({
                 success: false,
                 mensaje: "Error de configuración interna en el servidor de seguridad."
@@ -73,7 +80,6 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
-        // Log detallado para depuración en Render
         console.error('❌ Error Crítico en AuthControlador:', {
             mensaje: error.message,
             stack: error.stack,
@@ -82,7 +88,7 @@ const login = async (req, res) => {
         
         res.status(500).json({ 
             success: false, 
-            mensaje: "Error interno en el servidor de autenticación. Por favor, intente más tarde." 
+            mensaje: "Error interno en el servidor de autenticación." 
         });
     }
 };
