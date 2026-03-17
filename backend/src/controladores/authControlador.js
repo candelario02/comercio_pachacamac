@@ -3,14 +3,15 @@ const jwt = require('jsonwebtoken');
 const pool = require('../configuracion/db');
 
 const login = async (req, res) => {
-    // 1. Limpieza de datos de entrada
+    // 1. Mantenemos la limpieza de datos para evitar errores invisibles
     const correo = req.body.correo ? req.body.correo.trim().toLowerCase() : '';
-    const contrasena = req.body.contrasena ? req.body.contrasena.trim() : ''; // Agregamos trim aquí
+    const contrasena = req.body.contrasena ? req.body.contrasena.trim() : '';
 
     try {
-        // 2. Consulta a la base de datos
+        // 2. Consulta original mediante el Stored Procedure
         const usuarioRes = await pool.query('SELECT * FROM obtener_usuario_login($1)', [correo]);
 
+        // 3. Verificación de existencia (Funcionalidad original)
         if (usuarioRes.rows.length === 0) {
             return res.status(401).json({ 
                 success: false, 
@@ -20,7 +21,12 @@ const login = async (req, res) => {
 
         const usuario = usuarioRes.rows[0];
 
-        // 3. Verificación de estado de cuenta
+        // 🟢 LOG DE DEPURACIÓN (Mantenlo para ver qué llega de la DB)
+        console.log("--- DEBUG DATA BASE ---");
+        console.log("Columnas recibidas:", Object.keys(usuario));
+        console.log("Hash en DB:", usuario.contrasena);
+
+        // 4. Verificación de estado de cuenta (Funcionalidad original - NO SE QUITA)
         if (!usuario.cuenta_activa) {
             return res.status(403).json({ 
                 success: false, 
@@ -28,15 +34,11 @@ const login = async (req, res) => {
             });
         }
 
-        // 4. Validación Profesional de Contraseña (Bcrypt)
-        // Limpiamos el hash de la DB por si es de tipo CHAR en Postgres
+        // 5. Validación de Contraseña con Bcrypt
         const hashDB = usuario.contrasena ? usuario.contrasena.trim() : '';
-        
-        // Comparamos ambos valores ya saneados
         const esValida = await bcrypt.compare(contrasena, hashDB);
         
-        // Mantenemos este log solo para tu tranquilidad inicial en Render
-        console.log(`--- Intento de login para: ${correo} | ¿Válido?: ${esValida} ---`);
+        console.log("¿Bcrypt validó la clave?:", esValida);
         
         if (!esValida) {
             return res.status(401).json({ 
@@ -45,23 +47,26 @@ const login = async (req, res) => {
             });
         }
 
-        // 5. Validación de JWT_SECRET en Render
+        // 6. Validación de Clave Secreta para JWT (Seguridad de Render)
         if (!process.env.JWT_SECRET) {
-            console.error('❌ ERROR: JWT_SECRET no configurada en Render.');
+            console.error('❌ ERROR: JWT_SECRET no definida en Render.');
             return res.status(500).json({
                 success: false,
                 mensaje: "Error de configuración interna en el servidor."
             });
         }
 
-        // 6. Generación del Token
+        // 7. Generación del Token (Mantenemos la carga de ID y ROL original)
         const token = jwt.sign(
-            { id: usuario.id, rol: usuario.rol_nombre },
+            { 
+                id: usuario.id, 
+                rol: usuario.rol_nombre 
+            },
             process.env.JWT_SECRET,
             { expiresIn: '8h' }
         );
 
-        // 7. Respuesta Final
+        // 8. Respuesta Exitosa Completa
         res.status(200).json({
             success: true,
             mensaje: `Bienvenido al sistema, acceso concedido.`,
@@ -74,7 +79,13 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Error Crítico en AuthControlador:', error.message);
+        // Log detallado para auditoría en Render
+        console.error('❌ Error Crítico en AuthControlador:', {
+            mensaje: error.message,
+            stack: error.stack,
+            fecha: new Date().toISOString()
+        });
+        
         res.status(500).json({ 
             success: false, 
             mensaje: "Error interno en el servidor de autenticación." 
