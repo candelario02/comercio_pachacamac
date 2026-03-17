@@ -40,7 +40,8 @@ const login = async (req, res) => {
         // Logs detallados para descartar errores de longitud o caracteres
         console.log("Longitud clave ingresada:", contrasena.length);
         console.log("Longitud hash en DB:", hashDB.length);
-        
+        console.log("CLAVE RECIBIDA RAW:", req.body.contrasena);
+console.log("CLAVE FINAL USADA:", contrasena);
         const esValida = await bcrypt.compare(contrasena, hashDB);
         console.log("¿Bcrypt validó la clave?:", esValida);
         
