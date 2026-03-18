@@ -10,13 +10,13 @@ const InicioPublico = () => {
     ];
 
     const obtenerIcono = (nombre) => {
-    const n = nombre.toLowerCase();
-    if (n.includes('licencia')) return '📜';
-    if (n.includes('comercio')) return '🏪';
-    if (n.includes('pago')) return '💰';
-    if (n.includes('fiscalización') || n.includes('fiscalizacion')) return '⚖️';
-    return '🏢'; 
-};
+        const n = nombre.toLowerCase();
+        if (n.includes('licencia')) return '📜';
+        if (n.includes('comercio')) return '🏪';
+        if (n.includes('pago')) return '💰';
+        if (n.includes('fiscalización') || n.includes('fiscalizacion')) return '⚖️';
+        return '🏢'; 
+    };
 
     return (
         <div className="inicio-container">
