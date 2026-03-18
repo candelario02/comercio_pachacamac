@@ -36,22 +36,25 @@ export const AdminServicio = {
         return await res.json();
     },
 
-    confirmarPago: async (id, token) => {
-        const res = await fetch(`${API_URL}/confirmar-pago/${id}`, {
-            method: 'PUT',
-            headers: { 
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json' 
-            }
-        });
-        
-        if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData.mensaje || 'Error al confirmar pago y formalizar');
-        }
-        
-        return await res.json();
-    },
+  // adminApi.js
+confirmarPago: async (id, token, datos = {}) => {
+    const res = await fetch(`${API_URL}/confirmar-pago/${id}`, {
+        method: 'PUT',
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json' 
+        },
+        // Esto es lo que permite que el backend reciba monto_final, dni, etc.
+        body: JSON.stringify(datos) 
+    });
+    
+    if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.mensaje || 'Error al confirmar pago');
+    }
+    
+    return await res.json();
+},
 
     obtenerFormalizados: async (token) => {
         const res = await fetch(`${API_URL}/formalizados`, {

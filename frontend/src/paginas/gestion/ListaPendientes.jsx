@@ -4,7 +4,7 @@ import { AdminServicio } from '../../servicios/adminApi';
 import { generarOrdenPagoPDF } from '../../herramientas/generadorDocumentos';
 import { 
     FaFileInvoiceDollar, FaCheck, FaEye, 
-    FaSync, FaIdCard, FaMapMarkerAlt 
+    FaSync, FaIdCard 
 } from 'react-icons/fa';
 import ModalAlerta from '../../componentes/comunes/ModalAlerta';
 import '../../estilos/gestion-expedientes.css';
@@ -29,9 +29,7 @@ const ListaPendientes = () => {
             const datosProcesados = Array.isArray(res.data) ? res.data.map(item => ({
                 ...item,
                 telefono: item.telefono || '---',
-                distrito: item.sector_nombre || 'No especificado',
-                latitud: item.latitud_puesto || 'N/A',
-                longitud: item.longitud_puesto || 'N/A'
+                distrito: item.sector_nombre || 'No especificado'
             })) : [];
             setSolicitudes(datosProcesados);
         } catch (err) { console.error("Error al cargar:", err); }
@@ -41,31 +39,60 @@ const ListaPendientes = () => {
     const abrirDetalle = (s) => {
         setSeleccionado(s);
         setMontoActividad(parseFloat(s.costo_actividad) || 60);
-        setIncluirCarnet(s.desea_tramitar_carnet);
+        setIncluirCarnet(s.desea_tramitar_carnet === true || s.desea_tramitar_carnet === 'true');
         setModalAbierto(true);
     };
 
     const totalFinal = (parseFloat(montoActividad) || 0) + (incluirCarnet ? (parseFloat(montoCarnet) || 0) : 0);
 
     const prepararAprobacion = (id) => {
-        setModalAlerta({
-            abierto: true,
-            mensaje: `¿Aprobar trámite? Se generará una orden por S/ ${totalFinal.toFixed(2)}`,
-            tipo: "confirmar",
-            accion: async () => {
+    // 1. Aseguramos que los valores sean números antes de sumar
+    const mActividad = parseFloat(montoActividad) || 0;
+    const mCarnet = incluirCarnet ? (parseFloat(montoCarnet) || 0) : 0;
+    const montoFinalCalculado = mActividad + mCarnet;
+
+    setModalAlerta({
+        abierto: true,
+        mensaje: `¿Aprobar trámite? Se generará una orden por S/ ${montoFinalCalculado.toFixed(2)}`,
+        tipo: "confirmar",
+        accion: async () => {
+            try {
                 const token = localStorage.getItem('token');
+                
+                // 2. Enviamos números limpios al backend
                 const datosPago = { 
-                    monto_total: totalFinal, 
-                    detalle: { actividad: montoActividad, carnet: incluirCarnet ? montoCarnet : 0 } 
+                    monto_confirmado: montoFinalCalculado, 
+                    detalle: { 
+                        actividad: mActividad, 
+                        carnet: mCarnet 
+                    } 
                 };
+
                 const res = await AdminServicio.aprobarTramiteYGenerarDeuda(id, token, datosPago);
+                
                 if (res.success) {
-                    setModalAbierto(false);
-                    cargarSolicitudes();
+                    setModalAlerta({
+                        abierto: true,
+                        mensaje: `✅ ¡Éxito! Orden generada por S/ ${montoFinalCalculado.toFixed(2)}`,
+                        tipo: "aceptar",
+                        accion: () => {
+                            // 3. Limpiamos estados para la siguiente operación
+                            setModalAbierto(false);
+                            setModalAlerta({ abierto: false, mensaje: '', tipo: '', accion: null });
+                            cargarSolicitudes();
+                        }
+                    });
+                } else {
+                    // Manejo de error si el backend responde success: false
+                    alert(res.mensaje || "Error al procesar la aprobación");
                 }
+            } catch (error) {
+                console.error("Error al aprobar:", error);
+                alert("Error de conexión con el servidor");
             }
-        });
-    };
+        }
+    });
+};
 
     return (
         <div className="gestion-contenedor">
@@ -117,37 +144,31 @@ const ListaPendientes = () => {
                             <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
                         </div>
                         
-                    <div className="modal-body">
-    <div className="detalle-seccion">
-        <h4>Información del Comerciante</h4>
-        <div className="info-grid">
-            <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
-            <p><strong>Teléfono:</strong> {seleccionado.telefono}</p>
-            <p><strong>DNI:</strong> {seleccionado.dni}</p>
-            <p><strong>Sector:</strong> {seleccionado.distrito}</p>
-        </div>
-    </div>
+                        <div className="modal-body">
+                            <div className="detalle-seccion">
+                                <h4>Información del Comerciante</h4>
+                                <div className="info-grid">
+                                    <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
+                                    <p><strong>DNI:</strong> {seleccionado.dni}</p>
+                                    <p><strong>Sector:</strong> {seleccionado.distrito}</p>
+                                </div>
+                            </div>
 
-    <div className="detalle-seccion actividad-box">
-        <h4>Actividad Requerida</h4>
-        <p>{seleccionado.actividad_nombre}</p>
-    </div>
-
-    <div className="detalle-seccion">
-        <h4>Liquidación de Pago</h4>
-        <div className="input-group">
-            <label>Derecho Trámite (S/): 
-                <input type="number" value={montoActividad} onChange={(e) => setMontoActividad(e.target.value)} />
-            </label>
-            <label>
-                <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> 
-                Incluir Carnet (S/): 
-                <input type="number" value={montoCarnet} disabled={!incluirCarnet} onChange={(e) => setMontoCarnet(e.target.value)} />
-            </label>
-        </div>
-        <div className="total-display"><strong>Total: S/ {totalFinal.toFixed(2)}</strong></div>
-    </div>
-</div>
+                            <div className="detalle-seccion">
+                                <h4>Liquidación de Pago</h4>
+                                <div className="input-group">
+                                    <label>Derecho Trámite (S/): 
+                                        <input type="number" value={montoActividad} onChange={(e) => setMontoActividad(e.target.value)} />
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> 
+                                        Incluir Carnet (S/): 
+                                        <input type="number" value={montoCarnet} disabled={!incluirCarnet} onChange={(e) => setMontoCarnet(e.target.value)} />
+                                    </label>
+                                </div>
+                                <div className="total-display"><strong>Total: S/ {totalFinal.toFixed(2)}</strong></div>
+                            </div>
+                        </div>
 
                         <div className="modal-footer">
                             <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>

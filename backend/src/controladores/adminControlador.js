@@ -76,11 +76,14 @@ const listarPagosPendientes = async (req, res) => {
 // --- APROBACIÓN PROFESIONAL: Aprueba, calcula costo y genera deuda ---
 const aprobarTramiteYGenerarDeuda = async (req, res) => {
     const { id } = req.params;
+    // Extraemos monto_confirmado del cuerpo de la petición
+   
+    const { monto_confirmado, detalle } = req.body;
 
     try {
         await pool.query('BEGIN');
 
-        // 1. Obtener datos del comerciante y su actividad
+        // 1. Obtener datos básicos del comerciante y costo base
         const queryInfo = `
             SELECT c.id, c.exento_pago, a.costo 
             FROM comerciantes c 
@@ -91,11 +94,11 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
         if (resInfo.rows.length === 0) throw new Error("Comerciante no encontrado");
         
         const comerciante = resInfo.rows[0];
-        const monto = parseFloat(comerciante.costo) || 0;
 
-        // 2. Lógica Profesional: ¿Es exonerado?
+        // PRIORIDAD: 1. Lo que mandó el admin, 2. Costo actividad, 3. 0
+        const montoFinal = parseFloat(monto_confirmado) || parseFloat(comerciante.costo) || 0;
+
         if (comerciante.exento_pago) {
-            // A. Si es exento, formalizamos directo (no creamos deuda)
             await pool.query(
                 "UPDATE comerciantes SET estado_tramite = 'formalizado' WHERE id = $1", 
                 [id]
@@ -103,7 +106,7 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
             await pool.query('COMMIT');
             return res.json({ success: true, mensaje: "Trámite aprobado y formalizado por exoneración." });
         } else {
-            // B. Si NO es exento, flujo normal de deuda
+            // Actualizamos a 'aprobado' para que pase a la siguiente tabla de pagos
             await pool.query(
                 "UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", 
                 [id]
@@ -112,21 +115,22 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
             const numeroOperacion = `OP-${Date.now().toString().slice(-8)}`;
             const mesActual = new Date().toLocaleString('es-ES', { month: 'long' });
 
+            // Insertamos el montoFinal (S/ 60.00 o lo que hayas puesto)
             await pool.query(
                 `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, estado) 
                  VALUES ($1, $2, $3, $4, 'pendiente')`,
-                [id, monto, numeroOperacion, mesActual]
+                [id, montoFinal, numeroOperacion, mesActual]
             );
 
             await pool.query('COMMIT');
             return res.json({ 
                 success: true, 
-                mensaje: `Trámite aprobado. Orden de pago generada (S/ ${monto.toFixed(2)})` 
+                mensaje: `Trámite aprobado. Orden generada por S/ ${montoFinal.toFixed(2)}` 
             });
         }
     } catch (error) {
         await pool.query('ROLLBACK');
-        console.error("Error en Transacción de Aprobación:", error);
+        console.error("Error en Transacción:", error);
         res.status(500).json({ success: false, mensaje: error.message });
     }
 };
