@@ -60,3 +60,18 @@
     justify-content: center;
     color: #999;
 }
+/* --- AJUSTE RESPONSIVO PARA FORMULARIOS --- */
+@media (max-width: 768px) {
+    .card-login, .formulario-container {
+        width: 95% !important; /* Casi todo el ancho del celular */
+        max-width: 400px;
+        padding: 20px !important;
+        margin: 10px auto;
+    }
+
+    input, select, button {
+        width: 100% !important; /* Inputs a pantalla completa */
+        margin-bottom: 15px;
+        height: 45px; /* Más fácil de tocar */
+    }
+}

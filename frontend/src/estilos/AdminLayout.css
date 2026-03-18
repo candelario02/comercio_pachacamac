@@ -81,3 +81,20 @@
     100% { transform: translateY(-50%) scale(1); }
 }
 
+/* --- AJUSTE PARA EL MENÚ LATERAL --- */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        display: flex;
+        flex-direction: row; /* Menú horizontal en celular */
+        justify-content: space-around;
+        padding: 10px 0;
+    }
+    
+    .sidebar-link {
+        font-size: 12px; /* Letras más pequeñas para que quepan */
+        padding: 5px;
+    }
+}

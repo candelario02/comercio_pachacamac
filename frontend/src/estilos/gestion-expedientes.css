@@ -38,3 +38,18 @@
 .btn-aprobar { background: var(--verde-pachacamac); color: white; border: none; padding: 10px 20px; border-radius: 5px; }
 .spin { animation: rotation 1s infinite linear; }
 @keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(359deg); } }
+/* --- AJUSTE RESPONSIVO PARA FORMULARIOS --- */
+@media (max-width: 768px) {
+    .card-login, .formulario-container {
+        width: 95% !important; /* Casi todo el ancho del celular */
+        max-width: 400px;
+        padding: 20px !important;
+        margin: 10px auto;
+    }
+
+    input, select, button {
+        width: 100% !important; /* Inputs a pantalla completa */
+        margin-bottom: 15px;
+        height: 45px; /* Más fácil de tocar */
+    }
+}
