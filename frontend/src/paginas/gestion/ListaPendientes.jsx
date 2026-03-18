@@ -154,13 +154,11 @@ const ListaPendientes = () => {
                                 <div className="info-grid">
     <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
     <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
-<p><strong>Teléfono:</strong> {seleccionado.celular || 'Cargando...'}</p>
+   <p><strong>Teléfono:</strong> {seleccionado.celular || 'Cargando...'}</p>
     <p><strong>Sector:</strong> {seleccionado.distrito}</p>
     <p><strong>Ubicación:</strong> 
-        <span className="coordenadas-texto">
-            Lat: {seleccionado.latitud_puesto} | Lng: {seleccionado.longitud_puesto}
-        </span>
-    </p>
+    Lat: {seleccionado.lat} | Lng: {seleccionado.lng}
+</p>
 </div>
                             </div>
 
