@@ -127,7 +127,7 @@ const ListaPendientes = () => {
                 <tr key={s.comerciante_id}>
                     <td>{s.dni}</td>                    
                     <td>{s.nombres} {s.apellidos}</td>
-                    <td>{s.numero_celular || 'S/N'}</td>
+                    <td>{s.celular || 'Sin número'}</td>
                     <td>{s.distrito}</td>
                     <td>{s.actividad_nombre}</td>
                     <td>
@@ -156,7 +156,7 @@ const ListaPendientes = () => {
     <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
     
    
-    <p><strong>Teléfono:</strong> {seleccionado.numero_celular || 'No registrado'}</p>
+    <p><strong>Teléfono:</strong> {seleccionado.celular}</p>
     
     <p><strong>Sector:</strong> {seleccionado.distrito}</p>
     

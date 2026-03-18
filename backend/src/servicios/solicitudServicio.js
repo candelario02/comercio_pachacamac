@@ -30,20 +30,22 @@ const crearSolicitudComerciante = async (data) => {
 
         const usuarioId = userRes.rows[0].id;
 
-        // 3. Crear comerciante con el nuevo campo desea_tramitar_carnet
-        const comercianteRes = await client.query(
-            `INSERT INTO comerciantes (
-                usuario_id, dni, nombres, apellidos, numero_celular, 
-                actividad_id, sector_id, latitud_puesto, longitud_puesto, 
-                desea_tramitar_carnet, estado_tramite
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-            RETURNING id`,
-            [
-                usuarioId, data.dni, data.nombres, data.apellidos, data.celular,
-                data.actividad_id, data.sector_id, data.lat, data.lng,
-                data.desea_tramitar_carnet || false, 'pendiente'
-            ]
-        );
+const solicitudes = await client.query(`
+    SELECT 
+        c.comerciante_id, 
+        c.dni, 
+        c.nombres, 
+        c.apellidos, 
+        c.numero_celular AS celular,    
+        c.latitud_puesto AS lat,   
+        c.longitud_puesto AS lng, 
+        c.distrito,
+        c.estado_tramite
+    FROM comerciantes c
+    WHERE c.estado_tramite = 'pendiente'
+`);
+
+res.json(solicitudes.rows);
 
         const comercianteId = comercianteRes.rows[0].id;
 
