@@ -151,14 +151,15 @@ const ListaPendientes = () => {
                         <div className="modal-body">
                             <div className="detalle-seccion">
                                 <h4>Información del Comerciante</h4>
-                                <div className="info-grid">
+               <div className="info-grid">
     <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
     <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
-   <p><strong>Teléfono:</strong> {seleccionado.celular || 'Cargando...'}</p>
-    <p><strong>Sector:</strong> {seleccionado.distrito}</p>
+    <p><strong>Teléfono:</strong> {seleccionado.celular || seleccionado.numero_celular || 'S/N'}</p>
+    <p><strong>Sector:</strong> {seleccionado.sector_nombre || seleccionado.distrito}</p>
     <p><strong>Ubicación:</strong> 
-    Lat: {seleccionado.lat} | Lng: {seleccionado.lng}
-</p>
+        Lat: {seleccionado.lat || seleccionado.latitud_puesto} | 
+        Lng: {seleccionado.lng || seleccionado.longitud_puesto}
+    </p>
 </div>
                             </div>
 
