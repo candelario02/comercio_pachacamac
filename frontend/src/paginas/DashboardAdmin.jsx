@@ -57,10 +57,10 @@ const DashboardAdmin = () => {
                     <p>{stats.formalizados}</p>
                 </div>
             </div>
-            
+            {/* para graficos 
             <div className="dashboard-chart-placeholder">
-                {/* Aquí irán tus gráficos más adelante */}
-            </div>
+                
+            </div>*/}
         </div>
     );
 };
