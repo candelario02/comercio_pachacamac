@@ -148,10 +148,16 @@ const ListaPendientes = () => {
                             <div className="detalle-seccion">
                                 <h4>Información del Comerciante</h4>
                                 <div className="info-grid">
-                                    <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
-                                    <p><strong>DNI:</strong> {seleccionado.dni}</p>
-                                    <p><strong>Sector:</strong> {seleccionado.distrito}</p>
-                                </div>
+    <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
+    <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
+    <p><strong>Teléfono:</strong> {seleccionado.celular || 'No registrado'}</p>
+    <p><strong>Sector:</strong> {seleccionado.distrito}</p>
+    <p><strong>Ubicación:</strong> 
+        <span className="coordenadas-texto">
+            Lat: {seleccionado.lat} | Lng: {seleccionado.lng}
+        </span>
+    </p>
+</div>
                             </div>
 
                             <div className="detalle-seccion">

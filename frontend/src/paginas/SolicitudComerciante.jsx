@@ -120,94 +120,81 @@ const SolicitudComerciante = () => {
         }
     };
 
-    if (loading) return <div className="cargando">Cargando formulario...</div>;
+    // ... (Tus imports y lógica de estado se mantienen IGUAL) ...
+
+    if (loading) return <div className="cargando" style={{textAlign:'center', padding:'50px'}}>Cargando formulario...</div>;
 
     return (
-        <form onSubmit={handleSubmit} className="formulario-solicitud">
-            <h2>Registro de Solicitud</h2>
+        <div className="main-registro-container">
+            <form onSubmit={handleSubmit} className="formulario-solicitud">
+                <h2>Registro de Solicitud</h2>
 
-            <div className="bloque">
-                <h3>1. Datos Personales</h3>
-                <select onChange={(e) => { setTipoDoc(e.target.value); setFormData(prev => ({...prev, dni: ''})) }} style={{marginBottom: '10px'}}>
-                    <option value="DNI">DNI (8 dígitos)</option>
-                    <option value="RUC">RUC (11 dígitos)</option>
-                </select>
-                <input name="dni" value={formData.dni} onChange={handleChange} placeholder={`${tipoDoc} (máx ${tipoDoc === 'DNI' ? 8 : 11} dígitos)`} required />
-                <input name="nombres" onChange={handleChange} placeholder="Nombres" required />
-                <input name="apellidos" onChange={handleChange} placeholder="Apellidos" required />
-                <input name="celular" value={formData.celular} onChange={handleChange} placeholder="Celular (9 dígitos)" required />
-                <input name="correo" type="email" onChange={handleChange} placeholder="Correo Electrónico" required />
-                <input name="contrasena" type="password" onChange={handleChange} placeholder="Contraseña" required />
-            </div>
+                <div className="bloque">
+                    <h3>1. Datos Personales</h3>
+                    <select onChange={(e) => { setTipoDoc(e.target.value); setFormData(prev => ({...prev, dni: ''})) }} style={{marginBottom: '10px'}}>
+                        <option value="DNI">DNI (8 dígitos)</option>
+                        <option value="RUC">RUC (11 dígitos)</option>
+                    </select>
+                    <input name="dni" value={formData.dni} onChange={handleChange} placeholder={`${tipoDoc} (máx ${tipoDoc === 'DNI' ? 8 : 11} dígitos)`} required />
+                    <input name="nombres" onChange={handleChange} placeholder="Nombres" required />
+                    <input name="apellidos" onChange={handleChange} placeholder="Apellidos" required />
+                    <input name="celular" value={formData.celular} onChange={handleChange} placeholder="Celular (9 dígitos)" required />
+                    <input name="correo" type="email" onChange={handleChange} placeholder="Correo Electrónico" required />
+                    <input name="contrasena" type="password" onChange={handleChange} placeholder="Contraseña" required />
+                </div>
 
-            <div className="bloque">
-                <h3>2. Actividad Comercial</h3>
-                <select name="rubro_id" onChange={handleChange} required>
-                    <option value="">Seleccione Rubro</option>
-                    {rubros.map(r => <option key={r.id} value={r.id}>{r.nombre}</option>)}
-                </select>
-                
-                <select name="actividad_id" onChange={handleChange} required disabled={!formData.rubro_id}>
-                    <option value="">Seleccione Actividad</option>
-                    {actividadesFiltradas.map(a => <option key={a.id} value={a.id}>{a.descripcion}</option>)}
-                </select>
+                <div className="bloque">
+                    <h3>2. Actividad Comercial</h3>
+                    <select name="rubro_id" onChange={handleChange} required>
+                        <option value="">Seleccione Rubro</option>
+                        {rubros.map(r => <option key={r.id} value={r.id}>{r.nombre}</option>)}
+                    </select>
+                    
+                    <select name="actividad_id" onChange={handleChange} required disabled={!formData.rubro_id}>
+                        <option value="">Seleccione Actividad</option>
+                        {actividadesFiltradas.map(a => <option key={a.id} value={a.id}>{a.descripcion}</option>)}
+                    </select>
 
-                {requiereCarnet && (
-    <div className="bloque-carnet">
-        <div className="contenedor-check-carnet">
-            <input 
-                type="checkbox" 
-                name="desea_tramitar_carnet" 
-                checked={formData.desea_tramitar_carnet} 
-                onChange={handleChange} 
-                id="check-tramite"
-            />
-            <label htmlFor="check-tramite">
-                Deseo tramitar mi Carnet de Sanidad (Adicional)
-            </label>
+                    {requiereCarnet && (
+                        <div className="bloque-carnet">
+                            <div className="contenedor-check-carnet">
+                                <input type="checkbox" name="desea_tramitar_carnet" checked={formData.desea_tramitar_carnet} onChange={handleChange} id="check-tramite" />
+                                <label htmlFor="check-tramite" style={{cursor:'pointer'}}>Deseo tramitar mi Carnet de Sanidad (Adicional)</label>
+                            </div>
+
+                            {!formData.desea_tramitar_carnet && (
+                                <div className="campo-archivo">
+                                    <label className="subir-archivo-info">Subir documento aquí (Imagen o PDF):</label>
+                                    <input type="file" name="archivo_carnet" accept="image/*,.pdf" onChange={handleChange} required />
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <select name="sector_id" onChange={handleChange} required>
+                        <option value="">Seleccione Sector</option>
+                        {sectores.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+                    </select>
+                </div>
+
+                <div className="bloque">
+                    <h3>3. Ubicación del Puesto</h3>
+                    <MapaUbicacion onCoordsChange={(coords) => setFormData(prev => ({ ...prev, lat: coords.lat, lng: coords.lng }))} />
+                    {formData.lat && (
+                        <div className="coordenadas-info">
+                            <p><strong>Ubicación fijada correctamente:</strong></p>
+                            <p>Lat: {formData.lat.toFixed(6)} | Lng: {formData.lng.toFixed(6)}</p>
+                        </div>
+                    )}
+                </div>
+
+                <button type="submit" className="btn-enviar" disabled={enviando}>
+                    {enviando ? "Enviando..." : "Registrar Solicitud"}
+                </button>
+
+                <ModalAlerta modal={modal} cerrar={() => setModal({...modal, abierto: false})} />
+            </form>
         </div>
-
-        {!formData.desea_tramitar_carnet && (
-            <div className="campo-archivo">
-                <label className="subir-archivo-info">
-                    Subir documento aquí (Imagen o PDF):
-                </label>
-                <input 
-                    type="file" 
-                    name="archivo_carnet" 
-                    accept="image/*,.pdf" 
-                    onChange={handleChange} 
-                    required 
-                />
-            </div>
-        )}
-    </div>
-)}
-
-                <select name="sector_id" onChange={handleChange} required>
-                    <option value="">Seleccione Sector</option>
-                    {sectores.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
-                </select>
-            </div>
-
-            <div className="bloque">
-    <h3>3. Ubicación del Puesto</h3>
-    <MapaUbicacion onCoordsChange={(coords) => setFormData(prev => ({ ...prev, lat: coords.lat, lng: coords.lng }))} />
-    
-    {formData.lat && (
-        <div className="coordenadas-info">
-            <p><strong>Ubicación fijada correctamente:</strong></p>
-            <p>Latitud: {formData.lat.toFixed(6)} | Longitud: {formData.lng.toFixed(6)}</p>
-        </div>
-    )}
-</div>
-
-            <button type="submit" className="btn-enviar" disabled={enviando}>
-                {enviando ? "Enviando..." : "Registrar Solicitud"}
-            </button>
-
-            <ModalAlerta modal={modal} cerrar={() => setModal({...modal, abierto: false})} />
-        </form>
     );
 };
 
