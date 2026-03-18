@@ -130,3 +130,82 @@
     margin-bottom: 20px;
     padding: 10px 0;
 }
+/* --- OPTIMIZACIÓN PARA EL COMERCIANTE (MÓVIL) --- */
+@media (max-width: 768px) {
+    /* 1. Contenedor: Quitamos el margen lateral para aprovechar la pantalla */
+    .formulario-solicitud {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .formulario-solicitud h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    /* 2. Bloques: Reducimos el padding interno */
+    .bloque {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .bloque h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        display: block; /* Ocupa toda la línea en móvil */
+        text-align: center;
+    }
+
+    /* 3. Inputs y Selects: Tamaño ideal para el dedo (Touch friendly) */
+    .bloque input, 
+    .bloque select {
+        padding: 14px; /* Un poco más alto para facilitar el toque */
+        font-size: 16px !important; /* IMPORTANTE: Evita que el navegador haga zoom al escribir */
+        margin-bottom: 12px;
+    }
+
+    /* 4. Checkbox de Carnet: Ajuste de alineación */
+    .contenedor-check-carnet {
+        padding: 12px;
+        flex-direction: row; 
+        align-items: center;
+    }
+
+    .contenedor-check-carnet label {
+        font-size: 0.9rem;
+    }
+
+    /* 5. Botón de Enviar: Más prominente */
+    .btn-enviar {
+        padding: 18px;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        position: sticky; /* Opcional: para que el botón flote al final */
+        bottom: 10px;
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+    }
+
+    /* 6. Coordenadas y Mapas: Ajuste de visibilidad */
+    .coordenadas-info {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    .instruccion {
+        font-size: 0.85rem;
+        text-align: center;
+    }
+}
+
+/* Pantallas súper pequeñas (iPhone SE / Celulares viejos) */
+@media (max-width: 400px) {
+    .formulario-solicitud {
+        margin: 5px;
+        padding: 10px;
+    }
+    
+    .bloque {
+        padding: 12px;
+    }
+}

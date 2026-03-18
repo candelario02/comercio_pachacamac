@@ -1,5 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+    FaBell, FaInbox, FaFileUpload, FaFileDownload, 
+    FaHistory, FaSignOutAlt, FaCheckCircle, FaClock 
+} from 'react-icons/fa'; // Necesitarás instalar react-icons
 import '../estilos/PortalComerciante.css';
 
 const PortalComerciante = () => {
@@ -13,17 +17,75 @@ const PortalComerciante = () => {
 
     return (
         <div className="portal-container">
-            <header>
-                <h1>Bienvenido a tu Portal Comercial</h1>
-                <button onClick={handleLogout}>Cerrar Sesión</button>
-            </header>
-            
-            <main>
-                <div className="bloque">
-                    <h2>Estado de mi Solicitud</h2>
-                    <p>Tu solicitud está siendo revisada por el administrador.</p>
+            {/* Header Profesional con Identidad */}
+            <header className="portal-header">
+                <div className="header-info">
+                    <h1>Portal Comercial Pachacámac</h1>
+                    <span className="user-badge">Comerciante Autorizado</span>
                 </div>
-            </main>
+                <button className="btn-logout" onClick={handleLogout}>
+                    <FaSignOutAlt /> <span>Cerrar Sesión</span>
+                </button>
+            </header>
+
+            <div className="portal-content">
+                {/* 1. SECCIÓN DE ESTADO ACTUAL (Visual) */}
+                <section className="status-section card">
+                    <h2><FaClock className="icon-status" /> Estado de mi Solicitud</h2>
+                    <div className="stepper">
+                        <div className="step active">Envío</div>
+                        <div className="step current">Revisión</div>
+                        <div className="step">Pago</div>
+                        <div className="step">Finalizado</div>
+                    </div>
+                    <p className="status-msg">
+                        Actualmente: <strong>Tu solicitud está siendo revisada por el administrador municipal.</strong>
+                    </p>
+                </section>
+
+                {/* 2. PANEL DE ACCIONES (Grid de Botones) */}
+                <section className="action-grid">
+                    <button className="action-card color-notif">
+                        <FaBell className="card-icon" />
+                        <div className="card-text">
+                            <h3>Notificaciones</h3>
+                            <p>Tienes 2 mensajes nuevos</p>
+                        </div>
+                    </button>
+
+                    <button className="action-card color-buzon">
+                        <FaInbox className="card-icon" />
+                        <div className="card-text">
+                            <h3>Buzón Electrónico</h3>
+                            <p>Consultas y trámites</p>
+                        </div>
+                    </button>
+
+                    <button className="action-card color-upload">
+                        <FaFileUpload className="card-icon" />
+                        <div className="card-text">
+                            <h3>Subir Comprobantes</h3>
+                            <p>Pagos de tasas municipales</p>
+                        </div>
+                    </button>
+
+                    <button className="action-card color-download">
+                        <FaFileDownload className="card-icon" />
+                        <div className="card-text">
+                            <h3>Descargar Documentos</h3>
+                            <p>Formatos y autorizaciones</p>
+                        </div>
+                    </button>
+
+                    <button className="action-card color-history">
+                        <FaHistory className="card-icon" />
+                        <div className="card-text">
+                            <h3>Historial</h3>
+                            <p>Ver trámites pasados</p>
+                        </div>
+                    </button>
+                </section>
+            </div>
         </div>
     );
 };

@@ -1,27 +1,111 @@
-/* frontend/src/estilos/PortalComerciante.css */
-
 .portal-container {
-    background-color: var(--gris-fondo); /* Usando tu variable global */
+    background-color: var(--gris-fondo);
     min-height: 100vh;
-    padding: 2rem;
 }
 
 .portal-header {
-    background-color: var(--blanco);
-    border-bottom: 3px solid var(--verde-pachacamac); /* Identidad institucional */
-    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--cian-institucional), #008ba3);
+    color: white;
+    padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.portal-header h1 {
-    color: var(--cian-institucional); /* El cian que definiste */
+.user-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
 }
 
-.btn-cerrar-sesion {
-    background-color: var(--dorado-mun);
-    color: var(--blanco);
+.btn-logout {
+    background: var(--dorado-mun);
+    color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px;
+    border-radius: 8px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.portal-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Tarjeta de Estado */
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    position: relative;
+}
+
+.step {
+    font-size: 0.9rem;
+    color: #999;
+    flex: 1;
+    text-align: center;
+}
+
+.step.active { color: var(--verde-pachacamac); font-weight: bold; }
+.step.current { color: var(--cian-institucional); font-weight: bold; text-decoration: underline; }
+
+/* Grid de Acciones */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background: white;
+    border: none;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-icon { font-size: 2rem; }
+.card-text h3 { margin: 0; font-size: 1.1rem; color: #333; }
+.card-text p { margin: 5px 0 0; font-size: 0.85rem; color: #777; }
+
+/* Colores para iconos */
+.color-notif .card-icon { color: #e74c3c; }
+.color-buzon .card-icon { color: var(--cian-institucional); }
+.color-upload .card-icon { color: var(--verde-pachacamac); }
+.color-download .card-icon { color: var(--dorado-mun); }
+.color-history .card-icon { color: #9b59b6; }
+
+/* --- RESPONSIVO --- */
+@media (max-width: 768px) {
+    .portal-header { flex-direction: column; text-align: center; gap: 15px; }
+    .portal-content { padding: 1rem; }
+    .stepper { font-size: 0.75rem; }
+    .action-grid { grid-template-columns: 1fr; }
 }

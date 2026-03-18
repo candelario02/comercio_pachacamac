@@ -60,18 +60,52 @@
     justify-content: center;
     color: #999;
 }
-/* --- AJUSTE RESPONSIVO PARA FORMULARIOS --- */
+/* --- AJUSTE RESPONSIVO PARA DASHBOARD (MÓVIL Y PANTALLA DIVIDIDA) --- */
 @media (max-width: 768px) {
-    .card-login, .formulario-container {
-        width: 95% !important; /* Casi todo el ancho del celular */
-        max-width: 400px;
-        padding: 20px !important;
-        margin: 10px auto;
+    .dashboard-container {
+        padding: 20px 15px; /* Reducimos márgenes laterales para ganar espacio */
     }
 
-    input, select, button {
-        width: 100% !important; /* Inputs a pantalla completa */
-        margin-bottom: 15px;
-        height: 45px; /* Más fácil de tocar */
+    .dashboard-title {
+        font-size: 1.6rem; /* Título más acorde al tamaño móvil */
+        margin-bottom: 25px;
+    }
+
+    .kpi-container {
+        gap: 15px; /* Menos espacio entre tarjetas para que quepan mejor */
+        flex-direction: column; /* Las tarjetas se apilan verticalmente */
+        align-items: center;
+    }
+
+    .kpi-card {
+        width: 100%; /* Ocupan todo el ancho disponible */
+        max-width: 320px; /* Pero no crecen infinitamente para no verse deformes */
+        padding: 20px;
+        min-width: unset; /* Quitamos el mínimo de PC */
+    }
+
+    .kpi-card p {
+        font-size: 1.8rem; /* Número un poco más pequeño para que no desborde */
+    }
+
+    .kpi-icon {
+        font-size: 2rem;
+    }
+
+    .dashboard-chart-placeholder {
+        min-height: 200px; /* El gráfico se hace más bajo para no obligar a mucho scroll */
+        font-size: 0.9rem;
+        margin: 10px;
+    }
+}
+
+/* Optimización extra para celulares muy pequeños */
+@media (max-width: 480px) {
+    .dashboard-title {
+        font-size: 1.4rem;
+    }
+    
+    .kpi-card {
+        padding: 15px;
     }
 }

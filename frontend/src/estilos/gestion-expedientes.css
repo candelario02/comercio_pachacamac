@@ -38,18 +38,74 @@
 .btn-aprobar { background: var(--verde-pachacamac); color: white; border: none; padding: 10px 20px; border-radius: 5px; }
 .spin { animation: rotation 1s infinite linear; }
 @keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(359deg); } }
-/* --- AJUSTE RESPONSIVO PARA FORMULARIOS --- */
+
+/* --- AJUSTE RESPONSIVO MUNICIPAL (SIN PERDER DISEÑO) --- */
 @media (max-width: 768px) {
-    .card-login, .formulario-container {
-        width: 95% !important; /* Casi todo el ancho del celular */
-        max-width: 400px;
-        padding: 20px !important;
-        margin: 10px auto;
+    /* 1. Header: Apilamos el título y el botón de actualizar */
+    .gestion-header-pro {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 15px;
     }
 
-    input, select, button {
-        width: 100% !important; /* Inputs a pantalla completa */
-        margin-bottom: 15px;
-        height: 45px; /* Más fácil de tocar */
+    /* 2. Tabla: El truco del scroll lateral para que no empuje el diseño */
+    .tabla-card {
+        overflow-x: auto; /* Permite deslizar la tabla con el dedo */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tabla-gestion {
+        min-width: 600px; /* Obliga a la tabla a mantener forma, pero dentro del scroll */
+    }
+
+    .tabla-gestion th, .tabla-gestion td {
+        padding: 12px 10px;
+        font-size: 0.8rem;
+    }
+
+    /* 3. Modal: Ajustamos el tamaño para que respire en el móvil */
+    .modal-contenido {
+        width: 95%;
+        margin: 10px;
+        border-radius: 10px;
+    }
+
+    /* 4. Info Grid: De 2 columnas a 1 sola columna */
+    .info-grid {
+        grid-template-columns: 1fr !important; /* Los datos se ponen uno debajo de otro */
+        gap: 10px;
+    }
+
+    /* 5. Footer del Modal: Botones en columna para que no se corten */
+    .modal-footer {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .modal-footer button {
+        width: 100% !important; /* Botones a todo lo ancho para el dedo */
+        margin: 0;
+        padding: 12px;
+    }
+
+    /* Ajuste de inputs y selects generales */
+    input, select, .btn-footer, .btn-orden-pago, .btn-aprobar {
+        width: 100% !important;
+        margin-bottom: 10px;
+        height: 45px;
+        font-size: 16px; /* Evita zoom molesto en iPhone */
+    }
+}
+
+/* Pantallas muy pequeñas (Celulares) */
+@media (max-width: 480px) {
+    .gestion-contenedor {
+        padding: 10px;
+    }
+    
+    .modal-body {
+        padding: 15px;
     }
 }

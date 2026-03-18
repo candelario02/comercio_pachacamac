@@ -81,20 +81,66 @@
     100% { transform: translateY(-50%) scale(1); }
 }
 
-/* --- AJUSTE PARA EL MENÚ LATERAL --- */
+/* --- AJUSTE RESPONSIVO SEGURO --- */
 @media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column; /* Apila el menú arriba y el contenido abajo */
+    }
+
     .sidebar {
         width: 100% !important;
         height: auto !important;
-        position: relative !important;
-        display: flex;
-        flex-direction: row; /* Menú horizontal en celular */
-        justify-content: space-around;
-        padding: 10px 0;
+        padding: 10px;
+        flex-direction: column; /* Mantenemos columna pero más compacta */
+        gap: 10px;
     }
-    
-    .sidebar-link {
-        font-size: 12px; /* Letras más pequeñas para que quepan */
-        padding: 5px;
+
+    .sidebar-title {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+    }
+
+    .sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Dos botones por fila para que no se amontonen */
+        gap: 8px;
+    }
+
+    .sidebar-nav button {
+        padding: 10px;
+        font-size: 0.85rem;
+        flex-direction: column; /* Icono arriba, texto abajo */
+        gap: 5px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .sidebar-nav button svg, 
+    .sidebar-nav button i {
+        font-size: 1.2rem; /* Iconos un poco más grandes para facilitar el toque */
+    }
+
+    .badge-notificacion {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        transform: none;
+    }
+
+    .admin-content {
+        padding: 20px 15px; /* Reducimos el margen para ganar espacio en pantalla dividida */
+    }
+
+    .logout-btn {
+        margin-top: 10px;
+        grid-column: span 2; /* El botón de salir ocupa todo el ancho */
+    }
+}
+
+/* Pantallas muy pequeñas (Celulares delgados) */
+@media (max-width: 480px) {
+    .sidebar-nav {
+        grid-template-columns: 1fr; /* Un botón por fila en pantallas muy flacas */
     }
 }
