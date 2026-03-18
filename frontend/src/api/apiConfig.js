@@ -1,12 +1,7 @@
-// Detecta si estamos en entorno local
-const isLocalhost = 
-    window.location.hostname === 'localhost' || 
-    window.location.hostname === '127.0.0.1' || 
-    window.location.hostname.startsWith('192.168.'); // Para pruebas desde el celular en casa
+// Vite ya sabe si estás en modo 'development' o 'production'
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Configuración de URLs
-export const BASE_URL = isLocalhost 
-    ? 'http://localhost:10000/api'  // <--- Cambiado a 10000 para que coincida con tu backend
-    : 'https://comercio-pachacamac-v2.onrender.com/api';
+// Si por alguna razón la variable de entorno no carga, usamos un fallback
+export const BASE_URL = API_URL || 'http://localhost:10000/api';
 
 export default BASE_URL;
