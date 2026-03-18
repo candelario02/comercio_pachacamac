@@ -77,7 +77,7 @@ const SolicitudComerciante = () => {
             setFormData(prev => ({ 
                 ...prev, 
                 [name]: checked,
-                archivo_carnet: checked ? null : prev.archivo_carnet // Limpiamos archivo si marca que desea tramitar
+                archivo_carnet: checked ? null : prev.archivo_carnet 
             }));
             if (checked) {
                 setModal({ abierto: true, mensaje: "Nota: Al solicitar la gestión del carnet, se incluirá el costo del trámite en tu orden de pago.", tipo: 'info' });
