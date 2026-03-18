@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     FaBell, FaInbox, FaFileUpload, FaFileDownload, 
-    FaHistory, FaClock, FaTimes // Cambiamos FaSignOutAlt por FaTimes (X)
+    FaHistory, FaClock, FaTimes 
 } from 'react-icons/fa'; 
 import '../estilos/PortalComerciante.css';
 
@@ -17,14 +17,12 @@ const PortalComerciante = () => {
 
     return (
         <div className="portal-container">
-            {/* Header Rediseñado: Título a la izquierda, X a la derecha */}
             <header className="portal-header">
                 <div className="header-info">
                     <h1>Portal Comercial Pachacámac</h1>
                     <span className="user-badge">Comerciante Autorizado</span>
                 </div>
                 
-                {/* Botón minimalista de cerrar (X) */}
                 <button 
                     className="btn-logout-x" 
                     onClick={handleLogout} 
@@ -35,7 +33,6 @@ const PortalComerciante = () => {
             </header>
 
             <div className="portal-content">
-                {/* 1. SECCIÓN DE ESTADO ACTUAL (Visual) */}
                 <section className="status-section card">
                     <h2><FaClock className="icon-status" /> Estado de mi Solicitud</h2>
                     <div className="stepper">
@@ -49,7 +46,6 @@ const PortalComerciante = () => {
                     </p>
                 </section>
 
-                {/* 2. PANEL DE ACCIONES (Grid de Botones) */}
                 <section className="action-grid">
                     <button className="action-card color-notif">
                         <FaBell className="card-icon" />
