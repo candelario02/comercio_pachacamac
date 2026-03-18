@@ -1,19 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 
+// No es necesario cargar dotenv si ya borraste el archivo .env, 
+// pero no estorba dejarlo.
 require('dotenv').config();
 
-const authRutas = require('./rutas/authRutas');
-const adminRutas = require('./rutas/adminRutas');
-const publicoRutas = require('./rutas/publicoRutas');
-const comercioRutas = require('./rutas/comercioRutas');
+// --- CORRECCIÓN DE RUTAS (Entrando a /src/) ---
+const authRutas = require('./src/rutas/authRutas');
+const adminRutas = require('./src/rutas/adminRutas');
+const publicoRutas = require('./src/rutas/publicoRutas');
+const comercioRutas = require('./src/rutas/comercioRutas');
 
 const app = express();
 
-
 app.use(cors({
     origin: function (origin, callback) {
-        
         if (!origin || 
             origin.includes('vercel.app') || 
             origin.includes('localhost') || 
@@ -23,20 +24,20 @@ app.use(cors({
             callback(new Error('No permitido por CORS'));
         }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
 
-// Registro de rutas
+
 app.use('/api/auth', authRutas);
 app.use('/api/admin', adminRutas);
 app.use('/api/publico', publicoRutas);
 app.use('/api/comercio', comercioRutas);
 
-// Manejador de rutas no encontradas
+
 app.use((req, res) => {
     res.status(404).json({ 
         success: false, 
