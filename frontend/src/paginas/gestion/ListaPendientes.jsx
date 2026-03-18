@@ -111,31 +111,35 @@ const ListaPendientes = () => {
             </header>
 
             <div className="tabla-card">
-                <table className="tabla-gestion">
-                    <thead>
-                        <tr>
-                            <th>DNI</th>
-                            <th>Comerciante</th>
-                            <th>Sector/Distrito</th>
-                            <th>Actividad</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {solicitudes.map((s) => (
-                            <tr key={s.comerciante_id}>
-                                <td>{s.dni}</td>
-                                <td>{s.nombres} {s.apellidos}</td>
-                                <td>{s.distrito}</td>
-                                <td>{s.actividad_nombre}</td>
-                                <td>
-                                    <button className="btn-footer" onClick={() => abrirDetalle(s)}><FaEye /> Detalle</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+    <table className="tabla-gestion">
+        <thead>
+            <tr>
+                <th>DNI/RUC</th>
+                <th>Comerciante</th>
+                <th>Teléfono</th> 
+                <th>Sector/Distrito</th>
+                <th>Actividad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {solicitudes.map((s) => (
+                <tr key={s.comerciante_id}>
+                    <td>{s.dni}</td>                    
+                    <td>{s.nombres} {s.apellidos}</td>
+                    <td>{s.numero_celular || 'S/N'}</td>
+                    <td>{s.distrito}</td>
+                    <td>{s.actividad_nombre}</td>
+                    <td>
+                        <button className="btn-footer" onClick={() => abrirDetalle(s)}>
+                            <FaEye /> Detalle
+                        </button>
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+</div>
 
             {modalAbierto && seleccionado && (
                 <div className="modal-overlay">
