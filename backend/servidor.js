@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-// Nota: Dejamos el require('dotenv').config() por si Render necesita 
-// leer variables internas, pero ya no dependerá de archivos físicos locales.
+
 require('dotenv').config();
 
 const authRutas = require('./rutas/authRutas');
@@ -11,13 +10,10 @@ const comercioRutas = require('./rutas/comercioRutas');
 
 const app = express();
 
-// CONFIGURACIÓN DE CORS PARA LA NUBE
+
 app.use(cors({
     origin: function (origin, callback) {
-        // Permitimos: 
-        // 1. Peticiones sin origen (como Postman o el propio servidor)
-        // 2. Cualquier subdominio de Vercel (muy importante porque Vercel cambia los IDs)
-        // 3. Tu dominio local por si alguna vez vuelves a abrir el VS Code
+        
         if (!origin || 
             origin.includes('vercel.app') || 
             origin.includes('localhost') || 
