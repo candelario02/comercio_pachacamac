@@ -3,29 +3,31 @@ import '../estilos/InicioPublico.css';
 
 const InicioPublico = () => {
     const rubros = [
-        { id: 1, nombre: 'Licencias', icono: '📜' },
-        { id: 2, nombre: 'Comercio', icono: '🏪' },
-        { id: 3, nombre: 'Pagos', icono: '💰' },
-        { id: 4, nombre: 'Fiscalización', icono: '🏢' }
+        { id: 1, nombre: 'Licencias' },
+        { id: 2, nombre: 'Comercio' },
+        { id: 3, nombre: 'Pagos' },
+        { id: 4, nombre: 'Fiscalización' }
     ];
+
+    const obtenerIcono = (nombre) => {
+        const n = nombre.toLowerCase();
+        if (n.includes('licencia')) return '📜';
+        if (n.includes('comercio')) return '🏪';
+        if (n.includes('pago')) return '💰';
+        return '🏢';
+    };
 
     return (
         <div className="inicio-container">
-            {/* Espacio para que se luzca el slider del santuario */}
-            <div className="espacio-slider-libre"></div>
-
-            <div className="contenedor-inferior">
-                <h2 className="texto-bienvenida">Servicios al Ciudadano</h2>
-                <div className="accesos-grid">
-                    {rubros.map((rubro) => (
-                        <div key={rubro.id} className="acceso-item-dark">
-                            <div className="acceso-icono-circle-cian">
-                                <span className="icono-emblem">{rubro.icono}</span>
-                            </div>
-                            <span className="acceso-titulo-dark">{rubro.nombre}</span>
+            <div className="accesos-grid">
+                {rubros.map((rubro) => (
+                    <div key={rubro.id} className="acceso-item-dark">
+                        <div className="acceso-icono-circle-cian">
+                            <span className="icono">{obtenerIcono(rubro.nombre)}</span>
                         </div>
-                    ))}
-                </div>
+                        <span className="acceso-titulo-dark">{rubro.nombre}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );
