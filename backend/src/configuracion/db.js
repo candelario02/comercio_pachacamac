@@ -1,55 +1,32 @@
 const { Pool } = require('pg');
-const path = require('path');
 
-// 1. Determinar el archivo según el ambiente
-const envFile = process.env.NODE_ENV === 'production' 
-    ? '.env.produccion' 
-    : '.env.desarrollo';
-
-// 2. Cargar variables desde la raíz del proyecto (process.cwd())
-const envPath = path.join(process.cwd(), envFile);
-require('dotenv').config({ path: envPath });
-
-console.log("---------------------------------------------------------");
-console.log(`📂 Cargando configuración desde: ${envPath}`);
-
-// 3. Validación de seguridad (Previene el error de "client password must be a string")
+// 1. Ya no cargamos archivos .env manuales. 
+// Render inyecta DATABASE_URL automáticamente desde su panel de control.
 if (!process.env.DATABASE_URL) {
-    console.error("❌ ERROR CRÍTICO: La variable DATABASE_URL no está definida.");
-    console.error("👉 Asegúrate de que el archivo .env.desarrollo exista en la raíz y tenga el formato correcto.");
-    process.exit(1); 
+    console.error("❌ ERROR CRÍTICO: La variable DATABASE_URL no está definida en el panel de Render.");
+    process.exit(1);
 }
 
-// 4. Configuración del Pool
+// 2. Configuración simplificada para la Nube
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    // SSL solo en producción (Neon/Render)
-    ssl: process.env.NODE_ENV === 'production' 
-        ? { rejectUnauthorized: false } 
-        : false
+    // Neon requiere SSL obligatorio para funcionar de forma segura
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
-// 5. Monitoreo de errores globales del pool
+// 3. Monitoreo de errores
 pool.on('error', (err) => {
     console.error('❌ Error inesperado en el cliente de PostgreSQL:', err);
-    process.exit(-1);
 });
 
-// 6. Prueba de conexión inicial
-pool.query('SELECT NOW()', (err, res) => {
+// 4. Prueba de conexión silenciosa (solo avisa si falla o conecta al inicio)
+pool.query('SELECT NOW()', (err) => {
     if (err) {
-        console.error('❌ Error de conexión a la base de datos:', err.message);
-        console.error('Ambiente detectado:', process.env.NODE_ENV || 'development');
+        console.error('❌ FALLO DE CONEXIÓN A NEON:', err.message);
     } else {
-        const ambiente = process.env.NODE_ENV === 'production' ? 'NUBE (Neon)' : 'LOCAL (PC)';
-        try {
-            const dbHost = new URL(process.env.DATABASE_URL).hostname;
-            console.log(`✅ Conexión exitosa a la base de datos en ambiente: ${ambiente}`);
-            console.log(`🚀 Servidor conectado a: ${dbHost}`);
-        } catch (e) {
-            console.log(`✅ Conexión exitosa (Ambiente: ${ambiente})`);
-        }
-        console.log('---------------------------------------------------------');
+        console.log('✅ CONEXIÓN EXITOSA: El Backend está hablando con Neon (Nube).');
     }
 });
 
