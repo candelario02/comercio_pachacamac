@@ -1,60 +1,81 @@
-/* InicioPublico.css - Estilos aislados para Inicio */
+/* InicioPublico.css */
 
 .inicio-container {
     width: 100%;
-    height: 100%;
+    height: 100vh; /* Ocupa toda la pantalla */
     display: flex;
     flex-direction: column;
+    background: transparent; /* Fundamental para ver el slider */
+}
+
+.espacio-superior-slider {
+    flex: 1; /* Esto hace que el slider sea el protagonista arriba */
 }
 
 .accesos-grid {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 30px;
     width: 100%;
-    padding: 20px 20px 40px 20px; 
-    background-color: var(--cian-institucional); /* Color institucional */
+    padding: 40px 20px; 
+    /* Cambiamos color sólido por degradado elegante */
+    background: linear-gradient(to top, rgba(0, 168, 182, 0.95), rgba(0, 168, 182, 0.7), transparent);
     flex-wrap: wrap;
-    margin-top: auto; /* Anclaje al pie */
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 -10px 20px rgba(0,0,0,0.2);
 }
 
 .acceso-item-dark {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 120px;
+    width: 110px;
     cursor: pointer;
-    margin-bottom: 10px;
+    transition: transform 0.3s ease;
 }
 
 .acceso-icono-circle-cian {
-    width: 80px;
-    height: 80px;
-    background-color: var(--blanco);
+    width: 75px;
+    height: 75px;
+    background-color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 5px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
+    margin-bottom: 10px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
 .acceso-item-dark:hover .acceso-icono-circle-cian {
-    transform: translateY(-5px) scale(1.05);
+    transform: translateY(-8px);
 }
 
 .acceso-icono-circle-cian .icono { 
-    font-size: 2.5rem; 
-    line-height: 1;
+    font-size: 2.2rem; 
 }
 
 .acceso-titulo-dark {
-    color: var(--blanco) !important;
+    color: white !important;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-align: center;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Ajuste para celulares */
+@media (max-width: 600px) {
+    .accesos-grid {
+        gap: 15px;
+        padding: 20px 10px;
+    }
+    .acceso-item-dark {
+        width: 85px;
+    }
+    .acceso-icono-circle-cian {
+        width: 60px;
+        height: 60px;
+    }
+    .acceso-icono-circle-cian .icono {
+        font-size: 1.8rem;
+    }
 }

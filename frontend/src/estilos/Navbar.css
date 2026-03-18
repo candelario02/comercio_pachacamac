@@ -1,10 +1,12 @@
+/* Navbar.css */
+
 .navbar-turquesa {
-    background-color: var(--cian-institucional); /* Usando tu variable global */
+    background-color: var(--cian-institucional); 
     width: 100%;
-    z-index: 10;
+    z-index: 1000; /* Aseguramos que siempre esté arriba */
     position: relative;
-    padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 12px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .navbar-container {
@@ -14,7 +16,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 30px;
 }
 
 .navbar-logo {
@@ -24,54 +26,77 @@
 }
 
 .navbar-logo img {
-    height: 45px;
+    height: 50px; /* Un poco más grande para que luzca el escudo */
     width: auto;
 }
 
 .navbar-logo span {
-    color: var(--blanco); /* Usando variable */
+    color: var(--blanco);
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 800; /* Más grueso */
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 .navbar-links {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 30px;
 }
 
+/* ESTO ES LO QUE QUERÍAS RESALTAR */
 .navbar-links a {
-    color: var(--blanco);
+    color: #FFFFFF; /* Blanco puro */
     text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: color 0.3s;
+    font-weight: 700; /* Negrita resaltante */
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.2); /* Sombra para resaltar el texto */
 }
 
 .navbar-links a:hover {
-    color: var(--dorado-mun);
+    color: var(--dorado-mun); /* Cambia al dorado de la muni al pasar el mouse */
+    transform: translateY(-2px);
 }
 
 .btn-acceso {
     background-color: var(--blanco) !important;
     color: var(--cian-institucional) !important;
-    padding: 8px 20px;
-    border-radius: 5px;
-    font-weight: bold;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 800;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
 .btn-solicitud {
-    background-color: var(--blanco); /* O puedes usar var(--dorado-mun) */
-    color: var(--verde-pachacamac);
-    padding: 8px 16px;
-    border-radius: 5px;
+    background-color: #FFD700; /* Dorado resaltante para el llamado a la acción */
+    color: #004b5a; /* Texto oscuro para contraste */
+    padding: 10px 20px;
+    border-radius: 8px;
     text-decoration: none;
-    margin-right: 10px; /* Separación del botón Acceder */
-    font-weight: bold;
-    border: 2px solid var(--verde-pachacamac);
+    font-weight: 800;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    transition: transform 0.2s;
 }
+
 .btn-solicitud:hover {
-    background-color: var(--verde-pachacamac);
-    color: var(--blanco);
+    background-color: #fcc200;
+    color: #000;
+    transform: scale(1.05);
+}
+
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+    .navbar-logo span {
+        display: none; /* En celular ocultamos el texto largo del logo */
+    }
+    .navbar-links {
+        gap: 15px;
+    }
+    .navbar-links a {
+        font-size: 0.8rem;
+    }
 }
