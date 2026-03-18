@@ -6,31 +6,50 @@
 .portal-header {
     background: linear-gradient(135deg, var(--cian-institucional), #008ba3);
     color: white;
-    padding: 1.5rem; /* Ajusta el padding para que no sea muy alto */
+    padding: 1.2rem 2rem;
     display: flex;
-    justify-content: space-between; /* Esto empuja el botón a la derecha */
-    align-items: center; /* Centra verticalmente ambos elementos */
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Base para el posicionamiento de la X */
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.header-info h1 {
+    font-size: 1.6rem;
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.1;
 }
 
 .user-badge {
     background: rgba(255,255,255,0.2);
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-top: 5px;
 }
 
-.btn-logout {
-    background: var(--dorado-mun);
+/* --- EL NUEVO BOTÓN "X" --- */
+.btn-logout-x {
+    background: rgba(255, 255, 255, 0.15);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 600;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0; /* No permite que el botón se aplaste */
+}
+
+.btn-logout-x:hover {
+    background: #e74c3c; /* Rojo al pasar el mouse por ser cerrar sesión */
+    transform: rotate(90deg);
 }
 
 .portal-content {
@@ -39,7 +58,7 @@
     padding: 2rem;
 }
 
-/* Tarjeta de Estado */
+/* --- TARJETA DE ESTADO (STEPPER) --- */
 .card {
     background: white;
     padding: 2rem;
@@ -52,7 +71,6 @@
     display: flex;
     justify-content: space-between;
     margin: 2rem 0;
-    position: relative;
 }
 
 .step {
@@ -60,12 +78,13 @@
     color: #999;
     flex: 1;
     text-align: center;
+    position: relative;
 }
 
 .step.active { color: var(--verde-pachacamac); font-weight: bold; }
 .step.current { color: var(--cian-institucional); font-weight: bold; text-decoration: underline; }
 
-/* Grid de Acciones */
+/* --- GRID DE ACCIONES --- */
 .action-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -102,25 +121,41 @@
 .color-download .card-icon { color: var(--dorado-mun); }
 .color-history .card-icon { color: #9b59b6; }
 
-/* --- RESPONSIVO --- */
+/* --- AJUSTE RESPONSIVO FINAL --- */
 @media (max-width: 768px) {
     .portal-header {
-        flex-direction: row; /* Forzamos que se mantengan en la misma línea */
-        justify-content: space-between;
         padding: 1rem;
+        flex-direction: row; 
+        align-items: flex-start; /* Alinea arriba para dar espacio al badge */
+    }
+
+    .header-info {
+        max-width: 80%; /* El título tiene el 80% de la pantalla */
     }
 
     .header-info h1 {
-        font-size: 1.1rem; /* Reducimos un poco el título para que quepa bien */
+        font-size: 1.2rem;
         text-align: left;
     }
 
-    .btn-logout {
-        padding: 8px 12px;
-        font-size: 0.8rem;
+    .btn-logout-x {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+        position: absolute;
+        top: 15px;
+        right: 15px; /* La X se queda fija en la esquina superior */
     }
 
-    .btn-logout span {
-        display: none; /* TRUCO: Esconde el texto "Cerrar Sesión" y deja solo el icono en móviles muy pequeños */
+    .portal-content {
+        padding: 1rem;
+    }
+
+    .stepper {
+        font-size: 0.75rem;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr; /* Una sola columna en móvil */
     }
 }

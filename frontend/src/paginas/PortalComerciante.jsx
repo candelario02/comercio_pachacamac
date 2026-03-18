@@ -2,8 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     FaBell, FaInbox, FaFileUpload, FaFileDownload, 
-    FaHistory, FaSignOutAlt, FaCheckCircle, FaClock 
-} from 'react-icons/fa'; // Necesitarás instalar react-icons
+    FaHistory, FaClock, FaTimes // Cambiamos FaSignOutAlt por FaTimes (X)
+} from 'react-icons/fa'; 
 import '../estilos/PortalComerciante.css';
 
 const PortalComerciante = () => {
@@ -17,14 +17,20 @@ const PortalComerciante = () => {
 
     return (
         <div className="portal-container">
-            {/* Header Profesional con Identidad */}
+            {/* Header Rediseñado: Título a la izquierda, X a la derecha */}
             <header className="portal-header">
                 <div className="header-info">
                     <h1>Portal Comercial Pachacámac</h1>
                     <span className="user-badge">Comerciante Autorizado</span>
                 </div>
-                <button className="btn-logout" onClick={handleLogout}>
-                    <FaSignOutAlt /> <span>Cerrar Sesión</span>
+                
+                {/* Botón minimalista de cerrar (X) */}
+                <button 
+                    className="btn-logout-x" 
+                    onClick={handleLogout} 
+                    title="Cerrar Sesión"
+                >
+                    <FaTimes />
                 </button>
             </header>
 
