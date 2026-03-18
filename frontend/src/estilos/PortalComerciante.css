@@ -6,10 +6,10 @@
 .portal-header {
     background: linear-gradient(135deg, var(--cian-institucional), #008ba3);
     color: white;
-    padding: 1.5rem 2rem;
+    padding: 1.5rem; /* Ajusta el padding para que no sea muy alto */
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Esto empuja el botón a la derecha */
+    align-items: center; /* Centra verticalmente ambos elementos */
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
@@ -104,8 +104,23 @@
 
 /* --- RESPONSIVO --- */
 @media (max-width: 768px) {
-    .portal-header { flex-direction: column; text-align: center; gap: 15px; }
-    .portal-content { padding: 1rem; }
-    .stepper { font-size: 0.75rem; }
-    .action-grid { grid-template-columns: 1fr; }
+    .portal-header {
+        flex-direction: row; /* Forzamos que se mantengan en la misma línea */
+        justify-content: space-between;
+        padding: 1rem;
+    }
+
+    .header-info h1 {
+        font-size: 1.1rem; /* Reducimos un poco el título para que quepa bien */
+        text-align: left;
+    }
+
+    .btn-logout {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .btn-logout span {
+        display: none; /* TRUCO: Esconde el texto "Cerrar Sesión" y deja solo el icono en móviles muy pequeños */
+    }
 }
