@@ -30,6 +30,7 @@ const crearSolicitudComerciante = async (data) => {
 
         const usuarioId = userRes.rows[0].id;
 
+        // 3. Crear comerciante con el nuevo campo desea_tramitar_carnet
         const comercianteRes = await client.query(
             `INSERT INTO comerciantes (
                 usuario_id, dni, nombres, apellidos, numero_celular, 
