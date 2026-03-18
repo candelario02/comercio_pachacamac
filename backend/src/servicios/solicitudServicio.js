@@ -32,14 +32,14 @@ const crearSolicitudComerciante = async (data) => {
 
 const solicitudes = await client.query(`
     SELECT 
-        c.comerciante_id, 
+        c.id AS comerciante_id,          
         c.dni, 
         c.nombres, 
         c.apellidos, 
-        c.numero_celular AS celular,    
-        c.latitud_puesto AS lat,   
+        c.numero_celular AS celular,   
+        c.latitud_puesto AS lat, 
         c.longitud_puesto AS lng, 
-        c.distrito,
+        c.sector_id AS distrito,    
         c.estado_tramite
     FROM comerciantes c
     WHERE c.estado_tramite = 'pendiente'
