@@ -8,11 +8,77 @@
   --texto-oscuro: #333333;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
 
 body, html { 
     height: 100%; 
     width: 100%; 
-    overflow-x: hidden;
-    font-family: Arial, sans-serif; /* Recomendado definir fuente aquí */
+    overflow-x: hidden; /* Evita el scroll horizontal molesto en celulares */
+    font-family: Arial, sans-serif;
+    background-color: var(--gris-fondo);
+    color: var(--texto-oscuro);
+}
+
+.main-container {
+    width: 100%;
+    max-width: 1400px; 
+    margin: 0 auto;
+    padding: 0 15px; 
+    box-sizing: border-box;
+    min-height: 100vh; /* Asegura que el fondo cubra toda la pantalla */
+}
+
+/* --- NUEVAS REGLAS DE RESPONSIVIDAD --- */
+
+/* 1. Imágenes y Media Flexibles */
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 2. Tablas Responsivas (Para tus trámites de S/ 125.00) */
+/* Envuelve tus tablas en un <div class="table-responsive"> */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
+/* 3. Ajustes para Celulares y Pantalla Dividida (Media Queries) */
+@media (max-width: 768px) {
+    /* Ajustamos el tamaño de los textos para que no ocupen toda la pantalla */
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+
+    /* Forzamos a que cualquier GRID o FLEX se vuelva una sola columna */
+    .dashboard-grid, .flex-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px;
+    }
+
+    /* Los inputs y botones deben ser más grandes para el dedo */
+    input, button, select {
+        width: 100% !important; /* Ocupan todo el ancho */
+        min-height: 44px; /* Tamaño mínimo recomendado por Google para móviles */
+        font-size: 16px !important; /* Evita zoom automático en iPhone */
+    }
+
+    /* Si tienes un sidebar, podrías ocultarlo aquí (opcional) */
+    .sidebar {
+        display: none; 
+    }
+}
+
+/* 4. Utilidades de Flexbox para tus componentes */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Clave para que los elementos "salten" de línea si no caben */
 }
