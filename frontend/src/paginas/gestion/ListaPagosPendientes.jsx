@@ -38,10 +38,15 @@ const ListaPagosPendientes = () => {
         return;
     }
     
-    // Construimos la URL apuntando a la ruta que definimos en servidor.js
-    const urlFinal = `${BASE_URL}/uploads/vouchers/${nombreArchivo}`;
+    // 1. Quitamos el '/api' de la URL base para ir a la raíz del servidor
+    const servidorRaiz = BASE_URL.endsWith('/api') 
+        ? BASE_URL.replace('/api', '') 
+        : BASE_URL;
+
+    // 2. Construimos la URL limpia
+    const urlFinal = `${servidorRaiz}/uploads/vouchers/${nombreArchivo}`;
     
-    console.log("Intentando abrir:", urlFinal);
+    console.log("URL generada para el navegador:", urlFinal);
     window.open(urlFinal, '_blank');
 };
 

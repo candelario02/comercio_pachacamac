@@ -10,7 +10,7 @@ const comercianteRutas = require('./src/rutas/comercianteRutas');
 const app = express();
 const path = require('path');
 
-// Cambia estas líneas en tu servidor.js
+
 app.use('/uploads/carnets', express.static(path.join(__dirname, 'src', 'uploads', 'carnets')));
 app.use('/uploads/vouchers', express.static(path.join(__dirname, 'src', 'uploads', 'vouchers')));
 
