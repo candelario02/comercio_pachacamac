@@ -43,14 +43,14 @@ const ListaPagosPendientes = () => {
         ? BASE_URL.replace('/api', '') 
         : BASE_URL;
 
-    // 2. Construimos la URL limpia
+   
     const urlFinal = `${servidorRaiz}/uploads/vouchers/${nombreArchivo}`;
     
     console.log("URL generada para el navegador:", urlFinal);
     window.open(urlFinal, '_blank');
 };
 
-    // --- LOGICA DE CONTROL TOTAL ---
+
     const handleConfirmarPago = (s) => {
         const montoValido = parseFloat(s.monto_pagado) > 0 || s.exento_pago;
         
