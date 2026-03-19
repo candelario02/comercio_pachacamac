@@ -133,7 +133,7 @@ const ListaPagosPendientes = () => {
 
     return (
         <div className="gestion-contenedor">
-            {/* Modal de Alerta */}
+           
             {modalAlerta.abierto && (
                 <div className="modal-alerta-overlay">
                     <ModalAlerta 
