@@ -211,10 +211,10 @@ const confirmarPagoYFinalizar = async (req, res) => {
 
         // 5. Notificación Final
         await pool.query(
-            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, tipo) 
-             VALUES ($1, '¡Felicidades!', 'Tu pago ha sido verificado. Ya puedes descargar tus carnets autorizados en el portal.', 'exito')`,
-            [usuario_id]
-        );
+    `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
+     VALUES ($1, $2, $3)`,
+    [usuario_id, `¡Felicidades! Tu pago ha sido verificado.`, 'exito']
+);
 
         await pool.query('COMMIT');
         res.json({ 
