@@ -6,15 +6,15 @@ import escudo from '../assets/imagenes/logos/selloparagenerardoc.png';
 const VIGENCIA_MESES_COMERCIO = 6;
 const VIGENCIA_MESES_SANIDAD = 12; // Sanidad suele durar un año
 
-/**
- * FUNCIÓN NUEVA: Generar Carnet de Sanidad
- */
-export const generarCarnetSanidadPDF = async (comerciante) => {
-    // Tamaño 90x100mm (Igual al de comerciante)
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [90, 100] });
+export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
+    // Si el tipo es sanidad, llamamos a la lógica de sanidad, sino a la de comercio
+    if (tipo === 'sanidad') {
+        return await generarCarnetSanidadPDF(comerciante);
+    }
 
-    // Marco - Color Verde para Sanidad (Diferente al azul de comercio)
-    doc.setDrawColor(34, 139, 34); 
+    // --- LÓGICA PARA CARNET DE COMERCIO (AZUL) ---
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [90, 100] });
+    doc.setDrawColor(0, 102, 204); // Azul
     doc.setLineWidth(1.5);
     doc.rect(5, 5, 80, 90); 
 
@@ -23,7 +23,62 @@ export const generarCarnetSanidadPDF = async (comerciante) => {
     doc.addImage(escudo, 'PNG', 25, 30, 40, 40);
     doc.setGState(new doc.GState({ opacity: 1 }));
 
-    // Títulos
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text('MUNICIPALIDAD DE PACHACÁMAC', 45, 12, { align: 'center' });
+    doc.text('CARNET DE COMERCIANTE', 45, 18, { align: 'center' });
+
+    let currentY = 32; 
+    const marginX = 15; 
+    const spacing = 8;  
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Nombres: ${comerciante.nombres.toUpperCase()}`, marginX, currentY);
+    currentY += spacing;
+    doc.text(`Apellidos: ${comerciante.apellidos.toUpperCase()}`, marginX, currentY);
+    currentY += spacing;
+    doc.text(`DNI: ${comerciante.dni}`, marginX, currentY);
+    currentY += spacing;
+
+    doc.setTextColor(0, 128, 0);
+    doc.setFont("helvetica", "bold");
+    doc.text('Estado: FORMALIZADO', marginX, currentY); 
+    doc.setTextColor(0, 0, 0);
+    currentY += spacing;
+
+    doc.setFontSize(9);
+    doc.text(`Emisión: ${new Date().toLocaleDateString()}`, marginX, currentY);
+    currentY += 6;
+
+    // Usamos la fecha de vencimiento que viene de la base de datos (Vista SQL)
+    const fVen = comerciante.fecha_vencimiento 
+        ? new Date(comerciante.fecha_vencimiento).toLocaleDateString() 
+        : 'Consultar';
+    doc.text(`Vencimiento: ${fVen}`, marginX, currentY);
+
+    const urlValidacion = `https://pachacamac.gob.pe/validar?dni=${comerciante.dni}`;
+    try {
+        const qrDataUrl = await QRCode.toDataURL(urlValidacion, { width: 150, margin: 1 });
+        doc.addImage(qrDataUrl, 'PNG', 35, 70, 20, 20); 
+    } catch (err) { console.error("Error QR:", err); }
+
+    doc.save(`Carnet_Comercio_${comerciante.dni}.pdf`);
+};
+
+/**
+ * LÓGICA PARA CARNET DE SANIDAD (VERDE)
+ */
+export const generarCarnetSanidadPDF = async (comerciante) => {
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [90, 100] });
+    doc.setDrawColor(34, 139, 34); // Verde Sanidad
+    doc.setLineWidth(1.5);
+    doc.rect(5, 5, 80, 90); 
+
+    doc.setGState(new doc.GState({ opacity: 0.1 }));
+    doc.addImage(escudo, 'PNG', 25, 30, 40, 40);
+    doc.setGState(new doc.GState({ opacity: 1 }));
+
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.text('MUNICIPALIDAD DE PACHACÁMAC', 45, 12, { align: 'center' });
@@ -38,7 +93,6 @@ export const generarCarnetSanidadPDF = async (comerciante) => {
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-
     doc.text(`Nombres: ${comerciante.nombres.toUpperCase()}`, marginX, currentY);
     currentY += spacing;
     doc.text(`Apellidos: ${comerciante.apellidos.toUpperCase()}`, marginX, currentY);
@@ -46,83 +100,28 @@ export const generarCarnetSanidadPDF = async (comerciante) => {
     doc.text(`DNI: ${comerciante.dni}`, marginX, currentY);
     currentY += spacing;
 
-    // Estado Salud
     doc.setTextColor(0, 100, 0);
     doc.setFont("helvetica", "bold");
     doc.text('ESTADO: APTO / SALUDABLE', marginX, currentY); 
     doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "normal");
     currentY += spacing;
 
-    // Fechas
     doc.setFontSize(9);
-    const fEmision = new Date();
-    doc.text(`Emisión: ${fEmision.toLocaleDateString()}`, marginX, currentY);
+    doc.text(`Emisión: ${new Date().toLocaleDateString()}`, marginX, currentY);
     currentY += 6;
 
+    // Para sanidad, la vigencia suele ser distinta, pero por ahora usamos la del objeto
     const fVen = new Date();
-    fVen.setMonth(fVen.getMonth() + VIGENCIA_MESES_SANIDAD);
+    fVen.setMonth(fVen.getMonth() + 6); // Sanidad usualmente 6 meses
     doc.text(`Vencimiento: ${fVen.toLocaleDateString()}`, marginX, currentY);
 
-    // QR de Validación Sanitaria
     const urlValidacion = `https://pachacamac.gob.pe/validar-sanidad?dni=${comerciante.dni}`;
-    try {
-        const qrDataUrl = await QRCode.toDataURL(urlValidacion, { width: 150, margin: 1 });
-        doc.addImage(qrDataUrl, 'PNG', 35, 70, 20, 20); 
-    } catch (err) {
-        console.error("Error QR:", err);
-    }
-
-    doc.save(`Carnet_Sanidad_${comerciante.dni}.pdf`);
-};
-//genrra carnet formlozado
-export const generarCarnetPDF = async (comerciante) => {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [90, 100] });
-    doc.setDrawColor(0, 102, 204);
-    doc.setLineWidth(1.5);
-    doc.rect(5, 5, 80, 90); 
-
-    doc.setGState(new doc.GState({ opacity: 0.1 }));
-    doc.addImage(escudo, 'PNG', 25, 30, 40, 40);
-    doc.setGState(new doc.GState({ opacity: 1 }));
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.text('MUNICIPALIDAD DE PACHACAMAC', 45, 12, { align: 'center' });
-    doc.text('CARNET DE COMERCIANTE', 45, 18, { align: 'center' });
-
-    let currentY = 30; 
-    const marginX = 15; 
-    const spacing = 8;  
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(`Nombres: ${comerciante.nombres.toUpperCase()}`, marginX, currentY);
-    currentY += spacing;
-    doc.text(`Dni: ${comerciante.dni}`, marginX, currentY);
-    currentY += spacing;
-
-    doc.setTextColor(0, 128, 0);
-    doc.setFont("helvetica", "bold");
-    doc.text('Estado: FORMALIZADO (OK)', marginX, currentY); 
-    doc.setTextColor(0, 0, 0);
-    currentY += spacing;
-
-    doc.setFontSize(9);
-    doc.text(`Fecha emisión: ${new Date().toLocaleDateString()}`, marginX, currentY);
-    currentY += spacing;
-
-    const fVen = new Date();
-    fVen.setMonth(fVen.getMonth() + VIGENCIA_MESES_COMERCIO);
-    doc.text(`Fecha vencimiento: ${fVen.toLocaleDateString()}`, marginX, currentY);
-
-    const urlValidacion = `https://pachacamac.gob.pe/validar?dni=${comerciante.dni}`;
     try {
         const qrDataUrl = await QRCode.toDataURL(urlValidacion, { width: 150, margin: 1 });
         doc.addImage(qrDataUrl, 'PNG', 35, 70, 20, 20); 
     } catch (err) { console.error("Error QR:", err); }
 
-    doc.save(`Carnet_Comercio_${comerciante.dni}.pdf`);
+    doc.save(`Carnet_Sanidad_${comerciante.dni}.pdf`);
 };
 
 
