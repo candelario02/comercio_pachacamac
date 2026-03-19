@@ -10,9 +10,9 @@ const comercianteRutas = require('./src/rutas/comercianteRutas');
 const app = express();
 const path = require('path');
 
-// Esto hace que las carpetas de subida sean accesibles desde el navegador
-app.use('/uploads/carnets', express.static(path.join(__dirname, 'uploads/carnets')));
-app.use('/uploads/vouchers', express.static(path.join(__dirname, 'uploads/vouchers')));
+// Cambia estas líneas en tu servidor.js
+app.use('/uploads/carnets', express.static(path.join(__dirname, 'src', 'uploads', 'carnets')));
+app.use('/uploads/vouchers', express.static(path.join(__dirname, 'src', 'uploads', 'vouchers')));
 
 app.use(cors({
     origin: function (origin, callback) {

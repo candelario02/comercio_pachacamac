@@ -32,12 +32,13 @@ const ListaPagosPendientes = () => {
         } finally { setCargando(false); }
     };
 
-   const verComprobante = (nombreArchivo) => {
+  const verComprobante = (nombreArchivo) => {
     if (!nombreArchivo) {
         alert("No hay archivo adjunto para este pago.");
         return;
     }
     
+    // Construimos la URL apuntando a la ruta que definimos en servidor.js
     const urlFinal = `${BASE_URL}/uploads/vouchers/${nombreArchivo}`;
     
     console.log("Intentando abrir:", urlFinal);
@@ -158,41 +159,40 @@ const ListaPagosPendientes = () => {
                             <th>Acción</th>
                         </tr>
                     </thead>
-                    <tbody>
-    {pagos.length > 0 ? (
-        pagos.map((s) => (
-            <tr key={s.id_pago}> 
-                <td>{s.dni}</td>
-                <td>{s.nombres} {s.apellidos}</td>
-               
-                <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
-                <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
-                
-                <td>
-                    
-                    <button 
-                        className="btn-ver-voucher" 
-                        onClick={() => verComprobante(s.voucher_url)}
-                    >
-                        <FaEye /> Ver Foto
-                    </button>
-                </td>
-                
-                <td>
-                    <button className="btn-aprobar" onClick={() => handleConfirmarPago(s)}>
-                        <FaCheckCircle /> Confirmar
-                    </button>
+                   <tbody>
+        {pagos.length > 0 ? (
+            pagos.map((s) => (
+                <tr key={s.id_pago}> 
+                    <td>{s.dni}</td>
+                    <td>{s.nombres} {s.apellidos}</td>
+                    <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
+                    <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
+                    <td>
+                        {/* IMPORTANTE: Usamos s.voucher_url porque así se llama 
+                           la columna en tu pgAdmin (Captura image_b6aa06.jpg)
+                        */}
+                        <button 
+                            className="btn-ver-voucher" 
+                            onClick={() => verComprobante(s.voucher_url)}
+                        >
+                            <FaEye /> Ver Foto
+                        </button>
+                    </td>
+                    <td>
+                        <button className="btn-aprobar" onClick={() => handleConfirmarPago(s)}>
+                            <FaCheckCircle /> Confirmar
+                        </button>
+                    </td>
+                </tr>
+            ))
+        ) : (
+            <tr>
+                <td colSpan="6" className="celda-vacia">
+                    {cargando ? "Cargando..." : "No hay pagos pendientes."}
                 </td>
             </tr>
-        ))
-    ) : (
-        <tr>
-            <td colSpan="6" className="celda-vacia">
-                {cargando ? "Cargando..." : "No hay pagos pendientes."}
-            </td>
-        </tr>
-    )}
-</tbody>
+        )}
+    </tbody>
                 </table>
             </div>
         </div>
