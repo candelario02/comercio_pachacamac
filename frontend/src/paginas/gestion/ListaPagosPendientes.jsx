@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { FaSync, FaDollarSign, FaCheckCircle, FaExclamationTriangle, FaEye } from 'react-icons/fa'; // Añadimos FaEye
+import { FaSync, FaCheckCircle, FaEye, FaCalendarAlt } from 'react-icons/fa'; 
 import '../../estilos/gestion-expedientes.css'; 
 import { AdminServicio } from '../../servicios/adminApi';
-import { BASE_URL } from '../../api/apiConfig'; // Importamos la URL base para las fotos
+import { BASE_URL } from '../../api/apiConfig'; 
 import ModalAlerta from '../../componentes/comunes/ModalAlerta';
 
 const ListaPagosPendientes = () => {
     const [pagos, setPagos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [modalAlerta, setModalAlerta] = useState({ abierto: false, mensaje: '', tipo: '', accion: null });
+    
+    // Estado local para capturar la vigencia elegida por el admin
+    const [mesesComercio, setMesesComercio] = useState(6);
+    const [mesesSanidad, setMesesSanidad] = useState(12);
 
     useEffect(() => { 
         cargarPagos(); 
@@ -19,49 +23,65 @@ const ListaPagosPendientes = () => {
             setCargando(true);
             const token = localStorage.getItem('token');
             const res = await AdminServicio.obtenerPagosPendientes(token);
-            
             if (res && res.data && Array.isArray(res.data)) {
                 setPagos(res.data);
-            } else {
-                setPagos([]);
-            }
+            } else { setPagos([]); }
         } catch (err) {
             console.error("Error al cargar pagos:", err);
             setPagos([]);
-        } finally {
-            setCargando(false);
-        }
+        } finally { setCargando(false); }
     };
 
-    // Función para abrir el comprobante en otra pestaña
     const verComprobante = (rutaArchivo) => {
         if (!rutaArchivo) {
             alert("No hay archivo adjunto para este pago.");
             return;
         }
-        // Construimos la URL: BASE_URL + ruta guardada en DB
-        const url = `${BASE_URL}/${rutaArchivo}`;
-        window.open(url, '_blank');
+        window.open(`${BASE_URL}/${rutaArchivo}`, '_blank');
     };
 
+    // --- LOGICA DE CONTROL TOTAL ---
     const handleConfirmarPago = (s) => {
         const montoValido = parseFloat(s.monto_pagado) > 0 || s.exento_pago;
         
         if (!s.id_pago || !montoValido) {
             setModalAlerta({
                 abierto: true,
-                mensaje: `⚠️ Error: Los datos de pago para ${s.nombres} están incompletos.`,
+                mensaje: `⚠️ Error: Datos incompletos para ${s.nombres}.`,
                 tipo: "aceptar",
                 accion: null
             });
             return;
         }
 
+        // Mostramos el mensaje con la capacidad de elegir meses
+        // Usamos un div para el mensaje para que el ModalAlerta lo renderice si acepta componentes o texto
         setModalAlerta({
             abierto: true,
-            mensaje: s.exento_pago 
-                ? `¿Está seguro de formalizar el trámite EXONERADO de ${s.nombres} ${s.apellidos}?` 
-                : `¿Validar pago de S/ ${s.monto_pagado} para ${s.nombres}?`,
+            mensaje: (
+                <div className="modal-vigencia-control">
+                    <p>¿Validar formalización para <strong>{s.nombres}</strong>?</p>
+                    <hr />
+                    <div className="control-group">
+                        <label><FaCalendarAlt /> Meses Comercio:</label>
+                        <input 
+                            type="number" 
+                            defaultValue={6} 
+                            onChange={(e) => setMesesComercio(parseInt(e.target.value))}
+                            min="1" max="60"
+                        />
+                    </div>
+                    <div className="control-group">
+                        <label><FaCalendarAlt /> Meses Sanidad:</label>
+                        <input 
+                            type="number" 
+                            defaultValue={12} 
+                            onChange={(e) => setMesesSanidad(parseInt(e.target.value))}
+                            min="1" max="60"
+                        />
+                    </div>
+                </div>
+            ),
             tipo: "confirmar",
             accion: () => ejecutarConfirmacion(s)
         });
@@ -72,10 +92,13 @@ const ListaPagosPendientes = () => {
             const token = localStorage.getItem('token');
             if (!token) return;
 
+            // ENVIAMOS LOS MESES AL BACKEND
             const datosConfirmacion = {
                 monto_final: s.monto_pagado,
                 dni_comerciante: s.dni,
-                es_exonerado: s.exento_pago
+                es_exonerado: s.exento_pago,
+                vigencia_comercio: mesesComercio, // Control total
+                vigencia_sanidad: mesesSanidad    // Control total
             };
 
             const respuesta = await AdminServicio.confirmarPago(s.id_pago, token, datosConfirmacion);
@@ -83,7 +106,7 @@ const ListaPagosPendientes = () => {
             if (respuesta.success) {
                 setModalAlerta({
                     abierto: true,
-                    mensaje: '✅ ¡Operación exitosa! El comerciante ha sido formalizado.',
+                    mensaje: '✅ ¡Operación exitosa! Carnets generados con la vigencia indicada.',
                     tipo: "aceptar",
                     accion: () => cargarPagos() 
                 });
@@ -102,12 +125,15 @@ const ListaPagosPendientes = () => {
 
     return (
         <div className="gestion-contenedor">
-            <div className="modal-alerta-overlay" style={{ display: modalAlerta.abierto ? 'flex' : 'none' }}>
-                <ModalAlerta 
-                    modal={modalAlerta} 
-                    cerrar={() => setModalAlerta({...modalAlerta, abierto: false})} 
-                />
-            </div>
+            {/* Modal de Alerta */}
+            {modalAlerta.abierto && (
+                <div className="modal-alerta-overlay">
+                    <ModalAlerta 
+                        modal={modalAlerta} 
+                        cerrar={() => setModalAlerta({...modalAlerta, abierto: false})} 
+                    />
+                </div>
+            )}
 
             <header className="gestion-header-pro">
                 <h2>Validación de Pagos Pendientes</h2>
@@ -124,7 +150,7 @@ const ListaPagosPendientes = () => {
                             <th>Comerciante</th>
                             <th>Monto</th>
                             <th>N° Operación</th>
-                            <th>Voucher</th> {/* Nueva Columna */}
+                            <th>Voucher</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -136,18 +162,11 @@ const ListaPagosPendientes = () => {
                                     <td>{s.nombres} {s.apellidos}</td>
                                     <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
                                     <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
-                                    
-                                    {/* BOTÓN PARA VER EL ARCHIVO */}
                                     <td>
-                                        <button 
-                                            className="btn-ver-voucher"
-                                            onClick={() => verComprobante(s.ruta_voucher)}
-                                            title="Ver documento adjunto"
-                                        >
+                                        <button className="btn-ver-voucher" onClick={() => verComprobante(s.ruta_voucher)}>
                                             <FaEye /> Ver Foto
                                         </button>
                                     </td>
-
                                     <td>
                                         <button className="btn-aprobar" onClick={() => handleConfirmarPago(s)}>
                                             <FaCheckCircle /> Confirmar

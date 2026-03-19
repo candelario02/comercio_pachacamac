@@ -109,3 +109,6 @@
         padding: 15px;
     }
 }
+.modal-vigencia-control { text-align: left; padding: 10px; }
+.control-group { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+.control-group input { width: 60px; padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
