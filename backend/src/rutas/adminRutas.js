@@ -8,7 +8,7 @@ const adminControlador = require('../controladores/adminControlador');
 router.get('/estadisticas', verificarAdmin, adminControlador.obtenerEstadisticas);
 router.get('/solicitudes-pendientes', verificarAdmin, adminControlador.obtenerSolicitudesPendientes);
 router.put('/solicitudes/:id/estado', verificarAdmin, adminControlador.actualizarEstado);
-router.get('/pagos-pendientes', verificarAdmin, adminControlador.obtenerPagosPendientes);
+router.get('/pagos-pendientes', verificarAdmin, adminControlador.listarPagosPendientes);
 router.put('/confirmar-pago/:id', verificarAdmin, adminControlador.confirmarPagoYFinalizar);
 router.get('/formalizados', verificarAdmin, adminControlador.obtenerFormalizados);
 

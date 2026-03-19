@@ -48,18 +48,7 @@ const actualizarEstado = async (req, res) => {
         res.status(500).json({ success: false, mensaje: "Error interno" });
     }
 };
-//listar solo a pagos a cobrar
-const obtenerPagosPendientes = async (req, res) => {
-    try {
-      
-        const query = "SELECT * FROM vista_pagos_a_cobrar"; 
-        const { rows } = await pool.query(query);
-        res.json({ success: true, data: rows });
-    } catch (error) {
-        console.error("Error al obtener pagos:", error);
-        res.status(500).json({ success: false, mensaje: "Error" });
-    }
-};
+
 
 // --- Listar pagos pendientes ---
 const listarPagosPendientes = async (req, res) => {
