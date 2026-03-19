@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AdminServicio } from '../../servicios/adminApi';
-import { FaSync, FaPrint } from 'react-icons/fa';
+import { FaSync, FaMedkit, FaStore } from 'react-icons/fa'; // Agregamos iconos específicos
 import { generarCarnetPDF } from '../../herramientas/generadorDocumentos'; 
 import '../../estilos/gestion-expedientes.css';
 
@@ -17,7 +17,8 @@ const GestionFormalizados = () => {
             setFormalizados(res.data || []);
             setError(null);
         } catch (err) {
-            console.error("Error al cargar formalizados:", err);
+            // AL AGREGAR ESTE CONSOLE.LOG, EL ERROR DEL CATCH DESAPARECE
+            console.error("Error capturado:", err); 
             setError("No se pudieron cargar los comerciantes formalizados.");
         } finally {
             setCargando(false);
@@ -50,7 +51,8 @@ const GestionFormalizados = () => {
                             <tr>
                                 <th>DNI</th>
                                 <th>Comerciante</th>
-                                <th>Fecha de Formalización</th>
+                                <th>Actividad</th>
+                                <th>Vencimiento</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -59,14 +61,26 @@ const GestionFormalizados = () => {
                                 <tr key={item.comerciante_id}>
                                     <td>{item.dni}</td>
                                     <td><strong>{item.nombres} {item.apellidos}</strong></td>
-                                    <td>{new Date(item.fecha_confirmacion).toLocaleDateString()}</td>
-                                    <td>
+                                    {/* Usamos los campos nuevos de la vista corregida */}
+                                    <td>{item.actividad_nombre || 'General'}</td>
+                                    <td>{item.fecha_vencimiento ? new Date(item.fecha_vencimiento).toLocaleDateString() : 'Pendiente'}</td>
+                                    <td className="acciones-flex">
                                         <button 
-                                            className="btn-footer" 
-                                            onClick={async () => await generarCarnetPDF(item)}
+                                            className="btn-emitir carnet-comercio" 
+                                            onClick={() => generarCarnetPDF(item, 'comercio')}
                                         >
-                                            <FaPrint /> Emitir Carnet
+                                            <FaStore /> Comercio
                                         </button>
+
+                                        {/* El botón de sanidad solo aparece si la vista dice que lo desea */}
+                                        {item.desea_tramitar_carnet && (
+                                            <button 
+                                                className="btn-emitir carnet-sanidad" 
+                                                onClick={() => generarCarnetPDF(item, 'sanidad')}
+                                            >
+                                                <FaMedkit /> Sanidad
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
