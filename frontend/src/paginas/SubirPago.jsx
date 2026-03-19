@@ -9,6 +9,12 @@ const SubirPago = () => {
     const navigate = useNavigate();
     const [archivo, setArchivo] = useState(null);
     const [numOperacion, setNumOperacion] = useState('');
+    
+    // --- NUEVOS ESTADOS AÑADIDOS ---
+    const [monto, setMonto] = useState('');
+    const [mesSeleccionado, setMesSeleccionado] = useState('');
+    // -------------------------------
+
     const [cargando, setCargando] = useState(false);
     const [vistaPrevia, setVistaPrevia] = useState(null);
 
@@ -16,21 +22,27 @@ const SubirPago = () => {
         const file = e.target.files[0];
         if (file) {
             setArchivo(file);
-            setVistaPrevia(URL.createObjectURL(file)); // Para que el usuario vea qué subió
+            setVistaPrevia(URL.createObjectURL(file));
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!archivo || !numOperacion) {
-            alert("Por favor, suba el comprobante e ingrese el número de operación.");
+        
+        // Validación extendida para incluir los nuevos campos
+        if (!archivo || !numOperacion || !monto || !mesSeleccionado) {
+            alert("Por favor, complete todos los campos y suba el comprobante.");
             return;
         }
 
         setCargando(true);
         const formData = new FormData();
-        formData.append('voucher', archivo); // El nombre 'voucher' debe coincidir con Multer en el backend
+        
+        // ENVIANDO DATOS AL BACKEND (Nombres deben coincidir con el controlador)
+        formData.append('voucher', archivo); 
         formData.append('numero_operacion', numOperacion);
+        formData.append('monto_pagado', monto); // <--- NUEVO
+        formData.append('mes_correspondiente', mesSeleccionado); // <--- NUEVO
 
         try {
             const token = localStorage.getItem('token');
@@ -66,7 +78,44 @@ const SubirPago = () => {
                 <form className="pago-card card" onSubmit={handleSubmit}>
                     <div className="instrucciones">
                         <h3><FaCheckCircle color="#2ecc71" /> Paso Final</h3>
-                        <p>Adjunte la captura de pantalla o foto de su voucher de pago realizado en el banco o transferencia.</p>
+                        <p>Adjunte la captura de su voucher e ingrese los datos del depósito.</p>
+                    </div>
+
+                    {/* NUEVO CAMPO: MONTO */}
+                    <div className="form-group">
+                        <label>Monto Pagado (S/):</label>
+                        <input 
+                            type="number" 
+                            step="0.01"
+                            placeholder="Ej: 50.00"
+                            value={monto}
+                            onChange={(e) => setMonto(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* NUEVO CAMPO: MES */}
+                    <div className="form-group">
+                        <label>Mes Correspondiente:</label>
+                        <select 
+                            value={mesSeleccionado} 
+                            onChange={(e) => setMesSeleccionado(e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccione un mes</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
                     </div>
 
                     <div className="form-group">
