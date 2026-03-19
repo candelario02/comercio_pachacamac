@@ -1,0 +1,39 @@
+.subir-pago-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.upload-area {
+    border: 2px dashed #0066cc;
+    padding: 30px;
+    border-radius: 8px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.upload-area:hover {
+    background: #f0f7ff;
+}
+
+.preview-image {
+    max-width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-top: 15px;
+}
+
+.btn-enviar-pago {
+    background: #228b22;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: bold;
+    width: 100%;
+}
