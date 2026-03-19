@@ -76,80 +76,89 @@ const listarPagosPendientes = async (req, res) => {
 // --- APROBACIÓN PROFESIONAL: Aprueba, calcula costo y genera deuda ---
 const aprobarTramiteYGenerarDeuda = async (req, res) => {
     const { id } = req.params;
-    // Extraemos monto_confirmado del cuerpo de la petición
-   
-    const { monto_confirmado, detalle } = req.body;
+    const { monto_confirmado } = req.body;
 
     try {
         await pool.query('BEGIN');
 
-        // 1. Obtener datos básicos del comerciante y costo base
-        const queryInfo = `
-            SELECT c.id, c.exento_pago, a.costo 
-            FROM comerciantes c 
-            JOIN actividades a ON c.actividad_id = a.id 
-            WHERE c.id = $1`;
-        const resInfo = await pool.query(queryInfo, [id]);
+        // 1. Obtenemos datos y el usuario_id para poder notificarle
+        const resInfo = await pool.query(
+            `SELECT c.id, c.usuario_id, c.exento_pago, a.costo 
+             FROM comerciantes c 
+             JOIN actividades a ON c.actividad_id = a.id 
+             WHERE c.id = $1`, [id]
+        );
 
         if (resInfo.rows.length === 0) throw new Error("Comerciante no encontrado");
-        
         const comerciante = resInfo.rows[0];
-
-        // PRIORIDAD: 1. Lo que mandó el admin, 2. Costo actividad, 3. 0
         const montoFinal = parseFloat(monto_confirmado) || parseFloat(comerciante.costo) || 0;
 
+        // 2. Si es exonerado, pasa directo a formalizado
         if (comerciante.exento_pago) {
+            await pool.query("UPDATE comerciantes SET estado_tramite = 'formalizado' WHERE id = $1", [id]);
             await pool.query(
-                "UPDATE comerciantes SET estado_tramite = 'formalizado' WHERE id = $1", 
-                [id]
+                `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
+                 VALUES ($1, 'Tu trámite ha sido formalizado por exoneración de pago.', 'exito')`,
+                [comerciante.usuario_id]
             );
-            await pool.query('COMMIT');
-            return res.json({ success: true, mensaje: "Trámite aprobado y formalizado por exoneración." });
         } else {
-            // Actualizamos a 'aprobado' para que pase a la siguiente tabla de pagos
-            await pool.query(
-                "UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", 
-                [id]
-            );
+            // 3. Si debe pagar, pasa a 'aprobado' (esperando voucher)
+            await pool.query("UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", [id]);
 
             const numeroOperacion = `OP-${Date.now().toString().slice(-8)}`;
-            const mesActual = new Date().toLocaleString('es-ES', { month: 'long' });
-
-            // Insertamos el montoFinal (S/ 60.00 o lo que hayas puesto)
+            
+            // Creamos la deuda
             await pool.query(
-                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, estado) 
-                 VALUES ($1, $2, $3, $4, 'pendiente')`,
-                [id, montoFinal, numeroOperacion, mesActual]
+                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, estado) 
+                 VALUES ($1, $2, $3, 'pendiente')`,
+                [id, montoFinal, numeroOperacion]
             );
 
-            await pool.query('COMMIT');
-            return res.json({ 
-                success: true, 
-                mensaje: `Trámite aprobado. Orden generada por S/ ${montoFinal.toFixed(2)}` 
-            });
+            // IMPORTANTE: Notificamos al portal del comerciante
+            await pool.query(
+                `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
+                 VALUES ($1, $2, 'pago')`,
+                [comerciante.usuario_id, `Orden de pago generada por S/ ${montoFinal.toFixed(2)}. Sube tu voucher.`]
+            );
         }
+
+        await pool.query('COMMIT');
+        res.json({ success: true, mensaje: "Trámite procesado correctamente" });
     } catch (error) {
         await pool.query('ROLLBACK');
-        console.error("Error en Transacción:", error);
         res.status(500).json({ success: false, mensaje: error.message });
     }
 };
 
 // --- Confirmar pago final ---
 const confirmarPagoYFinalizar = async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params; // ID del pago
     try {
         await pool.query('BEGIN');
-        const resPago = await pool.query("UPDATE pagos_municipales SET estado = 'confirmado' WHERE id = $1", [id]);
-        if (resPago.rowCount === 0) throw new Error("Pago no encontrado");
 
-        await pool.query(
-            "UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = (SELECT comerciante_id FROM pagos_municipales WHERE id = $1)", 
-            [id]
+        // 1. Confirmamos el pago y obtenemos al comerciante
+        const resPago = await pool.query(
+            `UPDATE pagos_municipales SET estado = 'confirmado' 
+             WHERE id = $1 RETURNING comerciante_id`, [id]
         );
         
+        const comercianteId = resPago.rows[0].comerciante_id;
+
+        // 2. PASO FINAL: El comerciante ahora es FORMALIZADO
+        const resCom = await pool.query(
+            `UPDATE comerciantes SET estado_tramite = 'formalizado' 
+             WHERE id = $1 RETURNING usuario_id`, [comercianteId]
+        );
+
+        // 3. Notificamos que ya puede descargar carnets
+        await pool.query(
+            `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
+             VALUES ($1, '¡Pago verificado! Ya puedes descargar tus carnets desde tu portal.', 'formalizado')`,
+            [resCom.rows[0].usuario_id]
+        );
+
         await pool.query('COMMIT');
-        res.json({ success: true, mensaje: "Pago confirmado y trámite formalizado." });
+        res.json({ success: true, mensaje: "Comerciante formalizado con éxito" });
     } catch (error) {
         await pool.query('ROLLBACK');
         res.status(500).json({ success: false, mensaje: error.message });

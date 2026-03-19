@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FaSync, FaDollarSign, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FaSync, FaDollarSign, FaCheckCircle, FaExclamationTriangle, FaEye } from 'react-icons/fa'; // Añadimos FaEye
 import '../../estilos/gestion-expedientes.css'; 
 import { AdminServicio } from '../../servicios/adminApi';
+import { BASE_URL } from '../../api/apiConfig'; // Importamos la URL base para las fotos
 import ModalAlerta from '../../componentes/comunes/ModalAlerta';
 
 const ListaPagosPendientes = () => {
@@ -32,14 +33,24 @@ const ListaPagosPendientes = () => {
         }
     };
 
+    // Función para abrir el comprobante en otra pestaña
+    const verComprobante = (rutaArchivo) => {
+        if (!rutaArchivo) {
+            alert("No hay archivo adjunto para este pago.");
+            return;
+        }
+        // Construimos la URL: BASE_URL + ruta guardada en DB
+        const url = `${BASE_URL}/${rutaArchivo}`;
+        window.open(url, '_blank');
+    };
+
     const handleConfirmarPago = (s) => {
-        // Validación: debe tener ID y (monto > 0 o ser exonerado)
         const montoValido = parseFloat(s.monto_pagado) > 0 || s.exento_pago;
         
         if (!s.id_pago || !montoValido) {
             setModalAlerta({
                 abierto: true,
-                mensaje: `⚠️ Error: Los datos de pago para ${s.nombres} están incompletos o el monto es S/ 0.00.`,
+                mensaje: `⚠️ Error: Los datos de pago para ${s.nombres} están incompletos.`,
                 tipo: "aceptar",
                 accion: null
             });
@@ -61,14 +72,12 @@ const ListaPagosPendientes = () => {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            // Preparamos los datos adicionales para la API
             const datosConfirmacion = {
                 monto_final: s.monto_pagado,
                 dni_comerciante: s.dni,
                 es_exonerado: s.exento_pago
             };
 
-            // Llamada única a la API con el cuerpo de datos
             const respuesta = await AdminServicio.confirmarPago(s.id_pago, token, datosConfirmacion);
 
             if (respuesta.success) {
@@ -81,23 +90,18 @@ const ListaPagosPendientes = () => {
             } else {
                 setModalAlerta({
                     abierto: true,
-                    mensaje: '❌ Error: ' + (respuesta.mensaje || 'No se pudo procesar el pago.'),
+                    mensaje: '❌ Error: ' + (respuesta.mensaje || 'No se pudo procesar.'),
                     tipo: "aceptar"
                 });
             }
         } catch (error) {
-            console.error("Error crítico al confirmar:", error);
-            setModalAlerta({
-                abierto: true,
-                mensaje: '❌ Error de conexión con el servidor.',
-                tipo: "aceptar"
-            });
+            console.error("Error crítico:", error);
+            setModalAlerta({ abierto: true, mensaje: '❌ Error de conexión.', tipo: "aceptar" });
         }
     };
 
     return (
         <div className="gestion-contenedor">
-            {/* Componente de Alerta Personalizado */}
             <div className="modal-alerta-overlay" style={{ display: modalAlerta.abierto ? 'flex' : 'none' }}>
                 <ModalAlerta 
                     modal={modalAlerta} 
@@ -106,12 +110,8 @@ const ListaPagosPendientes = () => {
             </div>
 
             <header className="gestion-header-pro">
-                <h2>Validación de Pagos</h2>
-                <button 
-                    onClick={cargarPagos} 
-                    className="btn-actualizar-circular"
-                    disabled={cargando}
-                >
+                <h2>Validación de Pagos Pendientes</h2>
+                <button onClick={cargarPagos} className="btn-actualizar-circular" disabled={cargando}>
                     <FaSync className={cargando ? 'spin' : ''} />
                 </button>
             </header>
@@ -122,9 +122,9 @@ const ListaPagosPendientes = () => {
                         <tr>
                             <th>DNI</th>
                             <th>Comerciante</th>
-                            <th>Monto Recibido</th>
+                            <th>Monto</th>
                             <th>N° Operación</th>
-                            <th>Estado</th>
+                            <th>Voucher</th> {/* Nueva Columna */}
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -134,27 +134,22 @@ const ListaPagosPendientes = () => {
                                 <tr key={s.id_pago}> 
                                     <td>{s.dni}</td>
                                     <td>{s.nombres} {s.apellidos}</td>
-                                    <td>
-                                        <strong className="monto-resaltado">
-                                            S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        <span className="badge-operacion">
-                                            {s.numero_operacion || (s.exento_pago ? 'EXONERADO' : '---')}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span className={`status-label ${s.exento_pago ? 'exento' : 'pendiente-pago'}`}>
-                                            {s.exento_pago ? <FaCheckCircle /> : <FaDollarSign />} 
-                                            {s.exento_pago ? "Exonerado" : "Pago x Validar"}
-                                        </span>
-                                    </td>
+                                    <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
+                                    <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
+                                    
+                                    {/* BOTÓN PARA VER EL ARCHIVO */}
                                     <td>
                                         <button 
-                                            className="btn-aprobar" 
-                                            onClick={() => handleConfirmarPago(s)}
+                                            className="btn-ver-voucher"
+                                            onClick={() => verComprobante(s.ruta_voucher)}
+                                            title="Ver documento adjunto"
                                         >
+                                            <FaEye /> Ver Foto
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                        <button className="btn-aprobar" onClick={() => handleConfirmarPago(s)}>
                                             <FaCheckCircle /> Confirmar
                                         </button>
                                     </td>
@@ -163,16 +158,7 @@ const ListaPagosPendientes = () => {
                         ) : (
                             <tr>
                                 <td colSpan="6" className="celda-vacia">
-                                    {cargando ? (
-                                        <div className="loading-container">
-                                            <FaSync className="spin" /> Procesando...
-                                        </div>
-                                    ) : (
-                                        <div className="vacio-box">
-                                            <FaExclamationTriangle className="icon-vacio" />
-                                            <p>No hay pagos pendientes de revisión en este momento.</p>
-                                        </div>
-                                    )}
+                                    {cargando ? "Cargando..." : "No hay pagos pendientes."}
                                 </td>
                             </tr>
                         )}

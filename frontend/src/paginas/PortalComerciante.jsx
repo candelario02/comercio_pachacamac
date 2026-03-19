@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../api/apiConfig'; 
 import { 
     FaBell, FaInbox, FaFileUpload, FaFileDownload, 
     FaHistory, FaClock, FaTimes 
@@ -8,6 +10,48 @@ import '../estilos/PortalComerciante.css';
 
 const PortalComerciante = () => {
     const navigate = useNavigate();
+    
+    // 1. Estados
+    const [datos, setDatos] = useState(null);
+    const [notificaciones, setNotificaciones] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // 2. Definición de funciones
+    const cargarInformacionPortal = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            // Peticiones en paralelo al backend
+            const [resPerfil, resNotif] = await Promise.all([
+                axios.get(`${BASE_URL}/comerciante/perfil`, config),
+                axios.get(`${BASE_URL}/comerciante/notificaciones`, config)
+            ]);
+
+            setDatos(resPerfil.data);
+            setNotificaciones(resNotif.data);
+            setLoading(false);
+            setError(null);
+        } catch (err) {
+            console.error("Error cargando el portal:", err);
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                localStorage.removeItem('token');
+                navigate('/login');
+            } else {
+                setError("No se pudo cargar la información de tu perfil.");
+                setLoading(false);
+            }
+        }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -15,12 +59,53 @@ const PortalComerciante = () => {
         navigate('/login');
     };
 
+    const getStepClass = (stepName) => {
+        if (!datos) return "step";
+        const niveles = { 'Envío': 0, 'Revisión': 1, 'Pago': 2, 'Finalizado': 3 };
+        
+        const estadosMapper = {
+            'pendiente': 1, 
+            'observado': 1, 
+            'aprobado': 2,   
+            'pago_en_revision': 2, // Agregamos este estado para el stepper
+            'formalizado': 3 
+        };
+
+        const pasoActual = estadosMapper[datos.estado_tramite] || 0;
+        
+        if (niveles[stepName] < pasoActual) return "step active";
+        if (niveles[stepName] === pasoActual) return "step current";
+        return "step";
+    };
+
+    // 3. useEffect (Llamada limpia)
+    useEffect(() => {
+        cargarInformacionPortal();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); 
+
+    // 4. Renderizados condicionales
+    if (loading) return (
+        <div className="loading-container">
+            <p>Cargando tu portal comercial...</p>
+        </div>
+    );
+
+    if (error) return (
+        <div className="error-container">
+            <p>{error}</p>
+            <button className="btn-retry" onClick={() => window.location.reload()}>Reintentar</button>
+        </div>
+    );
+
     return (
         <div className="portal-container">
             <header className="portal-header">
                 <div className="header-info">
                     <h1>Portal Comercial Pachacámac</h1>
-                    <span className="user-badge">Comerciante Autorizado</span>
+                    <span className="user-badge">
+                        {datos?.nombres} {datos?.apellidos}
+                    </span>
                 </div>
                 
                 <button 
@@ -36,14 +121,21 @@ const PortalComerciante = () => {
                 <section className="status-section card">
                     <h2><FaClock className="icon-status" /> Estado de mi Solicitud</h2>
                     <div className="stepper">
-                        <div className="step active">Envío</div>
-                        <div className="step current">Revisión</div>
-                        <div className="step">Pago</div>
-                        <div className="step">Finalizado</div>
+                        <div className={getStepClass('Envío')}>Envío</div>
+                        <div className={getStepClass('Revisión')}>Revisión</div>
+                        <div className={getStepClass('Pago')}>Pago</div>
+                        <div className={getStepClass('Finalizado')}>Finalizado</div>
                     </div>
-                    <p className="status-msg">
-                        Actualmente: <strong>Tu solicitud está siendo revisada por el administrador municipal.</strong>
-                    </p>
+                    <div className="status-msg">
+                        <strong>Estado actual: </strong> 
+                        <span>
+                            {datos?.estado_tramite === 'pendiente' && "En revisión por la Municipalidad."}
+                            {datos?.estado_tramite === 'observado' && "Trámite con observaciones. Revisa notificaciones."}
+                            {datos?.estado_tramite === 'aprobado' && "¡Aprobado! Pendiente de pago."}
+                            {datos?.estado_tramite === 'pago_en_revision' && "Pago enviado. Esperando validación administrativa."}
+                            {datos?.estado_tramite === 'formalizado' && "¡Felicidades! Trámite Finalizado."}
+                        </span>
+                    </div>
                 </section>
 
                 <section className="action-grid">
@@ -51,7 +143,7 @@ const PortalComerciante = () => {
                         <FaBell className="card-icon" />
                         <div className="card-text">
                             <h3>Notificaciones</h3>
-                            <p>Tienes 2 mensajes nuevos</p>
+                            <p>{notificaciones.length} mensajes nuevos</p>
                         </div>
                     </button>
 
@@ -59,23 +151,37 @@ const PortalComerciante = () => {
                         <FaInbox className="card-icon" />
                         <div className="card-text">
                             <h3>Buzón Electrónico</h3>
-                            <p>Consultas y trámites</p>
+                            <p>Consultas oficiales</p>
                         </div>
                     </button>
 
-                    <button className="action-card color-upload">
+                    {/* BOTÓN SUBIR PAGO - CONECTADO A /subir-pago */}
+                    <button 
+                        className={`action-card color-upload ${datos?.estado_tramite !== 'aprobado' ? 'disabled' : ''}`}
+                        onClick={() => datos?.estado_tramite === 'aprobado' && navigate('/subir-pago')}
+                        disabled={datos?.estado_tramite !== 'aprobado'}
+                    >
                         <FaFileUpload className="card-icon" />
                         <div className="card-text">
                             <h3>Subir Comprobantes</h3>
-                            <p>Pagos de tasas municipales</p>
+                            <p>
+                                {datos?.estado_tramite === 'pago_en_revision' 
+                                    ? "Pago en revisión" 
+                                    : (datos?.monto_pendiente ? `Monto: S/ ${datos.monto_pendiente}` : 'Pago de tasas')}
+                            </p>
                         </div>
                     </button>
 
-                    <button className="action-card color-download">
+                    {/* BOTÓN DESCARGAR - CONECTADO A /mis-carnets */}
+                    <button 
+                        className={`action-card color-download ${datos?.estado_tramite !== 'formalizado' ? 'disabled' : ''}`}
+                        onClick={() => datos?.estado_tramite === 'formalizado' && navigate('/mis-carnets')}
+                        disabled={datos?.estado_tramite !== 'formalizado'}
+                    >
                         <FaFileDownload className="card-icon" />
                         <div className="card-text">
                             <h3>Descargar Documentos</h3>
-                            <p>Formatos y autorizaciones</p>
+                            <p>{datos?.estado_tramite === 'formalizado' ? "Carnets listos" : "No disponible"}</p>
                         </div>
                     </button>
 
@@ -83,7 +189,7 @@ const PortalComerciante = () => {
                         <FaHistory className="card-icon" />
                         <div className="card-text">
                             <h3>Historial</h3>
-                            <p>Ver trámites pasados</p>
+                            <p>Trámites anteriores</p>
                         </div>
                     </button>
                 </section>
@@ -91,5 +197,5 @@ const PortalComerciante = () => {
         </div>
     );
 };
-///////
+
 export default PortalComerciante;

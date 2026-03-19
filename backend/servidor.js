@@ -10,6 +10,7 @@ const authRutas = require('./src/rutas/authRutas');
 const adminRutas = require('./src/rutas/adminRutas');
 const publicoRutas = require('./src/rutas/publicoRutas');
 const comercioRutas = require('./src/rutas/comercioRutas');
+const comercianteRutas = require('./src/rutas/comercianteRutas');
 
 const app = express();
 
@@ -36,7 +37,7 @@ app.use('/api/auth', authRutas);
 app.use('/api/admin', adminRutas);
 app.use('/api/publico', publicoRutas);
 app.use('/api/comercio', comercioRutas);
-
+app.use('/api/comerciante', comercianteRutas);
 
 app.use((req, res) => {
     res.status(404).json({ 

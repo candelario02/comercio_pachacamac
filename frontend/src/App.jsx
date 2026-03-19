@@ -14,7 +14,8 @@ import GestionActividades from './paginas/GestionActividades';
 import AdminLayout from './componentes/comunes/AdminLayout';
 import GestionExpedientes from './paginas/gestion/GestionExpedientes';
 import GestionFormalizados from './paginas/gestion/GestionFormalizados';
-
+import SubirPago from './paginas/SubirPago';
+import MisCarnets from './paginas/MisCarnets';
 import PortalComerciante from './paginas/PortalComerciante';
 import "./estilos/Globales.css"
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/rubros-y-actividades" element={<LayoutFondo><ListaPublicaRubrosActividad /></LayoutFondo>} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro-solicitud" element={<LayoutFondo><SolicitudComerciante /></LayoutFondo>} />
+          
 
           <Route path="/admin-dashboard" element={<AdminLayout><DashboardAdmin /></AdminLayout>} />
           <Route path="/admin/rubros" element={<AdminLayout><GestionRubros /></AdminLayout>} />
@@ -37,7 +39,8 @@ function App() {
 
           
           <Route path="/panel-comerciante" element={<PortalComerciante />} />
-
+          <Route path="/mis-carnets" element={<MisCarnets />} />
+          <Route path="/subir-pago" element={<SubirPago />} />  
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

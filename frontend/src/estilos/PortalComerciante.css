@@ -159,3 +159,18 @@
         grid-template-columns: 1fr; /* Una sola columna en móvil */
     }
 }
+/* Estilos extra para diferenciar los botones de descarga */
+.btn-descargar.color-comercio {
+    background-color: #0066cc;
+    color: white;
+}
+
+.btn-descargar.color-sanidad {
+    background-color: #228b22;
+    color: white;
+}
+
+.btn-descargar:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+}
