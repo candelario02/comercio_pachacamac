@@ -32,13 +32,17 @@ const ListaPagosPendientes = () => {
         } finally { setCargando(false); }
     };
 
-    const verComprobante = (rutaArchivo) => {
-        if (!rutaArchivo) {
-            alert("No hay archivo adjunto para este pago.");
-            return;
-        }
-        window.open(`${BASE_URL}/${rutaArchivo}`, '_blank');
-    };
+   const verComprobante = (nombreArchivo) => {
+    if (!nombreArchivo) {
+        alert("No hay archivo adjunto para este pago.");
+        return;
+    }
+    
+    const urlFinal = `${BASE_URL}/uploads/vouchers/${nombreArchivo}`;
+    
+    console.log("Intentando abrir:", urlFinal);
+    window.open(urlFinal, '_blank');
+};
 
     // --- LOGICA DE CONTROL TOTAL ---
     const handleConfirmarPago = (s) => {
@@ -155,33 +159,40 @@ const ListaPagosPendientes = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {pagos.length > 0 ? (
-                            pagos.map((s) => (
-                                <tr key={s.id_pago}> 
-                                    <td>{s.dni}</td>
-                                    <td>{s.nombres} {s.apellidos}</td>
-                                    <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
-                                    <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
-                                    <td>
-                                        <button className="btn-ver-voucher" onClick={() => verComprobante(s.ruta_voucher)}>
-                                            <FaEye /> Ver Foto
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button className="btn-aprobar" onClick={() => handleConfirmarPago(s)}>
-                                            <FaCheckCircle /> Confirmar
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="6" className="celda-vacia">
-                                    {cargando ? "Cargando..." : "No hay pagos pendientes."}
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
+    {pagos.length > 0 ? (
+        pagos.map((s) => (
+            <tr key={s.id_pago}> 
+                <td>{s.dni}</td>
+                <td>{s.nombres} {s.apellidos}</td>
+               
+                <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
+                <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
+                
+                <td>
+                    
+                    <button 
+                        className="btn-ver-voucher" 
+                        onClick={() => verComprobante(s.voucher_url)}
+                    >
+                        <FaEye /> Ver Foto
+                    </button>
+                </td>
+                
+                <td>
+                    <button className="btn-aprobar" onClick={() => handleConfirmarPago(s)}>
+                        <FaCheckCircle /> Confirmar
+                    </button>
+                </td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan="6" className="celda-vacia">
+                {cargando ? "Cargando..." : "No hay pagos pendientes."}
+            </td>
+        </tr>
+    )}
+</tbody>
                 </table>
             </div>
         </div>
