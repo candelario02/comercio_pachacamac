@@ -73,7 +73,6 @@ const listarPagosPendientes = async (req, res) => {
     }
 };
 
-// --- APROBACIÓN PROFESIONAL: Aprueba, calcula costo y genera deuda ---
 const aprobarTramiteYGenerarDeuda = async (req, res) => {
     const { id } = req.params;
     const { monto_confirmado } = req.body;
@@ -81,7 +80,7 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
     try {
         await pool.query('BEGIN');
 
-        // 1. Obtenemos datos y el usuario_id para poder notificarle
+        // 1. Obtenemos datos
         const resInfo = await pool.query(
             `SELECT c.id, c.usuario_id, c.exento_pago, a.costo 
              FROM comerciantes c 
@@ -93,28 +92,41 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
         const comerciante = resInfo.rows[0];
         const montoFinal = parseFloat(monto_confirmado) || parseFloat(comerciante.costo) || 0;
 
-        // 2. Si es exonerado, pasa directo a formalizado
+        // --- SOLUCIÓN AL ERROR DE LA BD ---
+        // Obtenemos el mes actual en español para cumplir con el NOT NULL de la tabla
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const mesActual = meses[new Date().getMonth()];
+
         if (comerciante.exento_pago) {
+            // Si es exonerado, lo formalizamos de una vez
             await pool.query("UPDATE comerciantes SET estado_tramite = 'formalizado' WHERE id = $1", [id]);
+            
+            // Insertamos el registro de pago como 'exonerado' para que aparezca en reportes
+            await pool.query(
+                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, estado, mes_correspondiente, numero_operacion) 
+                 VALUES ($1, 0, 'pagado', $2, 'EXONERADO')`,
+                [id, mesActual]
+            );
+
             await pool.query(
                 `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
                  VALUES ($1, 'Tu trámite ha sido formalizado por exoneración de pago.', 'exito')`,
                 [comerciante.usuario_id]
             );
         } else {
-            // 3. Si debe pagar, pasa a 'aprobado' (esperando voucher)
+            // Si debe pagar, pasa a 'aprobado'
             await pool.query("UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", [id]);
 
             const numeroOperacion = `OP-${Date.now().toString().slice(-8)}`;
             
-            // Creamos la deuda
+            // REVISIÓN CRÍTICA: Añadimos 'mes_correspondiente'
             await pool.query(
-                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, estado) 
-                 VALUES ($1, $2, $3, 'pendiente')`,
-                [id, montoFinal, numeroOperacion]
+                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, estado, mes_correspondiente) 
+                 VALUES ($1, $2, $3, 'pendiente', $4)`,
+                [id, montoFinal, numeroOperacion, mesActual] // <--- Ahora sí enviamos el mes
             );
 
-            // IMPORTANTE: Notificamos al portal del comerciante
             await pool.query(
                 `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
                  VALUES ($1, $2, 'pago')`,
@@ -126,7 +138,8 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
         res.json({ success: true, mensaje: "Trámite procesado correctamente" });
     } catch (error) {
         await pool.query('ROLLBACK');
-        res.status(500).json({ success: false, mensaje: error.message });
+        console.error("Error en aprobación:", error);
+        res.status(500).json({ success: false, mensaje: "Error DB: " + error.message });
     }
 };
 
