@@ -74,15 +74,16 @@ const listarPagosPendientes = async (req, res) => {
 };
 
 const aprobarTramiteYGenerarDeuda = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; // UUID del comerciante
     const { monto_confirmado } = req.body;
+    const adminId = req.usuario.id; // Asumiendo que obtienes el ID del admin del token
 
     try {
         await pool.query('BEGIN');
 
-        // 1. Obtenemos datos
+        // 1. Obtener info del comerciante y su actividad
         const resInfo = await pool.query(
-            `SELECT c.id, c.usuario_id, c.exento_pago, a.costo 
+            `SELECT c.id, c.usuario_id, c.exento_pago, a.costo, a.descripcion as actividad_nombre
              FROM comerciantes c 
              JOIN actividades a ON c.actividad_id = a.id 
              WHERE c.id = $1`, [id]
@@ -90,91 +91,142 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
 
         if (resInfo.rows.length === 0) throw new Error("Comerciante no encontrado");
         const comerciante = resInfo.rows[0];
+        
+        // Calculamos el monto: si el admin no envió uno, usamos el de la actividad
         const montoFinal = parseFloat(monto_confirmado) || parseFloat(comerciante.costo) || 0;
 
-        // --- SOLUCIÓN AL ERROR DE LA BD ---
-        // Obtenemos el mes actual en español para cumplir con el NOT NULL de la tabla
         const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         const mesActual = meses[new Date().getMonth()];
+        const numeroOP = `OP-${Date.now().toString().slice(-8)}`;
+
+        // 2. CREAR LA ORDEN DE PAGO (Primero)
+        // Esto es lo más profesional: dejar registro de quién creó la orden y el detalle
+        const resOrden = await pool.query(
+            `INSERT INTO ordenes_pago (comerciante_id, monto_total, detalle, estado, creado_por) 
+             VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+            [id, montoFinal, JSON.stringify({ actividad: comerciante.actividad_nombre, mes: mesActual }), 
+             comerciante.exento_pago ? 'pagado' : 'pendiente', adminId]
+        );
+        const ordenId = resOrden.rows[0].id;
 
         if (comerciante.exento_pago) {
-            // Si es exonerado, lo formalizamos de una vez
-            await pool.query("UPDATE comerciantes SET estado_tramite = 'formalizado' WHERE id = $1", [id]);
+            // REGLA: Si tu BD aún no acepta 'formalizado', cámbialo a 'aprobado' o actualiza el CHECK en la BD
+            await pool.query("UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", [id]);
             
-            // Insertamos el registro de pago como 'exonerado' para que aparezca en reportes
+            // Insertar pago con monto 0 vinculado a la orden
             await pool.query(
-                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, estado, mes_correspondiente, numero_operacion) 
-                 VALUES ($1, 0, 'pagado', $2, 'EXONERADO')`,
-                [id, mesActual]
+                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, estado, orden_pago_id) 
+                 VALUES ($1, 0, $2, $3, 'pagado', $4)`,
+                [id, `EXO-${ordenId}`, mesActual, ordenId]
             );
 
-            await pool.query(
-                `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
-                 VALUES ($1, 'Tu trámite ha sido formalizado por exoneración de pago.', 'exito')`,
-                [comerciante.usuario_id]
-            );
         } else {
-            // Si debe pagar, pasa a 'aprobado'
+            // Flujo normal: Esperando pago
             await pool.query("UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", [id]);
 
-            const numeroOperacion = `OP-${Date.now().toString().slice(-8)}`;
-            
-            // REVISIÓN CRÍTICA: Añadimos 'mes_correspondiente'
+            // Generar la deuda vinculada a la orden
             await pool.query(
-                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, estado, mes_correspondiente) 
-                 VALUES ($1, $2, $3, 'pendiente', $4)`,
-                [id, montoFinal, numeroOperacion, mesActual] // <--- Ahora sí enviamos el mes
-            );
-
-            await pool.query(
-                `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
-                 VALUES ($1, $2, 'pago')`,
-                [comerciante.usuario_id, `Orden de pago generada por S/ ${montoFinal.toFixed(2)}. Sube tu voucher.`]
+                `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, estado, orden_pago_id) 
+                 VALUES ($1, $2, $3, $4, 'pendiente', $5)`,
+                [id, montoFinal, numeroOP, mesActual, ordenId]
             );
         }
 
+        // 3. Notificación al usuario
+        await pool.query(
+            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, tipo) 
+             VALUES ($1, $2, $3, $4)`,
+            [comerciante.usuario_id, 
+             comerciante.exento_pago ? 'Trámite Formalizado' : 'Orden de Pago Lista',
+             comerciante.exento_pago ? 'Tu trámite ha sido formalizado con éxito.' : `Se ha generado tu orden por S/ ${montoFinal.toFixed(2)}.`,
+             comerciante.exento_pago ? 'exito' : 'pago']
+        );
+
         await pool.query('COMMIT');
-        res.json({ success: true, mensaje: "Trámite procesado correctamente" });
+        res.json({ success: true, mensaje: "Circuito de orden y pago completado", ordenId });
+
     } catch (error) {
         await pool.query('ROLLBACK');
-        console.error("Error en aprobación:", error);
-        res.status(500).json({ success: false, mensaje: "Error DB: " + error.message });
+        console.error("Error profesional en BD:", error);
+        res.status(500).json({ success: false, mensaje: error.message });
     }
 };
 
-// --- Confirmar pago final ---
+/// --- Confirmar pago final y Formalizar ---
 const confirmarPagoYFinalizar = async (req, res) => {
-    const { id } = req.params; // ID del pago
+    const { id } = req.params; // ID del pago (pagos_municipales.id)
+    const { vigencia_comercio, vigencia_sanidad } = req.body; // Los meses que el admin digitó
+
     try {
         await pool.query('BEGIN');
 
-        // 1. Confirmamos el pago y obtenemos al comerciante
+        // 1. Confirmamos el pago y obtenemos el comerciante_id
         const resPago = await pool.query(
-            `UPDATE pagos_municipales SET estado = 'confirmado' 
-             WHERE id = $1 RETURNING comerciante_id`, [id]
+            `UPDATE pagos_municipales 
+             SET estado = 'pagado' 
+             WHERE id = $1 
+             RETURNING comerciante_id, orden_pago_id`, [id]
         );
-        
-        const comercianteId = resPago.rows[0].comerciante_id;
 
-        // 2. PASO FINAL: El comerciante ahora es FORMALIZADO
+        if (resPago.rows.length === 0) throw new Error("Pago no encontrado");
+        const { comerciante_id, orden_pago_id } = resPago.rows[0];
+
+        // 2. Actualizamos la ORDEN DE PAGO a 'pagado'
+        if (orden_pago_id) {
+            await pool.query(
+                `UPDATE ordenes_pago SET estado = 'pagado' WHERE id = $1`, 
+                [orden_pago_id]
+            );
+        }
+
+        // 3. PASO CRÍTICO: El comerciante ahora es FORMALIZADO
+        // Asegúrate de haber corrido el SQL del ALTER TABLE para aceptar 'formalizado'
         const resCom = await pool.query(
-            `UPDATE comerciantes SET estado_tramite = 'formalizado' 
-             WHERE id = $1 RETURNING usuario_id`, [comercianteId]
+            `UPDATE comerciantes 
+             SET estado_tramite = 'formalizado' 
+             WHERE id = $1 
+             RETURNING usuario_id, desea_tramitar_carnet`, [comerciante_id]
+        );
+        const { usuario_id, desea_tramitar_carnet } = resCom.rows[0];
+
+        // 4. GENERACIÓN DE VIGENCIA (Control Total)
+        // Calculamos las fechas basadas en lo que el admin digitó
+        const mesesFinalesComercio = parseInt(vigencia_comercio) || 12; // default 1 año
+        const mesesFinalesSanidad = desea_tramitar_carnet ? (parseInt(vigencia_sanidad) || 6) : 0;
+
+        // Insertamos o Actualizamos la tabla 'autorizaciones'
+        // Usamos un QR único (puedes usar el UUID del comerciante o un hash)
+        const qrUnico = `QR-${comerciante_id.slice(0, 8)}-${Date.now()}`;
+
+        await pool.query(
+            `INSERT INTO autorizaciones (comerciante_id, fecha_emision, fecha_vencimiento, codigo_qr_unico)
+             VALUES ($1, CURRENT_DATE, CURRENT_DATE + ($2 || ' months')::interval, $3)
+             ON CONFLICT (comerciante_id) DO UPDATE 
+             SET fecha_emision = CURRENT_DATE, 
+                 fecha_vencimiento = CURRENT_DATE + ($2 || ' months')::interval,
+                 codigo_qr_unico = $3`,
+            [comerciante_id, mesesFinalesComercio, qrUnico]
         );
 
-        // 3. Notificamos que ya puede descargar carnets
+        // 5. Notificación Final
         await pool.query(
-            `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
-             VALUES ($1, '¡Pago verificado! Ya puedes descargar tus carnets desde tu portal.', 'formalizado')`,
-            [resCom.rows[0].usuario_id]
+            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, tipo) 
+             VALUES ($1, '¡Felicidades!', 'Tu pago ha sido verificado. Ya puedes descargar tus carnets autorizados en el portal.', 'exito')`,
+            [usuario_id]
         );
 
         await pool.query('COMMIT');
-        res.json({ success: true, mensaje: "Comerciante formalizado con éxito" });
+        res.json({ 
+            success: true, 
+            mensaje: "Comerciante formalizado y carnets generados con éxito",
+            vigencia: mesesFinalesComercio
+        });
+
     } catch (error) {
         await pool.query('ROLLBACK');
-        res.status(500).json({ success: false, mensaje: error.message });
+        console.error("Error en formalización:", error);
+        res.status(500).json({ success: false, mensaje: "Error al formalizar: " + error.message });
     }
 };
 

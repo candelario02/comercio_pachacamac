@@ -36,25 +36,30 @@ export const AdminServicio = {
         return await res.json();
     },
 
-  // adminApi.js
+// adminApi.js
 confirmarPago: async (id, token, datos = {}) => {
-    const res = await fetch(`${API_URL}/confirmar-pago/${id}`, {
+    // IMPORTANTE: Asegúrate de que la URL en el backend sea exactamente esta.
+    // Si tu backend usa prefijos como /admin, agrégalo aquí.
+    const res = await fetch(`${API_URL}/admin/confirmar-pago/${id}`, { 
         method: 'PUT',
         headers: { 
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json' 
         },
-        // Esto es lo que permite que el backend reciba monto_final, dni, etc.
+        // Aquí viajan: vigencia_comercio, vigencia_sanidad, etc.
         body: JSON.stringify(datos) 
     });
     
     if (!res.ok) {
+        // Capturamos el error que viene del catch (ROLLBACK) del backend
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.mensaje || 'Error al confirmar pago');
     }
     
     return await res.json();
 },
+
+
 
     obtenerFormalizados: async (token) => {
         const res = await fetch(`${API_URL}/formalizados`, {
