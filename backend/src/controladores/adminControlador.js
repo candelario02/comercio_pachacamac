@@ -271,7 +271,6 @@ module.exports = {
     obtenerEstadisticas, 
     obtenerSolicitudesPendientes, 
     listarPagosPendientes, 
-    obtenerPagosPendientes, 
     aprobarTramiteYGenerarDeuda, 
     confirmarPagoYFinalizar, 
     obtenerFormalizados, 

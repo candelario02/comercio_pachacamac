@@ -10,7 +10,7 @@ const ListaPagosPendientes = () => {
     const [cargando, setCargando] = useState(true);
     const [modalAlerta, setModalAlerta] = useState({ abierto: false, mensaje: '', tipo: '', accion: null });
     
-    // Estado local para capturar la vigencia elegida por el admin
+    
     const [mesesComercio, setMesesComercio] = useState(6);
     const [mesesSanidad, setMesesSanidad] = useState(12);
 
@@ -59,8 +59,6 @@ const ListaPagosPendientes = () => {
             return;
         }
 
-        // Mostramos el mensaje con la capacidad de elegir meses
-        // Usamos un div para el mensaje para que el ModalAlerta lo renderice si acepta componentes o texto
         setModalAlerta({
             abierto: true,
             mensaje: (
@@ -97,13 +95,13 @@ const ListaPagosPendientes = () => {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            // ENVIAMOS LOS MESES AL BACKEND
+            
             const datosConfirmacion = {
                 monto_final: s.monto_pagado,
                 dni_comerciante: s.dni,
                 es_exonerado: s.exento_pago,
-                vigencia_comercio: mesesComercio, // Control total
-                vigencia_sanidad: mesesSanidad    // Control total
+                vigencia_comercio: mesesComercio,
+                vigencia_sanidad: mesesSanidad    
             };
 
             const respuesta = await AdminServicio.confirmarPago(s.id_pago, token, datosConfirmacion);
@@ -168,9 +166,8 @@ const ListaPagosPendientes = () => {
                     <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
                     <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
                     <td>
-                        {/* IMPORTANTE: Usamos s.voucher_url porque así se llama 
-                           la columna en tu pgAdmin (Captura image_b6aa06.jpg)
-                        */}
+                        
+                        
                         <button 
                             className="btn-ver-voucher" 
                             onClick={() => verComprobante(s.voucher_url)}
