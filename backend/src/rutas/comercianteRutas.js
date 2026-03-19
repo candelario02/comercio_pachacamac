@@ -1,11 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const comercianteCtrl = require('../controladores/comercianteControlador'); // El que creamos antes
+const comercianteCtrl = require('../controladores/comercianteControlador'); 
 const { verificarComerciante } = require('../intermediarios/authIntermediario');
 
-// Estas son las rutas que alimentarán tu PortalComerciante.jsx
+const subirArchivo = require('../intermediarios/uploadCarnet');
+
 router.get('/perfil', verificarComerciante, comercianteCtrl.obtenerPerfilPortal);
+
+
 router.get('/notificaciones', verificarComerciante, comercianteCtrl.obtenerNotificaciones);
-router.post('/registrar-pago', verificarComerciante, comercianteCtrl.registrarPago);
+
+
+router.post(
+    '/registrar-pago', 
+    verificarComerciante, 
+    subirArchivo.single('voucher'), 
+    comercianteCtrl.registrarPago
+);
 
 module.exports = router;

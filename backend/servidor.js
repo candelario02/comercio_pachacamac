@@ -1,15 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-
-// No es necesario cargar dotenv si ya borraste el archivo .env, 
-// pero no estorba dejarlo.
 require('dotenv').config();
 
-// --- CORRECCIÓN DE RUTAS (Entrando a /src/) ---
 const authRutas = require('./src/rutas/authRutas');
 const adminRutas = require('./src/rutas/adminRutas');
 const publicoRutas = require('./src/rutas/publicoRutas');
-const comercioRutas = require('./src/rutas/comercioRutas');
 const comercianteRutas = require('./src/rutas/comercianteRutas');
 
 const app = express();
@@ -36,7 +31,6 @@ app.use(express.json());
 app.use('/api/auth', authRutas);
 app.use('/api/admin', adminRutas);
 app.use('/api/publico', publicoRutas);
-app.use('/api/comercio', comercioRutas);
 app.use('/api/comerciante', comercianteRutas);
 
 app.use((req, res) => {
@@ -46,7 +40,6 @@ app.use((req, res) => {
     });
 });
 
-// Puerto dinámico para Render
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, '0.0.0.0', () => {

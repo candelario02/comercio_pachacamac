@@ -6,7 +6,7 @@ import LayoutFondo from './componentes/LayoutFondo';
 import InicioPublico from './paginas/InicioPublico';
 import Login from './paginas/Login';
 import ListaPublicaRubrosActividad from './paginas/ListaPublicaRubrosActividad';
-import SolicitudComerciante from './paginas/SolicitudComerciante'; // IMPORTANTE: Agregada
+import SolicitudComerciante from './paginas/SolicitudComerciante'; 
 
 import DashboardAdmin from './paginas/DashboardAdmin';
 import GestionRubros from './paginas/GestionRubros';
