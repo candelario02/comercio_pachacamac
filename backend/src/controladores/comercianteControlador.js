@@ -29,6 +29,9 @@ const registrarPago = async (req, res) => {
     
     
     const voucher_url = req.file ? req.file.filename : null;
+    console.log("--- DEBUG DE SUBIDA EN RENDER ---");
+    console.log("Nombre guardado en DB:", voucher_url);
+    console.log("¿Dónde lo guardó Multer?:", req.file ? req.file.path : "¡ERROR: No hay archivo en req.file!");
 
     if (!voucher_url) {
         return res.status(400).json({ success: false, mensaje: "Debes subir la foto del voucher" });
