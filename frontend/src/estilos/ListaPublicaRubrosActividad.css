@@ -1,18 +1,13 @@
-/* --- Estilos aislados para ListaPublicaRubrosActividad --- */
 .lista-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
     width: 100%;
-    min-height: 100vh;
+    min-height: 100vh; 
+    height: auto; 
     box-sizing: border-box;
-}
-
-.titulo-seccion { 
-    color: #333; 
-    margin-bottom: 30px; 
-    text-align: center;
+    overflow-y: visible; 
 }
 
 .scroll-wrapper {
@@ -20,6 +15,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .lista-container {
+        padding: 20px 10px;
+    }
+    .titulo-seccion {
+        font-size: 1.5rem;
+        margin-top: 20px;
+    }
+}
+
+.titulo-seccion { 
+    color: #333; 
+    margin-bottom: 30px; 
+    text-align: center;
 }
 
 .rubro-card {
