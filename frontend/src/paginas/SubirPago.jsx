@@ -3,13 +3,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../api/apiConfig';
 import { FaCloudUploadAlt, FaArrowLeft, FaCheckCircle, FaFileInvoiceDollar } from 'react-icons/fa';
-import { useModal } from '../contexto/ModalContext'; // Importamos tu hook de alertas
+import { useModal } from '../context/ModalContext'; 
+
+
 import '../estilos/SubirPago.css'; 
 
 const SubirPago = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { lanzarAlerta } = useModal(); // Inicializamos las alertas
+    const { lanzarAlerta } = useModal(); 
 
     const { ordenId, codigoOrden, monto, mes } = location.state || {};
 
