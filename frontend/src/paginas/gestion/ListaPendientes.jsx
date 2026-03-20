@@ -170,12 +170,16 @@ const ListaPendientes = () => {
                         <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
                         <p><strong>Carnet de Sanidad:</strong> 
                             {seleccionado.foto_carnet ? (
-                                <button 
-                                    className="btn-accion-ojito" 
-                                    onClick={() => window.open(`http://localhost:4000/uploads/carnets/${seleccionado.foto_carnet}`, '_blank')}
-                                >
-                                    <FaEye /> Ver Foto Adjunta
-                                </button>
+                               <button 
+    className="btn-accion-ojito" 
+    onClick={() => {
+        const url = `https://comercio-pachacamac-v2.onrender.com/uploads/carnets/${seleccionado.foto_carnet}`;
+        console.log("Abriendo URL:", url);
+        window.open(url, '_blank');
+    }}
+>
+    <FaEye /> Ver Foto Adjunta
+</button>
                             ) : seleccionado.desea_tramitar_carnet ? (
                                 <span className="status-tramite">⚠️ Solicita trámite nuevo</span>
                             ) : (
