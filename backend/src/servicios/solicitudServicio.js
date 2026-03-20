@@ -30,30 +30,28 @@ const crearSolicitudComerciante = async (data) => {
 
         const usuarioId = userRes.rows[0].id;
 
-        // 3. Crear comerciante con el nuevo campo desea_tramitar_carnet
-        const comercianteRes = await client.query(
-            `INSERT INTO comerciantes (
-                usuario_id, dni, nombres, apellidos, numero_celular, 
-                actividad_id, sector_id, latitud_puesto, longitud_puesto, 
-                desea_tramitar_carnet, estado_tramite
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-            RETURNING id`,
-            [
-                usuarioId, data.dni, data.nombres, data.apellidos, data.celular,
-                data.actividad_id, data.sector_id, data.lat, data.lng,
-                data.desea_tramitar_carnet || false, 'pendiente'
-            ]
-        );
+       // 3. Crear comerciante con el nuevo campo desea_tramitar_carnet
+const comercianteRes = await client.query(
+    `INSERT INTO comerciantes (
+        usuario_id, dni, nombres, apellidos, numero_celular, 
+        actividad_id, sector_id, latitud_puesto, longitud_puesto, 
+        desea_tramitar_carnet, estado_tramite
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    RETURNING id`,
+    [
+        usuarioId, data.dni, data.nombres, data.apellidos, data.celular,
+        data.actividad_id, data.sector_id, data.lat, data.lng,
+        data.desea_tramitar_carnet || false, 'pendiente'
+    ]
+);
 
-        const comercianteId = comercianteRes.rows[0].id;
+const comercianteId = comercianteRes.rows[0].id;
 
-        // 4. Guardar carnet solo si lo subió
-      if (requiereCarnet && data.archivo) {
+if (requiereCarnet && data.archivo) {
     await client.query(
         `INSERT INTO expediente_digital (comerciante_id, tipo_documento, enlace_archivo_nube)
          VALUES ($1, $2, $3)`,
-    
-        [comerciante_id, 'CARNET_SANIDAD', data.archivo.filename] 
+        [comercianteId, 'CARNET_SANIDAD', data.archivo.filename] 
     );
 }
 
