@@ -1,27 +1,27 @@
-/* Definición local - Mantenemos tus variables */
+
 :root {
   --cian-institucional: #00bcd4;
   --gris-fondo: #f9f9f9;
   --blanco: #ffffff;
 }
 
-/* --- 1. Contenedor Principal --- */
+
 .gestion-container {
     padding: 20px;
     background-color: var(--gris-fondo);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 10px 20px; /* Simplificado */
+    margin: 10px 20px; 
 }
 
-/* --- 2. Formulario (EL CAMBIO CLAVE) --- */
+
 .formulario-fijo {
     background: var(--blanco);
     padding: 20px;
     margin: 0 auto 20px auto;
     border: 1px solid #ddd;
     border-radius: 8px;
-    width: 100%; /* Cambiado de max-width a width fluido */
+    width: 100%; 
     max-width: 900px;
     text-align: center;
 }
@@ -31,7 +31,7 @@
     gap: 15px;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap; /* Esto permite que en celular los inputs bajen solitos */
+    flex-wrap: wrap; 
 }
 
 .formulario-fijo input[type="text"],
@@ -39,11 +39,11 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    flex: 1; /* Hace que crezcan parejos */
-    min-width: 200px; /* Evita que se vuelvan minúsculos */
+    flex: 1; 
+    min-width: 200px; 
 }
 
-/* --- 3. Botones --- */
+
 .button-group {
     display: flex;
     gap: 10px;
@@ -62,7 +62,7 @@
     color: white;
 }
 
-/* Mantenemos tus colores exactamente igual */
+
 .btn-nuevo    { background-color: var(--cian-institucional) !important; }
 .btn-update   { background-color: #2196f3 !important; }
 .btn-edit     { background-color: #ffb300 !important; }
@@ -80,7 +80,7 @@
     background-color: var(--cian-institucional); 
     color: white; 
     padding: 12px; 
-    white-space: nowrap; /* Evita que los títulos de la tabla se corten */
+    white-space: nowrap; 
 }
 
 .tabla-base td { 
@@ -89,10 +89,10 @@
     text-align: center; 
 }
 
-/* Mejora para botones de acciones en la tabla */
+
 .acciones-container { 
     display: flex; 
     justify-content: center; 
     gap: 8px; 
-    flex-wrap: nowrap; /* En la tabla queremos que se mantengan en línea si es posible */
+    flex-wrap: nowrap; 
 }

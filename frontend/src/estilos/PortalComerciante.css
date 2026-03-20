@@ -44,11 +44,11 @@
     font-size: 1.3rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    flex-shrink: 0; /* No permite que el botón se aplaste */
+    flex-shrink: 0; 
 }
 
 .btn-logout-x:hover {
-    background: #e74c3c; /* Rojo al pasar el mouse por ser cerrar sesión */
+    background: #e74c3c; 
     transform: rotate(90deg);
 }
 
@@ -57,8 +57,6 @@
     margin: 0 auto;
     padding: 2rem;
 }
-
-/* --- TARJETA DE ESTADO (STEPPER) --- */
 .card {
     background: white;
     padding: 2rem;
@@ -84,7 +82,6 @@
 .step.active { color: var(--verde-pachacamac); font-weight: bold; }
 .step.current { color: var(--cian-institucional); font-weight: bold; text-decoration: underline; }
 
-/* --- GRID DE ACCIONES --- */
 .action-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -114,23 +111,23 @@
 .card-text h3 { margin: 0; font-size: 1.1rem; color: #333; }
 .card-text p { margin: 5px 0 0; font-size: 0.85rem; color: #777; }
 
-/* Colores para iconos */
+
 .color-notif .card-icon { color: #e74c3c; }
 .color-buzon .card-icon { color: var(--cian-institucional); }
 .color-upload .card-icon { color: var(--verde-pachacamac); }
 .color-download .card-icon { color: var(--dorado-mun); }
 .color-history .card-icon { color: #9b59b6; }
 
-/* --- AJUSTE RESPONSIVO FINAL --- */
+
 @media (max-width: 768px) {
     .portal-header {
         padding: 1rem;
         flex-direction: row; 
-        align-items: flex-start; /* Alinea arriba para dar espacio al badge */
+        align-items: flex-start;
     }
 
     .header-info {
-        max-width: 80%; /* El título tiene el 80% de la pantalla */
+        max-width: 80%;
     }
 
     .header-info h1 {
@@ -144,7 +141,8 @@
         font-size: 1.1rem;
         position: absolute;
         top: 15px;
-        right: 15px; /* La X se queda fija en la esquina superior */
+        right: 15px; 
+        color: #e74c3c;
     }
 
     .portal-content {
@@ -156,10 +154,9 @@
     }
 
     .action-grid {
-        grid-template-columns: 1fr; /* Una sola columna en móvil */
+        grid-template-columns: 1fr; 
     }
 }
-/* Estilos extra para diferenciar los botones de descarga */
 .btn-descargar.color-comercio {
     background-color: #0066cc;
     color: white;

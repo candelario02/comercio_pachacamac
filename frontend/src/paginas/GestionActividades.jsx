@@ -93,7 +93,7 @@ const GestionActividades = () => {
                 </div>
             </form>
             
-           {/* Paso 2: Envolvemos la tabla con la clase que creamos en Globales.css */}
+           
 <div className="table-responsive"> 
     <table className="tabla-base">
         <thead>

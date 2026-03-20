@@ -1,21 +1,95 @@
-/* --- Estilos aislados para GestionRubros --- */
-.gestion-container { margin-top: -10px; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-left: 20px; margin-right: 20px; }
 
-.header-acciones { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
-.header-acciones h3 { flex: 1; text-align: center; margin: 0; }
+.gestion-container { 
+    padding: 20px; 
+    background-color: #f9f9f9; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    margin: 10px 20px;
+}
 
-.formulario-fijo { background: #fff; padding: 20px; margin: 0 auto 20px auto; border: 1px solid #ddd; border-radius: 8px; max-width: 600px; text-align: center; }
-.form-inputs { display: flex; gap: 10px; justify-content: center; align-items: center; }
 
-.btn-secondary { background-color: #607d8b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
-.btn-base { padding: 8px 15px; border-radius: 5px; cursor: pointer; border: none; margin: 0 5px; }
-.btn-edit { background-color: #ff9800; color: white; }
-.btn-delete { background-color: #f44336; color: white; }
+.gestion-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+
+.formulario-fijo { 
+    background: #fff; 
+    padding: 20px; 
+    margin: 0 auto 20px auto; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    width: 100%;
+    max-width: 600px; 
+    text-align: center; 
+}
+
+.form-inputs { 
+    display: flex; 
+    gap: 10px; 
+    justify-content: center; 
+    align-items: center; 
+    flex-wrap: wrap; 
+}
+
+.formulario-fijo input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 200px;
+}
+
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-base { 
+    padding: 10px 18px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    border: none; 
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
 .btn-nuevo { background-color: #00bcd4; color: white; }
 .btn-update { background-color: #2196f3; color: white; }
+.btn-edit { background-color: #ff9800; color: white; }
+.btn-delete { background-color: #f44336; color: white; }
 .btn-cancelar { background-color: #757575; color: white; }
+.btn-secondary { background-color: #607d8b; color: white; }
 
-.tabla-base { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-.tabla-base th, .tabla-base td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+
+.tabla-base { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: white; 
+}
+
+.tabla-base th { 
+    background-color: #00bcd4; 
+    color: white; 
+    padding: 12px; 
+    text-align: left;
+    white-space: nowrap;
+}
+
+.tabla-base td { 
+    padding: 12px; 
+    border-bottom: 1px solid #ddd; 
+    text-align: left; 
+}
+
 .tabla-base tr:nth-child(even) { background-color: #f2f2f2; }
-.acciones-container { display: flex; gap: 5px; }
+
+.acciones-container { 
+    display: flex; 
+    gap: 8px; 
+    justify-content: flex-start;
+}

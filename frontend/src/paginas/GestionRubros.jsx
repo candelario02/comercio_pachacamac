@@ -104,32 +104,35 @@ const GestionRubros = () => {
                 </div>
             </form>
             
-            <table className="tabla-base">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rubros.length > 0 ? rubros.map((r) => (
-                        <tr key={r.id}>
-                            <td>{r.nombre}</td>
-                            <td>{r.descripcion || 'Sin descripción'}</td>
-                            <td className="acciones-container">
-                                <button className="btn-base btn-edit" onClick={() => {
-                                    setRubroSeleccionado(r);
-                                    setFormData({ nombre: r.nombre, descripcion: r.descripcion || '' });
-                                }}>Editar</button>
-                                <button className="btn-base btn-delete" onClick={() => eliminarRubro(r.id)}>
-                                    Eliminar
-                                </button>
-                            </td>
+            {/* Escudo para que la tabla no rompa el diseño en celular */}
+            <div className="table-responsive">
+                <table className="tabla-base">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
                         </tr>
-                    )) : <tr><td colSpan="3">No hay registros disponibles.</td></tr>}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {rubros.length > 0 ? rubros.map((r) => (
+                            <tr key={r.id}>
+                                <td>{r.nombre}</td>
+                                <td>{r.descripcion || 'Sin descripción'}</td>
+                                <td className="acciones-container">
+                                    <button className="btn-base btn-edit" onClick={() => {
+                                        setRubroSeleccionado(r);
+                                        setFormData({ nombre: r.nombre, descripcion: r.descripcion || '' });
+                                    }}>Editar</button>
+                                    <button className="btn-base btn-delete" onClick={() => eliminarRubro(r.id)}>
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        )) : <tr><td colSpan="3" style={{textAlign: 'center', padding: '20px'}}>No hay registros disponibles.</td></tr>}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
