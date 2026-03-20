@@ -48,13 +48,14 @@ const crearSolicitudComerciante = async (data) => {
         const comercianteId = comercianteRes.rows[0].id;
 
         // 4. Guardar carnet solo si lo subió
-        if (requiereCarnet && data.archivo) {
-            await client.query(
-                `INSERT INTO expediente_digital (comerciante_id, tipo_documento, enlace_archivo_nube)
-                 VALUES ($1, $2, $3)`,
-                [comercianteId, 'CARNET_SANIDAD', data.archivo.path]
-            );
-        }
+      if (requiereCarnet && data.archivo) {
+    await client.query(
+        `INSERT INTO expediente_digital (comerciante_id, tipo_documento, enlace_archivo_nube)
+         VALUES ($1, $2, $3)`,
+    
+        [comerciante_id, 'CARNET_SANIDAD', data.archivo.filename] 
+    );
+}
 
         await client.query('COMMIT');
         return { success: true, comercianteId };

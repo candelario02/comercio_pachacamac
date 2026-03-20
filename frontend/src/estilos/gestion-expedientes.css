@@ -129,3 +129,29 @@
     filter: brightness(1.1);
     transform: translateY(-2px);
 }
+/* Botón "ojito" pequeño dentro del grid de info */
+.btn-accion-ojito {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-left: 8px;
+}
+
+/* Etiqueta para cuando pide trámite */
+.status-tramite {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    border: 1px solid #ffeeba;
+}
+
+.status-no-req {
+    color: #95a5a6;
+    font-style: italic;
+}

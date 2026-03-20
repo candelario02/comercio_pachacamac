@@ -110,14 +110,14 @@ const ListaPendientes = () => {
                 </button>
             </header>
 
-            <div className="tabla-card">
+<div className="tabla-card">
     <table className="tabla-gestion">
         <thead>
             <tr>
                 <th>DNI/RUC</th>
                 <th>Comerciante</th>
                 <th>Teléfono</th> 
-                <th>Sector/Distrito</th>
+                <th>Sector</th> {/* Cambiado de Sector/Distrito a Sector */}
                 <th>Actividad</th>
                 <th>Acciones</th>
             </tr>
@@ -125,10 +125,12 @@ const ListaPendientes = () => {
         <tbody>
             {solicitudes.map((s) => (
                 <tr key={s.comerciante_id}>
-                    <td>{s.dni}</td>                    
+                    <td>{s.dni}</td>                     
                     <td>{s.nombres} {s.apellidos}</td>
                     <td>{s.celular || 'Sin número'}</td>
-                    <td>{s.distrito}</td>
+                    {/* Usamos sector_nombre que viene de la vista */}
+                    <td>{s.sector_nombre || 'No asignado'}</td>
+                    {/* Usamos actividad_nombre que viene de la vista */}
                     <td>{s.actividad_nombre}</td>
                     <td>
                         <button className="btn-footer" onClick={() => abrirDetalle(s)}>
@@ -142,55 +144,76 @@ const ListaPendientes = () => {
 </div>
 
             {modalAbierto && seleccionado && (
-                <div className="modal-overlay">
-                    <div className="modal-contenido">
-                        <div className="modal-header">
-                            <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
-                        </div>
-                        
-                        <div className="modal-body">
-                            <div className="detalle-seccion">
-                                <h4>Información del Comerciante</h4>
-               <div className="info-grid">
-    <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
-    <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
-    <p><strong>Teléfono:</strong> {seleccionado.celular || seleccionado.numero_celular || 'S/N'}</p>
-    <p><strong>Sector:</strong> {seleccionado.sector_nombre || seleccionado.distrito}</p>
-    <p><strong>Ubicación:</strong> 
-        Lat: {seleccionado.lat || seleccionado.latitud_puesto} | 
-        Lng: {seleccionado.lng || seleccionado.longitud_puesto}
-    </p>
-</div>
-                            </div>
-
-                            <div className="detalle-seccion">
-                                <h4>Liquidación de Pago</h4>
-                                <div className="input-group">
-                                    <label>Derecho Trámite (S/): 
-                                        <input type="number" value={montoActividad} onChange={(e) => setMontoActividad(e.target.value)} />
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> 
-                                        Incluir Carnet (S/): 
-                                        <input type="number" value={montoCarnet} disabled={!incluirCarnet} onChange={(e) => setMontoCarnet(e.target.value)} />
-                                    </label>
-                                </div>
-                                <div className="total-display"><strong>Total: S/ {totalFinal.toFixed(2)}</strong></div>
-                            </div>
-                        </div>
-
-                        <div className="modal-footer">
-                            <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>
-                            <button className="btn-orden-pago" onClick={async () => await generarOrdenPagoPDF(seleccionado, {total: totalFinal, derecho: montoActividad, carnet: incluirCarnet ? montoCarnet : 0})}>
-                                <FaFileInvoiceDollar /> Generar Orden
-                            </button>
-                            <button className="btn-aprobar" onClick={() => prepararAprobacion(seleccionado.comerciante_id)}>
-                                <FaCheck /> Aprobar
-                            </button>
-                        </div>
+    <div className="modal-overlay">
+        <div className="modal-contenido">
+            <div className="modal-header">
+                <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
+            </div>
+            
+            <div className="modal-body">
+                {/* SECCIÓN 1: DATOS PERSONALES */}
+                <div className="detalle-seccion">
+                    <h4>Información del Comerciante</h4>
+                    <div className="info-grid">
+                        <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
+                        <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
+                        <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
+                        <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
+                        <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
                     </div>
                 </div>
-            )}
+
+                {/* SECCIÓN 2: VALIDACIÓN TÉCNICA (Lo que faltaba) */}
+                <div className="detalle-seccion">
+                    <h4>Requisitos de Actividad</h4>
+                    <div className="info-grid">
+                        <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
+                        <p><strong>Carnet de Sanidad:</strong> 
+                            {seleccionado.foto_carnet ? (
+                                <button 
+                                    className="btn-accion-ojito" 
+                                    onClick={() => window.open(`http://localhost:4000/uploads/carnets/${seleccionado.foto_carnet}`, '_blank')}
+                                >
+                                    <FaEye /> Ver Foto Adjunta
+                                </button>
+                            ) : seleccionado.desea_tramitar_carnet ? (
+                                <span className="status-tramite">⚠️ Solicita trámite nuevo</span>
+                            ) : (
+                                <span className="status-no-req">No requiere / No adjunto</span>
+                            )}
+                        </p>
+                    </div>
+                </div>
+
+                {/* SECCIÓN 3: LIQUIDACIÓN DE PAGO (Tu lógica de montos) */}
+                <div className="detalle-seccion">
+                    <h4>Liquidación de Pago</h4>
+                    <div className="input-group">
+                        <label>Derecho Trámite (S/): 
+                            <input type="number" value={montoActividad} onChange={(e) => setMontoActividad(e.target.value)} />
+                        </label>
+                        <label>
+                            <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> 
+                            Incluir Carnet (S/): 
+                            <input type="number" value={montoCarnet} disabled={!incluirCarnet} onChange={(e) => setMontoCarnet(e.target.value)} />
+                        </label>
+                    </div>
+                    <div className="total-display"><strong>Total: S/ {totalFinal.toFixed(2)}</strong></div>
+                </div>
+            </div>
+
+            <div className="modal-footer">
+                <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>
+                <button className="btn-orden-pago" onClick={async () => await generarOrdenPagoPDF(seleccionado, {total: totalFinal, derecho: montoActividad, carnet: incluirCarnet ? montoCarnet : 0})}>
+                    <FaFileInvoiceDollar /> Generar Orden
+                </button>
+                <button className="btn-aprobar" onClick={() => prepararAprobacion(seleccionado.comerciante_id)}>
+                    <FaCheck /> Aprobar
+                </button>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 };
