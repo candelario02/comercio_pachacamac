@@ -34,28 +34,26 @@ const registrarPago = async (req, res) => {
 
     try {
         await pool.query('BEGIN');
-
-        // 1. Obtener ID del comerciante
         const resCom = await pool.query(`SELECT id FROM comerciantes WHERE usuario_id = $1`, [usuario_id_token]);
         if (resCom.rows.length === 0) throw new Error("Perfil no encontrado");
         const comerciante_id = resCom.rows[0].id;
-
-        // 2. LOGICA ANTI-DUPLICADOS: ¿Ya hay un pago en revisión para esta orden?
         const pagoPrevio = await pool.query(
-            `SELECT id FROM pagos_municipales WHERE orden_pago_id = $1 AND estado = 'revision'`,
+            `SELECT id FROM pagos_municipales WHERE orden_pago_id = $1`, 
             [orden_id]
         );
 
         if (pagoPrevio.rows.length > 0) {
-            // ACTUALIZAR (Si el comerciante se equivocó de foto y la re-sube)
             const updateQuery = `
                 UPDATE pagos_municipales 
-                SET monto_pagado = $1, numero_operacion = $2, voucher_url = $3, fecha_pago = NOW()
+                SET monto_pagado = $1, 
+                    numero_operacion = $2, 
+                    voucher_url = $3, 
+                    estado = 'revision', 
+                    fecha_pago = NOW()
                 WHERE id = $4
             `;
             await pool.query(updateQuery, [monto_pagado, numero_operacion, voucher_url, pagoPrevio.rows[0].id]);
         } else {
-            // INSERTAR NUEVO
             const insertQuery = `
                 INSERT INTO pagos_municipales (
                     comerciante_id, monto_pagado, numero_operacion, 
@@ -65,7 +63,6 @@ const registrarPago = async (req, res) => {
             await pool.query(insertQuery, [comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, orden_id, voucher_url]);
         }
 
-        // 3. Notificar al Admin
         await pool.query(
             `INSERT INTO notificaciones (usuario_id, titulo, mensaje) 
              VALUES ((SELECT id FROM usuarios WHERE rol_id = 1 LIMIT 1), 'Nuevo Pago', 'Se ha recibido un comprobante para la Orden #${orden_id}')`
