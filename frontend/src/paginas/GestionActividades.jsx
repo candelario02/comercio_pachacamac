@@ -93,37 +93,40 @@ const GestionActividades = () => {
                 </div>
             </form>
             
-            <table className="tabla-base">
-                <thead>
-                    <tr><th>Código</th><th>Rubro</th><th>Descripción</th><th>Sanidad</th><th>Acciones</th></tr>
-                </thead>
-                <tbody>
-                    {actividades.length > 0 ? (
-                        actividades.map((act) => (
-                            <tr key={act.id}>
-                                <td>{act.codigo_municipal}</td>
-                                <td>{act.nombre_rubro}</td>
-                                <td>{act.descripcion}</td>
-                                <td>{act.requiere_carnet_sanidad ? '✅ SI' : '❌ NO'}</td>
-                                <td className="acciones-container">
-                                    <button className="btn-base btn-edit" onClick={() => {
-                                        setActividadSeleccionada(act);
-                                        setFormData({ 
-                                            rubro_id: act.rubro_id, 
-                                            codigo: act.codigo_municipal, 
-                                            descripcion: act.descripcion, 
-                                            requiere_sanidad: act.requiere_carnet_sanidad 
-                                        });
-                                    }}>Editar</button>
-                                    <button className="btn-base btn-delete" onClick={() => eliminarActividad(act.id)}>Eliminar</button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr><td colSpan="5" style={{ padding: '20px', color: '#666' }}>No hay registros disponibles.</td></tr>
-                    )}
-                </tbody>
-            </table>
+           {/* Paso 2: Envolvemos la tabla con la clase que creamos en Globales.css */}
+<div className="table-responsive"> 
+    <table className="tabla-base">
+        <thead>
+            <tr><th>Código</th><th>Rubro</th><th>Descripción</th><th>Sanidad</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {actividades.length > 0 ? (
+                actividades.map((act) => (
+                    <tr key={act.id}>
+                        <td>{act.codigo_municipal}</td>
+                        <td>{act.nombre_rubro}</td>
+                        <td>{act.descripcion}</td>
+                        <td>{act.requiere_carnet_sanidad ? '✅ SI' : '❌ NO'}</td>
+                        <td className="acciones-container">
+                            <button className="btn-base btn-edit" onClick={() => {
+                                setActividadSeleccionada(act);
+                                setFormData({ 
+                                    rubro_id: act.rubro_id, 
+                                    codigo: act.codigo_municipal, 
+                                    descripcion: act.descripcion, 
+                                    requiere_sanidad: act.requiere_carnet_sanidad 
+                                });
+                            }}>Editar</button>
+                            <button className="btn-base btn-delete" onClick={() => eliminarActividad(act.id)}>Eliminar</button>
+                        </td>
+                    </tr>
+                ))
+            ) : (
+                <tr><td colSpan="5" style={{ padding: '20px', color: '#666' }}>No hay registros disponibles.</td></tr>
+            )}
+        </tbody>
+    </table>
+</div>
         </div>
     );
 };

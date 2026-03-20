@@ -1,4 +1,4 @@
-/* Definición local para asegurar independencia total */
+/* Definición local - Mantenemos tus variables */
 :root {
   --cian-institucional: #00bcd4;
   --gris-fondo: #f9f9f9;
@@ -7,93 +7,92 @@
 
 /* --- 1. Contenedor Principal --- */
 .gestion-container {
-    margin-top: -10px;
     padding: 20px;
     background-color: var(--gris-fondo);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 10px 20px; /* Simplificado */
 }
 
-/* --- 2. Encabezado --- */
-.header-acciones {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0 10px;
-}
-
-.header-acciones h3 {
-    flex: 1;
-    text-align: center;
-    margin: 0;
-}
-
-/* --- 3. Formulario --- */
+/* --- 2. Formulario (EL CAMBIO CLAVE) --- */
 .formulario-fijo {
     background: var(--blanco);
     padding: 20px;
     margin: 0 auto 20px auto;
     border: 1px solid #ddd;
     border-radius: 8px;
+    width: 100%; /* Cambiado de max-width a width fluido */
     max-width: 900px;
     text-align: center;
 }
 
 .form-inputs {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Esto permite que en celular los inputs bajen solitos */
 }
 
-.formulario-fijo input {
-    padding: 8px;
+.formulario-fijo input[type="text"],
+.formulario-fijo input[type="number"] {
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    flex: 1; /* Hace que crezcan parejos */
+    min-width: 200px; /* Evita que se vuelvan minúsculos */
 }
 
-/* --- 4. Botones --- */
+/* --- 3. Botones --- */
 .button-group {
     display: flex;
     gap: 10px;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .btn-base {
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 4px;
     border: none;
     cursor: pointer;
     font-weight: 500;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
     color: white;
 }
 
+/* Mantenemos tus colores exactamente igual */
 .btn-nuevo    { background-color: var(--cian-institucional) !important; }
 .btn-update   { background-color: #2196f3 !important; }
 .btn-edit     { background-color: #ffb300 !important; }
 .btn-delete   { background-color: #e53935 !important; }
-.btn-cancelar { background-color: #757575 !important; color: white !important; padding: 8px 15px; border-radius: 5px; cursor: pointer; border: none; }
+.btn-cancelar { background-color: #757575 !important; }
 
-.btn-secondary {
-    background-color: #607d8b;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
+/* --- 4. Tabla --- */
+.tabla-base { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: var(--blanco); 
 }
-.btn-secondary:hover { background-color: #455a64; }
 
-/* --- 5. Tabla --- */
-.tabla-base { width: 100%; border-collapse: collapse; margin-top: 10px; background: var(--blanco); }
-.tabla-base th { background-color: var(--cian-institucional); color: white; padding: 12px; }
-.tabla-base td { padding: 10px; border-bottom: 1px solid #ddd; text-align: center; }
-.tabla-base tr:nth-child(even) { background-color: #f2f2f2; }
-.acciones-container { display: flex; justify-content: center; gap: 8px; }
+.tabla-base th { 
+    background-color: var(--cian-institucional); 
+    color: white; 
+    padding: 12px; 
+    white-space: nowrap; /* Evita que los títulos de la tabla se corten */
+}
+
+.tabla-base td { 
+    padding: 12px; 
+    border-bottom: 1px solid #ddd; 
+    text-align: center; 
+}
+
+/* Mejora para botones de acciones en la tabla */
+.acciones-container { 
+    display: flex; 
+    justify-content: center; 
+    gap: 8px; 
+    flex-wrap: nowrap; /* En la tabla queremos que se mantengan en línea si es posible */
+}
