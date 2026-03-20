@@ -50,13 +50,13 @@
     flex: 1; 
     padding: 40px; 
 }
-/* Estilos para el Badge de Notificación */
+
 .btn-notificacion {
-    position: relative; /* Para que el badge se posicione respecto al botón */
+    position: relative; 
 }
 
 .badge-notificacion {
-    background-color: #ff4d4d; /* Rojo vibrante */
+    background-color: #ff4d4d;
     color: white;
     font-size: 0.75rem;
     font-weight: bold;
@@ -67,7 +67,7 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    right: 15px; /* Ajustado al padding del botón */
+    right: 20px; 
     top: 50%;
     transform: translateY(-50%);
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -81,66 +81,73 @@
     100% { transform: translateY(-50%) scale(1); }
 }
 
-/* --- AJUSTE RESPONSIVO SEGURO --- */
+
 @media (max-width: 768px) {
     .admin-layout {
-        flex-direction: column; /* Apila el menú arriba y el contenido abajo */
+        flex-direction: column; 
     }
 
     .sidebar {
         width: 100% !important;
         height: auto !important;
-        padding: 10px;
-        flex-direction: column; /* Mantenemos columna pero más compacta */
-        gap: 10px;
+        padding: 10px 15px;
+        gap: 5px;
     }
 
     .sidebar-title {
         font-size: 1.1rem;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         padding-bottom: 5px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .sidebar-nav {
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Dos botones por fila para que no se amontonen */
-        gap: 8px;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 6px;
     }
 
     .sidebar-nav button {
-        padding: 10px;
-        font-size: 0.85rem;
-        flex-direction: column; /* Icono arriba, texto abajo */
-        gap: 5px;
-        text-align: center;
+        padding: 8px 4px;
+        font-size: 0.75rem;
+        flex-direction: column; 
+        gap: 3px;
+        min-height: 65px; 
         justify-content: center;
     }
 
-    .sidebar-nav button svg, 
-    .sidebar-nav button i {
-        font-size: 1.2rem; /* Iconos un poco más grandes para facilitar el toque */
+    .sidebar-nav button i, 
+    .sidebar-nav button svg {
+        font-size: 1.2rem; 
     }
 
     .badge-notificacion {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        transform: none;
+        top: 2px;
+        right: 2px;
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+        transform: none; 
     }
 
     .admin-content {
-        padding: 20px 15px; /* Reducimos el margen para ganar espacio en pantalla dividida */
+        padding: 15px; 
     }
 
     .logout-btn {
-        margin-top: 10px;
-        grid-column: span 2; /* El botón de salir ocupa todo el ancho */
+        margin-top: 5px;
+        grid-column: span 3; 
+        min-height: 40px !important;
+        color: #ff6b6b !important; 
     }
 }
 
-/* Pantallas muy pequeñas (Celulares delgados) */
+
 @media (max-width: 480px) {
     .sidebar-nav {
-        grid-template-columns: 1fr; /* Un botón por fila en pantallas muy flacas */
+        grid-template-columns: repeat(2, 1fr); 
+    }
+    .logout-btn {
+        grid-column: span 2;
     }
 }
