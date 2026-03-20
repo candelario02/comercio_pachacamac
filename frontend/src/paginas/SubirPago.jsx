@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../api/apiConfig';
-import { FaCloudUploadAlt, FaArrowLeft, FaCheckCircle } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaArrowLeft, FaCheckCircle, FaFileInvoiceDollar } from 'react-icons/fa';
 import '../estilos/SubirPago.css'; 
 
 const SubirPago = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Recibimos los datos enviados desde el Portal
+    const { ordenId, codigoOrden, monto, mes } = location.state || {};
+
     const [archivo, setArchivo] = useState(null);
     const [numOperacion, setNumOperacion] = useState('');
-    
-    // --- NUEVOS ESTADOS AÑADIDOS ---
-    const [monto, setMonto] = useState('');
-    const [mesSeleccionado, setMesSeleccionado] = useState('');
-    // -------------------------------
-
     const [cargando, setCargando] = useState(false);
     const [vistaPrevia, setVistaPrevia] = useState(null);
+
+    // Si no hay datos de orden, regresamos al portal por seguridad
+    useEffect(() => {
+        if (!ordenId) {
+            navigate('/portal-comerciante');
+        }
+    }, [ordenId, navigate]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -29,20 +35,22 @@ const SubirPago = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Validación extendida para incluir los nuevos campos
-        if (!archivo || !numOperacion || !monto || !mesSeleccionado) {
-            alert("Por favor, complete todos los campos y suba el comprobante.");
+        if (!archivo || !numOperacion) {
+            alert("Por favor, suba el comprobante e ingrese el número de operación.");
             return;
         }
 
         setCargando(true);
         const formData = new FormData();
         
-        // ENVIANDO DATOS AL BACKEND (Nombres deben coincidir con el controlador)
+        // Datos automáticos que vienen del portal
+        formData.append('orden_id', ordenId);
+        formData.append('monto_pagado', monto);
+        formData.append('mes_correspondiente', mes);
+        
+        // Datos que ingresa el usuario
         formData.append('voucher', archivo); 
         formData.append('numero_operacion', numOperacion);
-        formData.append('monto_pagado', monto); // <--- NUEVO
-        formData.append('mes_correspondiente', mesSeleccionado); // <--- NUEVO
 
         try {
             const token = localStorage.getItem('token');
@@ -77,45 +85,24 @@ const SubirPago = () => {
             <main className="pago-content">
                 <form className="pago-card card" onSubmit={handleSubmit}>
                     <div className="instrucciones">
-                        <h3><FaCheckCircle color="#2ecc71" /> Paso Final</h3>
-                        <p>Adjunte la captura de su voucher e ingrese los datos del depósito.</p>
+                        <h3><FaCheckCircle color="#2ecc71" /> Pago de Orden: {codigoOrden}</h3>
+                        <p>Verifique los detalles de su orden y adjunte su comprobante.</p>
                     </div>
 
-                    {/* NUEVO CAMPO: MONTO */}
-                    <div className="form-group">
-                        <label>Monto Pagado (S/):</label>
-                        <input 
-                            type="number" 
-                            step="0.01"
-                            placeholder="Ej: 50.00"
-                            value={monto}
-                            onChange={(e) => setMonto(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    {/* NUEVO CAMPO: MES */}
-                    <div className="form-group">
-                        <label>Mes Correspondiente:</label>
-                        <select 
-                            value={mesSeleccionado} 
-                            onChange={(e) => setMesSeleccionado(e.target.value)}
-                            required
-                        >
-                            <option value="">Seleccione un mes</option>
-                            <option value="Enero">Enero</option>
-                            <option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option>
-                            <option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option>
-                            <option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option>
-                            <option value="Agosto">Agosto</option>
-                            <option value="Septiembre">Septiembre</option>
-                            <option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option>
-                            <option value="Diciembre">Diciembre</option>
-                        </select>
+                    <div className="info-orden-resumen">
+                        <div className="info-item">
+                            <FaFileInvoiceDollar className="info-icon" />
+                            <div>
+                                <strong>Monto a depositar:</strong>
+                                <p className="monto-resaltado">S/ {monto}</p>
+                            </div>
+                        </div>
+                        <div className="info-item">
+                            <div style={{ marginLeft: '35px' }}>
+                                <strong>Mes:</strong>
+                                <p>{mes}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="form-group">
@@ -144,7 +131,7 @@ const SubirPago = () => {
                                 <>
                                     <FaCloudUploadAlt size={50} />
                                     <span>Click para seleccionar comprobante</span>
-                                    <small>(Imagen o PDF)</small>
+                                    <small>(Imagen del voucher)</small>
                                 </>
                             )}
                         </label>
@@ -156,7 +143,7 @@ const SubirPago = () => {
                         className="btn-confirmar-pago"
                         disabled={cargando}
                     >
-                        {cargando ? "Enviando..." : "Confirmar y Finalizar Trámite"}
+                        {cargando ? "Enviando..." : "Confirmar y Enviar Pago"}
                     </button>
                 </form>
             </main>

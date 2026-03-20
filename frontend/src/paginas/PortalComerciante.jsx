@@ -11,17 +11,14 @@ import '../estilos/PortalComerciante.css';
 const PortalComerciante = () => {
     const navigate = useNavigate();
     
-    // 1. Estados
     const [datos, setDatos] = useState(null);
     const [notificaciones, setNotificaciones] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // 2. Definición de funciones
     const cargarInformacionPortal = async () => {
         try {
             const token = localStorage.getItem('token');
-            
             if (!token) {
                 navigate('/login');
                 return;
@@ -31,7 +28,6 @@ const PortalComerciante = () => {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            // Peticiones en paralelo al backend
             const [resPerfil, resNotif] = await Promise.all([
                 axios.get(`${BASE_URL}/comerciante/perfil`, config),
                 axios.get(`${BASE_URL}/comerciante/notificaciones`, config)
@@ -62,29 +58,36 @@ const PortalComerciante = () => {
     const getStepClass = (stepName) => {
         if (!datos) return "step";
         const niveles = { 'Envío': 0, 'Revisión': 1, 'Pago': 2, 'Finalizado': 3 };
-        
         const estadosMapper = {
             'pendiente': 1, 
             'observado': 1, 
             'aprobado': 2,   
-            'pago_en_revision': 2, // Agregamos este estado para el stepper
+            'pago_en_revision': 2, 
             'formalizado': 3 
         };
-
         const pasoActual = estadosMapper[datos.estado_tramite] || 0;
-        
         if (niveles[stepName] < pasoActual) return "step active";
         if (niveles[stepName] === pasoActual) return "step current";
         return "step";
     };
 
-    // 3. useEffect (Llamada limpia)
     useEffect(() => {
-        cargarInformacionPortal();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); 
+    let isMounted = true;
 
-    // 4. Renderizados condicionales
+    const fetchData = async () => {
+        if (isMounted) {
+            await cargarInformacionPortal();
+        }
+    };
+
+    fetchData();
+
+    return () => {
+        isMounted = false; 
+    };
+},
+ []);
+
     if (loading) return (
         <div className="loading-container">
             <p>Cargando tu portal comercial...</p>
@@ -107,12 +110,7 @@ const PortalComerciante = () => {
                         {datos?.nombres} {datos?.apellidos}
                     </span>
                 </div>
-                
-                <button 
-                    className="btn-logout-x" 
-                    onClick={handleLogout} 
-                    title="Cerrar Sesión"
-                >
+                <button className="btn-logout-x" onClick={handleLogout} title="Cerrar Sesión">
                     <FaTimes />
                 </button>
             </header>
@@ -155,10 +153,20 @@ const PortalComerciante = () => {
                         </div>
                     </button>
 
-                    {/* BOTÓN SUBIR PAGO - CONECTADO A /subir-pago */}
                     <button 
                         className={`action-card color-upload ${datos?.estado_tramite !== 'aprobado' ? 'disabled' : ''}`}
-                        onClick={() => datos?.estado_tramite === 'aprobado' && navigate('/subir-pago')}
+                        onClick={() => {
+                            if (datos?.estado_tramite === 'aprobado') {
+                                navigate('/subir-pago', { 
+                                    state: { 
+                                        ordenId: datos.orden_id, 
+                                        codigoOrden: datos.codigo_orden, 
+                                        monto: datos.monto_pendiente,
+                                        mes: datos.mes_correspondiente 
+                                    } 
+                                });
+                            }
+                        }}
                         disabled={datos?.estado_tramite !== 'aprobado'}
                     >
                         <FaFileUpload className="card-icon" />
@@ -172,7 +180,6 @@ const PortalComerciante = () => {
                         </div>
                     </button>
 
-                    {/* BOTÓN DESCARGAR - CONECTADO A /mis-carnets */}
                     <button 
                         className={`action-card color-download ${datos?.estado_tramite !== 'formalizado' ? 'disabled' : ''}`}
                         onClick={() => datos?.estado_tramite === 'formalizado' && navigate('/mis-carnets')}
