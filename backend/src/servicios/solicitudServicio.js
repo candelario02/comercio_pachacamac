@@ -51,7 +51,11 @@ if (requiereCarnet && data.archivo) {
     await client.query(
         `INSERT INTO expediente_digital (comerciante_id, tipo_documento, enlace_archivo_nube)
          VALUES ($1, $2, $3)`,
-        [comercianteId, 'CARNET_SANIDAD', data.archivo.filename] 
+        [
+            comercianteId, 
+            'CARNET_SANIDAD', 
+            data.archivo.path 
+        ] 
     );
 }
 

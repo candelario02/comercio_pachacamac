@@ -22,15 +22,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// 2. MIDDLEWARES DE PARSEO
+
 app.use(express.json());
 
-// 3. CARPETAS ESTÁTICAS (LAS IMÁGENES)
-// Verifica que en tu VS Code la carpeta 'uploads' esté en la RAÍZ (junto a servidor.js)
 app.use('/uploads/carnets', express.static(path.join(__dirname, 'uploads', 'carnets')));
 app.use('/uploads/vouchers', express.static(path.join(__dirname, 'uploads', 'vouchers')));
 
-// 4. RUTAS DE LA API
 const authRutas = require('./src/rutas/authRutas');
 const adminRutas = require('./src/rutas/adminRutas');
 const publicoRutas = require('./src/rutas/publicoRutas');
@@ -41,7 +38,7 @@ app.use('/api/admin', adminRutas);
 app.use('/api/publico', publicoRutas);
 app.use('/api/comerciante', comercianteRutas);
 
-// 5. MANEJADOR DE RUTAS NO ENCONTRADAS (404)
+
 app.use((req, res) => {
     res.status(404).json({ 
         success: false, 

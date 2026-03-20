@@ -26,7 +26,8 @@ const registrarPago = async (req, res) => {
     const usuario_id_token = req.usuario.id; 
     const { monto_pagado, numero_operacion, mes_correspondiente, orden_id } = req.body;
     
-    const voucher_url = req.file ? req.file.filename : null;
+   const voucher_url = req.file ? req.file.path : null;
+   
 
     if (!voucher_url) {
         return res.status(400).json({ success: false, mensaje: "Debes subir la foto del voucher" });

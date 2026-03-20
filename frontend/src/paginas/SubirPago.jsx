@@ -3,13 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../api/apiConfig';
 import { FaCloudUploadAlt, FaArrowLeft, FaCheckCircle, FaFileInvoiceDollar } from 'react-icons/fa';
+import { useModal } from '../contexto/ModalContext'; // Importamos tu hook de alertas
 import '../estilos/SubirPago.css'; 
 
 const SubirPago = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { lanzarAlerta } = useModal(); // Inicializamos las alertas
 
-    // Recibimos los datos enviados desde el Portal
     const { ordenId, codigoOrden, monto, mes } = location.state || {};
 
     const [archivo, setArchivo] = useState(null);
@@ -17,7 +18,6 @@ const SubirPago = () => {
     const [cargando, setCargando] = useState(false);
     const [vistaPrevia, setVistaPrevia] = useState(null);
 
-    // Si no hay datos de orden, regresamos al portal por seguridad
     useEffect(() => {
         if (!ordenId) {
             navigate('/portal-comerciante');
@@ -36,19 +36,15 @@ const SubirPago = () => {
         e.preventDefault();
         
         if (!archivo || !numOperacion) {
-            alert("Por favor, suba el comprobante e ingrese el número de operación.");
+            lanzarAlerta("Por favor, suba el comprobante e ingrese el número de operación.", "alerta");
             return;
         }
 
         setCargando(true);
         const formData = new FormData();
-        
-        // Datos automáticos que vienen del portal
         formData.append('orden_id', ordenId);
         formData.append('monto_pagado', monto);
         formData.append('mes_correspondiente', mes);
-        
-        // Datos que ingresa el usuario
         formData.append('voucher', archivo); 
         formData.append('numero_operacion', numOperacion);
 
@@ -62,12 +58,13 @@ const SubirPago = () => {
             });
 
             if (response.data.success) {
-                alert("¡Comprobante enviado con éxito! Revisaremos su pago pronto.");
-                navigate('/portal-comerciante');
+                lanzarAlerta("¡Comprobante enviado con éxito! Revisaremos su pago pronto.", "exito", () => {
+                    navigate('/portal-comerciante');
+                });
             }
         } catch (error) {
             console.error("Error al subir pago:", error);
-            alert(error.response?.data?.mensaje || "Error al conectar con el servidor");
+            lanzarAlerta(error.response?.data?.mensaje || "Error al conectar con el servidor", "error");
         } finally {
             setCargando(false);
         }
@@ -77,36 +74,36 @@ const SubirPago = () => {
         <div className="subir-pago-container">
             <header className="pago-header">
                 <button onClick={() => navigate(-1)} className="btn-volver">
-                    <FaArrowLeft /> Volver al Portal
+                    <FaArrowLeft /> Volver
                 </button>
-                <h1>Registro de Pago de Tasa</h1>
+                <h1>Registro de Pago</h1>
             </header>
 
             <main className="pago-content">
-                <form className="pago-card card" onSubmit={handleSubmit}>
+                <form className="pago-card" onSubmit={handleSubmit}>
                     <div className="instrucciones">
-                        <h3><FaCheckCircle color="#2ecc71" /> Pago de Orden: {codigoOrden}</h3>
-                        <p>Verifique los detalles de su orden y adjunte su comprobante.</p>
+                        <h3><FaCheckCircle className="icon-check" /> Orden: {codigoOrden}</h3>
+                        <p>Adjunte su comprobante de pago para validación.</p>
                     </div>
 
                     <div className="info-orden-resumen">
                         <div className="info-item">
                             <FaFileInvoiceDollar className="info-icon" />
-                            <div>
+                            <div className="detalles">
                                 <strong>Monto a depositar:</strong>
                                 <p className="monto-resaltado">S/ {monto}</p>
                             </div>
                         </div>
                         <div className="info-item">
-                            <div style={{ marginLeft: '35px' }}>
-                                <strong>Mes:</strong>
+                            <div className="detalles extra">
+                                <strong>Mes de Tasa:</strong>
                                 <p>{mes}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label>Número de Operación / Referencia:</label>
+                        <label>Número de Operación:</label>
                         <input 
                             type="text" 
                             placeholder="Ej: 00982341"
@@ -120,22 +117,24 @@ const SubirPago = () => {
                         <input 
                             type="file" 
                             id="file-upload" 
-                            accept="image/*,application/pdf"
+                            accept="image/*"
                             onChange={handleFileChange}
                             hidden
                         />
                         <label htmlFor="file-upload" className="upload-label">
                             {vistaPrevia ? (
-                                <img src={vistaPrevia} alt="Vista previa" className="preview-img" />
+                                <div className="preview-container">
+                                    <img src={vistaPrevia} alt="Vista previa" className="preview-img" />
+                                    <span>Cambiar imagen</span>
+                                </div>
                             ) : (
-                                <>
-                                    <FaCloudUploadAlt size={50} />
-                                    <span>Click para seleccionar comprobante</span>
-                                    <small>(Imagen del voucher)</small>
-                                </>
+                                <div className="upload-placeholder">
+                                    <FaCloudUploadAlt size={45} />
+                                    <span>Seleccionar Voucher</span>
+                                    <small>JPG o PNG</small>
+                                </div>
                             )}
                         </label>
-                        {archivo && <p className="file-name">{archivo.name}</p>}
                     </div>
 
                     <button 
@@ -143,7 +142,7 @@ const SubirPago = () => {
                         className="btn-confirmar-pago"
                         disabled={cargando}
                     >
-                        {cargando ? "Enviando..." : "Confirmar y Enviar Pago"}
+                        {cargando ? "Procesando..." : "Enviar Comprobante"}
                     </button>
                 </form>
             </main>
