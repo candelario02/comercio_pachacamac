@@ -96,31 +96,6 @@
     margin-bottom: 5px;
 }
 
-
-
-.diseno-carnet {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    background-color: #f8f9fa; 
-    border: 2px dashed #28a745; 
-    border-radius: 8px;
-    cursor: pointer;
-    color: #333;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.diseno-carnet:hover {
-    background-color: #e2f0e6;
-}
-
-.nombre-archivo-elegido {
-    margin-top: 8px;
-    font-size: 0.9rem;
-    color: #28a745;
-}
 .btn-enviar {
     width: 100%;
     padding: 16px;
