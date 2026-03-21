@@ -17,6 +17,7 @@ import GestionFormalizados from './paginas/gestion/GestionFormalizados';
 import SubirPago from './paginas/SubirPago';
 import MisCarnets from './paginas/MisCarnets';
 import PortalComerciante from './paginas/PortalComerciante';
+import Ordenanzas from './paginas/Ordenanzas';
 import "./estilos/Globales.css"
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/rubros-y-actividades" element={<LayoutFondo><ListaPublicaRubrosActividad /></LayoutFondo>} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro-solicitud" element={<LayoutFondo><SolicitudComerciante /></LayoutFondo>} />
+          <Route path="/ordenanzas" element={<Ordenanzas />} />
           
 
           <Route path="/admin-dashboard" element={<AdminLayout><DashboardAdmin /></AdminLayout>} />
