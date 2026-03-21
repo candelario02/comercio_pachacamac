@@ -10,11 +10,17 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'comercio_pachacamac', 
-    allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
-    resource_type: 'auto', 
-    public_id: (req, file) => `doc-${Date.now()}` 
+  params: async (req, file) => {
+    
+    const esPdf = file.mimetype === 'application/pdf';
+    
+    return {
+      folder: 'comercio_pachacamac',
+   
+      resource_type: esPdf ? 'raw' : 'image', 
+      public_id: `doc-${Date.now()}`,
+      
+    };
   },
 });
 

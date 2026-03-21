@@ -226,7 +226,7 @@ const ListaPendientes = () => {
             </div>
         )}
 
-        {/* LANZADOR DE ALERTAS AL FINAL: Ahora saldrá por encima del modal */}
+        
         <div className="modal-alerta-overlay" style={{ display: modalAlerta.abierto ? 'flex' : 'none' }}>
             <ModalAlerta 
                 modal={modalAlerta} 
