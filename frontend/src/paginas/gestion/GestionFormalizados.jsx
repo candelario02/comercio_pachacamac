@@ -6,7 +6,7 @@ import '../../estilos/gestion-expedientes.css';
 
 const GestionFormalizados = () => {
     const [formalizados, setFormalizados] = useState([]);
-    const [filtro, setFiltro] = useState(""); // Estado para el buscador
+    const [filtro, setFiltro] = useState(""); 
     const [cargando, setCargando] = useState(true);
 
     const cargarFormalizados = async () => {
@@ -24,7 +24,6 @@ const GestionFormalizados = () => {
 
     useEffect(() => { cargarFormalizados(); }, []);
 
-    // Lógica del buscador
     const datosFiltrados = formalizados.filter(item => 
         item.dni.includes(filtro) || 
         item.nombres.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -35,12 +34,12 @@ const GestionFormalizados = () => {
         <div className="gestion-contenedor">
             <header className="gestion-header-pro">
                 <h2>Control de Formalizados</h2>
-                <div className="acciones-header">
-                    {/* BUSCADOR PROFESIONAL */}
+                <div className="header-acciones">
                     <div className="buscador-caja">
-                        <FaSearch />
+                        <FaSearch className="icon-search" />
                         <input 
                             type="text" 
+                            className="input-buscador"
                             placeholder="Buscar por DNI o Nombre..." 
                             value={filtro}
                             onChange={(e) => setFiltro(e.target.value)}
@@ -63,32 +62,46 @@ const GestionFormalizados = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {datosFiltrados.map((item) => (
-                            <tr key={item.comerciante_id}>
-                                <td>{item.dni}</td>
-                                <td><strong>{item.nombres} {item.apellidos}</strong></td>
-                                <td>{item.fecha_vencimiento ? new Date(item.fecha_vencimiento).toLocaleDateString() : 'Pendiente'}</td>
-                                <td className="acciones-flex">
-                                    {/* BOTÓN 1: COMERCIO (Siempre visible) */}
-                                    <button 
-                                        className="btn-emitir carnet-comercio" 
-                                        onClick={() => generarCarnetPDF(item, 'comercio')}
-                                    >
-                                        <FaStore /> Comercio
-                                    </button>
+                        {datosFiltrados.length > 0 ? (
+                            datosFiltrados.map((item) => (
+                                <tr key={item.comerciante_id}>
+                                    <td>{item.dni}</td>
+                                    <td><strong>{item.nombres} {item.apellidos}</strong></td>
+                                    <td>
+                                        <span className="fecha-badge">
+                                            {item.fecha_vencimiento ? new Date(item.fecha_vencimiento).toLocaleDateString() : 'Pendiente'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="acciones-botones-flex">
+                                        
+                                            <button 
+                                                className="btn-emitir carnet-comercio" 
+                                                onClick={() => generarCarnetPDF(item, 'comercio')}
+                                            >
+                                                <FaStore /> Comercio
+                                            </button>
 
-                                    {/* BOTÓN 2: SANIDAD (Solo si lo pagó/requiere) */}
-                                    {item.desea_tramitar_carnet && (
-                                        <button 
-                                            className="btn-emitir carnet-sanidad" 
-                                            onClick={() => generarCarnetPDF(item, 'sanidad')}
-                                        >
-                                            <FaMedkit /> Sanidad
-                                        </button>
-                                    )}
+                                          
+                                            {item.desea_tramitar_carnet && (
+                                                <button 
+                                                    className="btn-emitir carnet-sanidad" 
+                                                    onClick={() => generarCarnetPDF(item, 'sanidad')}
+                                                >
+                                                    <FaMedkit /> Sanidad
+                                                </button>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4" style={{textAlign: 'center', padding: '20px'}}>
+                                    {cargando ? "Cargando..." : "No se encontraron registros."}
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>

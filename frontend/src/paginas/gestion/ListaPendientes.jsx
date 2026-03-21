@@ -46,53 +46,43 @@ const ListaPendientes = () => {
     const totalFinal = (parseFloat(montoActividad) || 0) + (incluirCarnet ? (parseFloat(montoCarnet) || 0) : 0);
 
     const prepararAprobacion = (id) => {
-    // 1. Aseguramos que los valores sean números antes de sumar
-    const mActividad = parseFloat(montoActividad) || 0;
-    const mCarnet = incluirCarnet ? (parseFloat(montoCarnet) || 0) : 0;
-    const montoFinalCalculado = mActividad + mCarnet;
+        const mActividad = parseFloat(montoActividad) || 0;
+        const mCarnet = incluirCarnet ? (parseFloat(montoCarnet) || 0) : 0;
+        const montoFinalCalculado = mActividad + mCarnet;
 
-    setModalAlerta({
-        abierto: true,
-        mensaje: `¿Aprobar trámite? Se generará una orden por S/ ${montoFinalCalculado.toFixed(2)}`,
-        tipo: "confirmar",
-        accion: async () => {
-            try {
-                const token = localStorage.getItem('token');
-                
-                // 2. Enviamos números limpios al backend
-                const datosPago = { 
-                    monto_confirmado: montoFinalCalculado, 
-                    detalle: { 
-                        actividad: mActividad, 
-                        carnet: mCarnet 
-                    } 
-                };
-
-                const res = await AdminServicio.aprobarTramiteYGenerarDeuda(id, token, datosPago);
-                
-                if (res.success) {
-                    setModalAlerta({
-                        abierto: true,
-                        mensaje: `✅ ¡Éxito! Orden generada por S/ ${montoFinalCalculado.toFixed(2)}`,
-                        tipo: "aceptar",
-                        accion: () => {
-                            // 3. Limpiamos estados para la siguiente operación
-                            setModalAbierto(false);
-                            setModalAlerta({ abierto: false, mensaje: '', tipo: '', accion: null });
-                            cargarSolicitudes();
-                        }
-                    });
-                } else {
-                    // Manejo de error si el backend responde success: false
-                    alert(res.mensaje || "Error al procesar la aprobación");
+        setModalAlerta({
+            abierto: true,
+            mensaje: `¿Aprobar trámite? Se generará una orden por S/ ${montoFinalCalculado.toFixed(2)}`,
+            tipo: "confirmar",
+            accion: async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    const datosPago = { 
+                        monto_confirmado: montoFinalCalculado, 
+                        detalle: { actividad: mActividad, carnet: mCarnet } 
+                    };
+                    const res = await AdminServicio.aprobarTramiteYGenerarDeuda(id, token, datosPago);
+                    if (res.success) {
+                        setModalAlerta({
+                            abierto: true,
+                            mensaje: `✅ ¡Éxito! Orden generada por S/ ${montoFinalCalculado.toFixed(2)}`,
+                            tipo: "aceptar",
+                            accion: () => {
+                                setModalAbierto(false);
+                                setModalAlerta({ abierto: false, mensaje: '', tipo: '', accion: null });
+                                cargarSolicitudes();
+                            }
+                        });
+                    } else {
+                        alert(res.mensaje || "Error al procesar la aprobación");
+                    }
+                } catch (error) {
+                    console.error("Error al aprobar:", error);
+                    alert("Error de conexión con el servidor");
                 }
-            } catch (error) {
-                console.error("Error al aprobar:", error);
-                alert("Error de conexión con el servidor");
             }
-        }
-    });
-};
+        });
+    };
 
     return (
         <div className="gestion-contenedor">
@@ -110,114 +100,125 @@ const ListaPendientes = () => {
                 </button>
             </header>
 
-<div className="tabla-card">
-    <table className="tabla-gestion">
-        <thead>
-            <tr>
-                <th>DNI/RUC</th>
-                <th>Comerciante</th>
-                <th>Teléfono</th> 
-                <th>Sector</th> {/* Cambiado de Sector/Distrito a Sector */}
-                <th>Actividad</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {solicitudes.map((s) => (
-                <tr key={s.comerciante_id}>
-                    <td>{s.dni}</td>                     
-                    <td>{s.nombres} {s.apellidos}</td>
-                    <td>{s.celular || 'Sin número'}</td>
-                    {/* Usamos sector_nombre que viene de la vista */}
-                    <td>{s.sector_nombre || 'No asignado'}</td>
-                    {/* Usamos actividad_nombre que viene de la vista */}
-                    <td>{s.actividad_nombre}</td>
-                    <td>
-                        <button className="btn-footer" onClick={() => abrirDetalle(s)}>
-                            <FaEye /> Detalle
-                        </button>
-                    </td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
-</div>
+            
+            <div className="tabla-card">
+                <table className="tabla-gestion">
+                    <thead>
+                        <tr>
+                            <th>DNI/RUC</th>
+                            <th>Comerciante</th>
+                            <th>Teléfono</th> 
+                            <th>Sector</th>
+                            <th>Actividad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {solicitudes.map((s) => (
+                            <tr key={s.comerciante_id}>
+                                <td>{s.dni}</td>                     
+                                <td>{s.nombres} {s.apellidos}</td>
+                                <td>{s.celular || 'Sin número'}</td>
+                                <td>{s.sector_nombre || 'No asignado'}</td>
+                                <td>{s.actividad_nombre}</td>
+                                <td>
+                                    <button className="btn-footer" onClick={() => abrirDetalle(s)}>
+                                        <FaEye /> Detalle
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             {modalAbierto && seleccionado && (
-    <div className="modal-overlay">
-        <div className="modal-contenido">
-            <div className="modal-header">
-                <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
-            </div>
-            
-            <div className="modal-body">
-                {/* SECCIÓN 1: DATOS PERSONALES */}
-                <div className="detalle-seccion">
-                    <h4>Información del Comerciante</h4>
-                    <div className="info-grid">
-                        <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
-                        <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
-                        <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
-                        <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
-                        <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
-                    </div>
-                </div>
+                <div className="modal-overlay">
+                    <div className="modal-contenido">
+                        <div className="modal-header">
+                            <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
+                        </div>
+                        
+                        <div className="modal-body">
+                            <div className="detalle-seccion">
+                                <h4>Información del Comerciante</h4>
+                                <div className="info-grid">
+                                    <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
+                                    <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
+                                    <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
+                                    <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
+                                    <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
+                                </div>
+                            </div>
 
-                {/* SECCIÓN 2: VALIDACIÓN TÉCNICA (Lo que faltaba) */}
-                <div className="detalle-seccion">
-                    <h4>Requisitos de Actividad</h4>
-                    <div className="info-grid">
-                        <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
-                        <p><strong>Carnet de Sanidad:</strong> 
-                            {seleccionado.foto_carnet ? (
-                               <button 
-    className="btn-accion-ojito" 
+                            <div className="detalle-seccion">
+                                <h4>Requisitos de Actividad</h4>
+                                <div className="info-grid">
+                                    <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
+                                    <p><strong>Carnet de Sanidad:</strong> 
+                                        {seleccionado.foto_carnet ? (
+                                          <button 
+    className="btn-ver-foto" 
     onClick={() => {
         const url = `https://comercio-pachacamac-v2.onrender.com/uploads/carnets/${seleccionado.foto_carnet}`;
-        console.log("Abriendo URL:", url);
         window.open(url, '_blank');
     }}
 >
     <FaEye /> Ver Foto Adjunta
 </button>
-                            ) : seleccionado.desea_tramitar_carnet ? (
-                                <span className="status-tramite">⚠️ Solicita trámite nuevo</span>
-                            ) : (
-                                <span className="status-no-req">No requiere / No adjunto</span>
-                            )}
-                        </p>
+                                        ) : seleccionado.desea_tramitar_carnet ? (
+                                            <span style={{color: 'orange', fontWeight: 'bold'}}>⚠️ Solicita trámite nuevo</span>
+                                        ) : (
+                                            <span>No requiere / No adjunto</span>
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="detalle-seccion activity-box">
+                                <h4>Liquidación de Pago</h4>
+                                
+                                <div className="info-grid">
+                                    <div className="input-field">
+                                        <label style={{display: 'block', marginBottom: '5px', fontSize: '0.85rem'}}>Derecho Trámite (S/):</label>
+                                        <input 
+                                            type="number" 
+                                            style={{width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc'}}
+                                            value={montoActividad} 
+                                            onChange={(e) => setMontoActividad(e.target.value)} 
+                                        />
+                                    </div>
+                                    <div className="input-field">
+                                        <label style={{display: 'block', marginBottom: '5px', fontSize: '0.85rem'}}>
+                                            <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> Incluir Carnet (S/):
+                                        </label>
+                                        <input 
+                                            type="number" 
+                                            style={{width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc'}}
+                                            value={montoCarnet} 
+                                            disabled={!incluirCarnet} 
+                                            onChange={(e) => setMontoCarnet(e.target.value)} 
+                                        />
+                                    </div>
+                                </div>
+                                <div style={{marginTop: '15px', textAlign: 'right', fontSize: '1.1rem'}}>
+                                    <strong>Total: S/ {totalFinal.toFixed(2)}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>
+                            <button className="btn-orden-pago" onClick={async () => await generarOrdenPagoPDF(seleccionado, {total: totalFinal, derecho: montoActividad, carnet: incluirCarnet ? montoCarnet : 0})}>
+                                <FaFileInvoiceDollar /> Generar Orden
+                            </button>
+                            <button className="btn-aprobar" onClick={() => prepararAprobacion(seleccionado.comerciante_id)}>
+                                <FaCheck /> Aprobar
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                {/* SECCIÓN 3: LIQUIDACIÓN DE PAGO (Tu lógica de montos) */}
-                <div className="detalle-seccion">
-                    <h4>Liquidación de Pago</h4>
-                    <div className="input-group">
-                        <label>Derecho Trámite (S/): 
-                            <input type="number" value={montoActividad} onChange={(e) => setMontoActividad(e.target.value)} />
-                        </label>
-                        <label>
-                            <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> 
-                            Incluir Carnet (S/): 
-                            <input type="number" value={montoCarnet} disabled={!incluirCarnet} onChange={(e) => setMontoCarnet(e.target.value)} />
-                        </label>
-                    </div>
-                    <div className="total-display"><strong>Total: S/ {totalFinal.toFixed(2)}</strong></div>
-                </div>
-            </div>
-
-            <div className="modal-footer">
-                <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>
-                <button className="btn-orden-pago" onClick={async () => await generarOrdenPagoPDF(seleccionado, {total: totalFinal, derecho: montoActividad, carnet: incluirCarnet ? montoCarnet : 0})}>
-                    <FaFileInvoiceDollar /> Generar Orden
-                </button>
-                <button className="btn-aprobar" onClick={() => prepararAprobacion(seleccionado.comerciante_id)}>
-                    <FaCheck /> Aprobar
-                </button>
-            </div>
-        </div>
-    </div>
-)}
+            )}
         </div>
     );
 };

@@ -120,8 +120,6 @@ const SolicitudComerciante = () => {
         }
     };
 
-    // ... (Tus imports y lógica de estado se mantienen IGUAL) ...
-
     if (loading) return <div className="cargando" style={{textAlign:'center', padding:'50px'}}>Cargando formulario...</div>;
 
     return (

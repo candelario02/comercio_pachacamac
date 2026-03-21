@@ -7,7 +7,6 @@
     --texto-oscuro: #2c3e50;
 }
 
-
 .gestion-contenedor { 
     padding: 20px; 
     background-color: var(--gris-fondo); 
@@ -20,13 +19,50 @@
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    margin-bottom: 25px; 
+    margin-bottom: 20px; 
     background: var(--blanco); 
-    padding: 20px; 
+    padding: 15px 20px; 
     border-radius: 10px; 
     box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
 }
 
+.header-acciones {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.gestion-tabs {
+    display: flex;
+    background: #eeeeee;
+    padding: 4px;
+    border-radius: 8px;
+    gap: 4px;
+    width: 100%;
+    max-width: 400px; 
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tab-btn.active {
+    background: var(--cian-institucional);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 188, 212, 0.2);
+}
+
+/* --- Tablas y Cards --- */
 .tabla-card { 
     background: var(--blanco); 
     border-radius: 12px; 
@@ -58,33 +94,27 @@
     background-color: rgba(0, 188, 212, 0.05); 
 }
 
+/* --- Modales --- */
 .modal-overlay { 
     position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
+    top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(0,0,0,0.6); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
+    display: flex; justify-content: center; align-items: center; 
     z-index: 1000; 
     padding: 10px; 
 }
 
 .modal-contenido { 
     background: var(--blanco); 
-    width: 100%; 
-    max-width: 700px; 
+    width: 100%; max-width: 700px; 
     border-radius: 15px; 
     overflow: hidden; 
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column; 
     max-height: 95vh; 
 }
 
 .modal-header { 
-    padding: 20px; 
+    padding: 15px 20px; 
     background: var(--cian-institucional); 
     color: white; 
     flex-shrink: 0; 
@@ -97,20 +127,35 @@
 }
 
 .modal-footer { 
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
+    display: flex; justify-content: center; gap: 10px; 
     padding: 15px; 
     border-top: 1px solid #ddd; 
-    background: #fff;
-    flex-shrink: 0;
+    background: #fff; flex-shrink: 0;
 }
 
+
 .detalle-seccion { 
-    margin-bottom: 20px; 
+    margin-bottom: 15px; 
     padding: 15px; 
     background: #f9f9f9; 
     border-radius: 8px; 
+}
+.btn-ver-foto {
+    background-color: var(--cian-institucional);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s;
+}
+
+.btn-ver-foto:hover {
+    filter: brightness(1.1);
 }
 
 .actividad-box { border-left: 5px solid var(--cian-institucional); }
@@ -118,7 +163,7 @@
 .info-grid { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
-    gap: 15px; 
+    gap: 12px; 
 }
 
 .btn-actualizar-circular { background: var(--cian-institucional); color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;}
@@ -128,11 +173,27 @@
 
 
 @media (max-width: 768px) {
+    .gestion-contenedor { padding: 10px; }
+
     .gestion-header-pro {
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
+        padding: 15px 10px;
         text-align: center;
-        padding: 15px;
+    }
+
+    .header-acciones {
+        width: 100%;
+    }
+
+    .gestion-tabs {
+        max-width: 100%; 
+        border-radius: 8px;
+    }
+
+    .tab-btn {
+        padding: 12px 5px; 
+        font-size: 0.8rem;
     }
 
     .tabla-card {
@@ -141,7 +202,7 @@
     }
 
     .tabla-gestion {
-        min-width: 700px; 
+        min-width: 750px;
     }
 
     .info-grid {
@@ -154,10 +215,10 @@
 
     .modal-footer button {
         width: 100% !important;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
+        padding: 12px;
     }
 
-    
     input, select {
         font-size: 16px !important;
     }
