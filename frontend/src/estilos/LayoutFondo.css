@@ -1,12 +1,13 @@
-/* LayoutFondo.css - Optimizado */
 
 .layout-wrapper { 
     position: relative; 
-    height: 100vh; 
+    min-height: 100vh; 
+    height: auto; 
     width: 100vw; 
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Evita scrolls dobles raros */
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 .fondo-slider {
@@ -15,8 +16,9 @@
     left: 0; 
     width: 100%; 
     height: 100%;
-    z-index: 0; /* Lo bajamos al fondo base */
+    z-index: 0; 
 }
+
 
 .fondo-slider .swiper, 
 .fondo-slider .swiper-wrapper, 
@@ -28,15 +30,16 @@
 .fondo-slider img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Esto garantiza que la foto llene la pantalla */
-    filter: brightness(0.8); /* Oscurece un poquito la foto para que el texto resalte */
+    object-fit: cover; 
+    filter: brightness(0.8); 
 }
 
 .contenido-dinamico {
     position: relative;
-    z-index: 2; /* Por encima del slider */
+    z-index: 2; 
     flex: 1; 
     display: flex;
     flex-direction: column;
-    background: transparent; /* FUNDAMENTAL: Que no tenga color de fondo */
+    background: transparent;
+    height: auto; 
 }
