@@ -76,7 +76,7 @@ const GestionFormalizados = () => {
                                         <div className="acciones-botones-flex">
                                         
                                             <button 
-                                                className="btn-emitir carnet-comercio" 
+                                                className="btn-emitir.carnet-comercio" 
                                                 onClick={() => generarCarnetPDF(item, 'comercio')}
                                             >
                                                 <FaStore /> Comercio
@@ -85,7 +85,7 @@ const GestionFormalizados = () => {
                                           
                                             {item.desea_tramitar_carnet && (
                                                 <button 
-                                                    className="btn-emitir carnet-sanidad" 
+                                                    className="btn-emitir.carnet-sanidad" 
                                                     onClick={() => generarCarnetPDF(item, 'sanidad')}
                                                 >
                                                     <FaMedkit /> Sanidad
