@@ -84,162 +84,157 @@ const ListaPendientes = () => {
         });
     };
 
-    return (
-        <div className="gestion-contenedor">
-            <div className="modal-alerta-overlay" style={{ display: modalAlerta.abierto ? 'flex' : 'none' }}>
-                <ModalAlerta 
-                    modal={modalAlerta} 
-                    cerrar={() => setModalAlerta({...modalAlerta, abierto: false})} 
-                />
-            </div>
-            
-            <header className="gestion-header-pro">
-                <h2>Expedientes Pendientes</h2>
-                <button onClick={cargarSolicitudes} className="btn-actualizar-circular">
-                    <FaSync className={cargando ? 'spin' : ''} />
-                </button>
-            </header>
+  return (
+    <div className="gestion-contenedor">
+        <header className="gestion-header-pro">
+            <h2>Expedientes Pendientes</h2>
+            <button onClick={cargarSolicitudes} className="btn-actualizar-circular">
+                <FaSync className={cargando ? 'spin' : ''} />
+            </button>
+        </header>
 
-            
-            <div className="tabla-card">
-                <table className="tabla-gestion">
-                    <thead>
-                        <tr>
-                            <th>DNI/RUC</th>
-                            <th>Comerciante</th>
-                            <th>Teléfono</th> 
-                            <th>Sector</th>
-                            <th>Actividad</th>
-                            <th>Acciones</th>
+        <div className="tabla-card">
+            <table className="tabla-gestion">
+                <thead>
+                    <tr>
+                        <th>DNI/RUC</th>
+                        <th>Comerciante</th>
+                        <th>Teléfono</th> 
+                        <th>Sector</th>
+                        <th>Actividad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {solicitudes.map((s) => (
+                        <tr key={s.comerciante_id}>
+                            <td>{s.dni}</td>                     
+                            <td>{s.nombres} {s.apellidos}</td>
+                            <td>{s.celular || 'Sin número'}</td>
+                            <td>{s.sector_nombre || 'No asignado'}</td>
+                            <td>{s.actividad_nombre}</td>
+                            <td>
+                                <button className="btn-footer" onClick={() => abrirDetalle(s)}>
+                                    <FaEye /> Detalle
+                                </button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {solicitudes.map((s) => (
-                            <tr key={s.comerciante_id}>
-                                <td>{s.dni}</td>                     
-                                <td>{s.nombres} {s.apellidos}</td>
-                                <td>{s.celular || 'Sin número'}</td>
-                                <td>{s.sector_nombre || 'No asignado'}</td>
-                                <td>{s.actividad_nombre}</td>
-                                <td>
-                                    <button className="btn-footer" onClick={() => abrirDetalle(s)}>
-                                        <FaEye /> Detalle
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            {modalAbierto && seleccionado && (
-                <div className="modal-overlay">
-                    <div className="modal-contenido">
-                        <div className="modal-header">
-                            <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
-                        </div>
-                        
-                        <div className="modal-body">
-                            <div className="detalle-seccion">
-                                <h4>Información del Comerciante</h4>
-                                <div className="info-grid">
-                                    <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
-                                    <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
-                                    <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
-                                    <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
-                                    <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
-                                </div>
-                            </div>
-
-                            <div className="detalle-seccion">
-                                <h4>Requisitos de Actividad</h4>
-                                <div className="info-grid">
-                                    <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
-                                    <p><strong>Carnet de Sanidad:</strong> 
-                                        {seleccionado.foto_carnet ? (
- <button 
-    className="btn-ver-foto" 
-    onClick={() => {
-        const url = seleccionado?.foto_carnet;
-
-        if (!url) {
-            alert("No hay foto disponible para este carnet.");
-            return;
-        }
-
-        if (!url.startsWith('http')) {
-            console.error("URL no válida en base de datos:", url);
-            alert("El archivo no es una URL válida de Cloudinary. Es un registro antiguo o corrupto.");
-            return;
-        }
- 
-        console.log("Abriendo carnet desde Cloudinary:", url);
-        window.open(url, '_blank');
-    }}
->
-    <FaEye /> Ver Foto Adjunta
-</button>
-                                        ) : seleccionado.desea_tramitar_carnet ? (
-                                            <span style={{color: 'orange', fontWeight: 'bold'}}>⚠️ Solicita trámite nuevo</span>
-                                        ) : (
-                                            <span>No requiere / No adjunto</span>
-                                        )}
-                                    </p>
-                                </div>
-                            </div>
-
-                          <div className="detalle-seccion activity-box">
-    <h4>Liquidación de Pago</h4>
-    
-    <div className="info-grid">
-        <div className="input-field">
-            <label className="label-standard">Derecho Trámite (S/):</label>
-            <input 
-                type="number" 
-                className="input-standard"
-                value={montoActividad} 
-                onChange={(e) => setMontoActividad(e.target.value)} 
-            />
+                    ))}
+                </tbody>
+            </table>
         </div>
-        <div className="input-field">
-            <label className="label-standard">
-                <input 
-                    type="checkbox" 
-                    className="check-inline"
-                    checked={incluirCarnet} 
-                    onChange={(e) => setIncluirCarnet(e.target.checked)} 
-                /> Incluir Carnet (S/):
-            </label>
-            <input 
-                type="number" 
-                className="input-standard"
-                value={montoCarnet} 
-                disabled={!incluirCarnet} 
-                onChange={(e) => setMontoCarnet(e.target.value)} 
-            />
-        </div>
-    </div>
-    
-    <div className="total-liquidacion">
-        <strong>Total: S/ {totalFinal.toFixed(2)}</strong>
-    </div>
-</div>
+
+        {modalAbierto && seleccionado && (
+            <div className="modal-overlay">
+                <div className="modal-contenido">
+                    <div className="modal-header">
+                        <h3><FaIdCard /> Detalle: {seleccionado.nombres}</h3>
+                    </div>
+                    
+                    <div className="modal-body">
+                        <div className="detalle-seccion">
+                            <h4>Información del Comerciante</h4>
+                            <div className="info-grid">
+                                <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
+                                <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
+                                <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
+                                <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
+                                <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
+                            </div>
                         </div>
 
-                        <div className="modal-footer">
-                            <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>
-                            <button className="btn-orden-pago" onClick={async () => await generarOrdenPagoPDF(seleccionado, {total: totalFinal, derecho: montoActividad, carnet: incluirCarnet ? montoCarnet : 0})}>
-                                <FaFileInvoiceDollar /> Generar Orden
-                            </button>
-                            <button className="btn-aprobar" onClick={() => prepararAprobacion(seleccionado.comerciante_id)}>
-                                <FaCheck /> Aprobar
-                            </button>
+                        <div className="detalle-seccion">
+                            <h4>Requisitos de Actividad</h4>
+                            <div className="info-grid">
+                                <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
+                                <p><strong>Carnet de Sanidad:</strong> 
+                                    {seleccionado.foto_carnet ? (
+                                        <button 
+                                            className="btn-ver-foto" 
+                                            onClick={() => {
+                                                const url = seleccionado?.foto_carnet;
+                                                if (!url) {
+                                                    alert("No hay foto disponible para este carnet.");
+                                                    return;
+                                                }
+                                                if (!url.startsWith('http')) {
+                                                    console.error("URL no válida en base de datos:", url);
+                                                    alert("El archivo no es una URL válida de Cloudinary. Es un registro antiguo o corrupto.");
+                                                    return;
+                                                }
+                                                console.log("Abriendo carnet desde Cloudinary:", url);
+                                                window.open(url, '_blank');
+                                            }}
+                                        >
+                                            <FaEye /> Ver Foto Adjunta
+                                        </button>
+                                    ) : seleccionado.desea_tramitar_carnet ? (
+                                        <span style={{color: 'orange', fontWeight: 'bold'}}>⚠️ Solicita trámite nuevo</span>
+                                    ) : (
+                                        <span>No requiere / No adjunto</span>
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="detalle-seccion activity-box">
+                            <h4>Liquidación de Pago</h4>
+                            <div className="info-grid">
+                                <div className="input-field">
+                                    <label className="label-standard">Derecho Trámite (S/):</label>
+                                    <input 
+                                        type="number" 
+                                        className="input-standard"
+                                        value={montoActividad} 
+                                        onChange={(e) => setMontoActividad(e.target.value)} 
+                                    />
+                                </div>
+                                <div className="input-field">
+                                    <label className="label-standard">
+                                        <input 
+                                            type="checkbox" 
+                                            className="check-inline"
+                                            checked={incluirCarnet} 
+                                            onChange={(e) => setIncluirCarnet(e.target.checked)} 
+                                        /> Incluir Carnet (S/):
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        className="input-standard"
+                                        value={montoCarnet} 
+                                        disabled={!incluirCarnet} 
+                                        onChange={(e) => setMontoCarnet(e.target.value)} 
+                                    />
+                                </div>
+                            </div>
+                            <div className="total-liquidacion">
+                                <strong>Total: S/ {totalFinal.toFixed(2)}</strong>
+                            </div>
                         </div>
                     </div>
+
+                    <div className="modal-footer">
+                        <button className="btn-footer" onClick={() => setModalAbierto(false)}>Cerrar</button>
+                        <button className="btn-orden-pago" onClick={async () => await generarOrdenPagoPDF(seleccionado, {total: totalFinal, derecho: montoActividad, carnet: incluirCarnet ? montoCarnet : 0})}>
+                            <FaFileInvoiceDollar /> Generar Orden
+                        </button>
+                        <button className="btn-aprobar" onClick={() => prepararAprobacion(seleccionado.comerciante_id)}>
+                            <FaCheck /> Aprobar
+                        </button>
+                    </div>
                 </div>
-            )}
+            </div>
+        )}
+
+        {/* LANZADOR DE ALERTAS AL FINAL: Ahora saldrá por encima del modal */}
+        <div className="modal-alerta-overlay" style={{ display: modalAlerta.abierto ? 'flex' : 'none' }}>
+            <ModalAlerta 
+                modal={modalAlerta} 
+                cerrar={() => setModalAlerta({...modalAlerta, abierto: false})} 
+            />
         </div>
-    );
+    </div>
+);
 };
 
 export default ListaPendientes;
