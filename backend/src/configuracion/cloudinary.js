@@ -13,6 +13,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'comercio_pachacamac', 
     allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
+    resource_type: 'auto', 
     public_id: (req, file) => `doc-${Date.now()}` 
   },
 });
