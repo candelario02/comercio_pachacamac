@@ -160,12 +160,18 @@ const SolicitudComerciante = () => {
                                 <label htmlFor="check-tramite" style={{cursor:'pointer'}}>Deseo tramitar mi Carnet de Sanidad (Adicional)</label>
                             </div>
 
-                            {!formData.desea_tramitar_carnet && (
-                                <div className="campo-archivo">
-                                    <label className="subir-archivo-info">Subir documento aquí (Imagen o PDF):</label>
-                                    <input type="file" name="archivo_carnet" accept="image/*,.pdf" onChange={handleChange} required />
-                                </div>
-                            )}
+                           {!formData.desea_tramitar_carnet && (
+    <div className="campo-archivo">
+        <label className="subir-archivo-info">Subir documento aquí (Solo Imagen):</label>
+        <input 
+            type="file" 
+            name="archivo_carnet" 
+            accept="image/png, image/jpeg, image/jpg" 
+            onChange={handleChange} 
+            required 
+        />
+    </div>
+)}
                         </div>
                     )}
 

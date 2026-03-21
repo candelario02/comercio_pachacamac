@@ -13,10 +13,10 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'comercio_pachacamac',
-    // 'auto' es fundamental para que el navegador sepa que es un PDF
-    resource_type: 'auto', 
-    // NO uses public_id personalizado por ahora para evitar conflictos con la extensión
-    // Cloudinary le pondrá el nombre y la extensión .pdf automáticamente
+   
+    allowed_formats: ['jpg', 'png', 'jpeg'], 
+    resource_type: 'image',
+    public_id: (req, file) => `doc-${Date.now()}`
   },
 });
 
