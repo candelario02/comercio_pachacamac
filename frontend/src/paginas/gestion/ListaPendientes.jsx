@@ -157,16 +157,24 @@ const ListaPendientes = () => {
                                     <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
                                     <p><strong>Carnet de Sanidad:</strong> 
                                         {seleccionado.foto_carnet ? (
-  <button 
+ <button 
     className="btn-ver-foto" 
     onClick={() => {
-        
-        if (seleccionado && seleccionado.foto_carnet) {
-         
-            window.open(seleccionado.foto_carnet, '_blank');
-        } else {
+        const url = seleccionado?.foto_carnet;
+
+        if (!url) {
             alert("No hay foto disponible para este carnet.");
+            return;
         }
+
+        if (!url.startsWith('http')) {
+            console.error("URL no válida en base de datos:", url);
+            alert("El archivo no es una URL válida de Cloudinary. Es un registro antiguo o corrupto.");
+            return;
+        }
+ 
+        console.log("Abriendo carnet desde Cloudinary:", url);
+        window.open(url, '_blank');
     }}
 >
     <FaEye /> Ver Foto Adjunta
@@ -180,36 +188,42 @@ const ListaPendientes = () => {
                                 </div>
                             </div>
 
-                            <div className="detalle-seccion activity-box">
-                                <h4>Liquidación de Pago</h4>
-                                
-                                <div className="info-grid">
-                                    <div className="input-field">
-                                        <label style={{display: 'block', marginBottom: '5px', fontSize: '0.85rem'}}>Derecho Trámite (S/):</label>
-                                        <input 
-                                            type="number" 
-                                            style={{width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc'}}
-                                            value={montoActividad} 
-                                            onChange={(e) => setMontoActividad(e.target.value)} 
-                                        />
-                                    </div>
-                                    <div className="input-field">
-                                        <label style={{display: 'block', marginBottom: '5px', fontSize: '0.85rem'}}>
-                                            <input type="checkbox" checked={incluirCarnet} onChange={(e) => setIncluirCarnet(e.target.checked)} /> Incluir Carnet (S/):
-                                        </label>
-                                        <input 
-                                            type="number" 
-                                            style={{width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc'}}
-                                            value={montoCarnet} 
-                                            disabled={!incluirCarnet} 
-                                            onChange={(e) => setMontoCarnet(e.target.value)} 
-                                        />
-                                    </div>
-                                </div>
-                                <div style={{marginTop: '15px', textAlign: 'right', fontSize: '1.1rem'}}>
-                                    <strong>Total: S/ {totalFinal.toFixed(2)}</strong>
-                                </div>
-                            </div>
+                          <div className="detalle-seccion activity-box">
+    <h4>Liquidación de Pago</h4>
+    
+    <div className="info-grid">
+        <div className="input-field">
+            <label className="label-standard">Derecho Trámite (S/):</label>
+            <input 
+                type="number" 
+                className="input-standard"
+                value={montoActividad} 
+                onChange={(e) => setMontoActividad(e.target.value)} 
+            />
+        </div>
+        <div className="input-field">
+            <label className="label-standard">
+                <input 
+                    type="checkbox" 
+                    className="check-inline"
+                    checked={incluirCarnet} 
+                    onChange={(e) => setIncluirCarnet(e.target.checked)} 
+                /> Incluir Carnet (S/):
+            </label>
+            <input 
+                type="number" 
+                className="input-standard"
+                value={montoCarnet} 
+                disabled={!incluirCarnet} 
+                onChange={(e) => setMontoCarnet(e.target.value)} 
+            />
+        </div>
+    </div>
+    
+    <div className="total-liquidacion">
+        <strong>Total: S/ {totalFinal.toFixed(2)}</strong>
+    </div>
+</div>
                         </div>
 
                         <div className="modal-footer">
