@@ -14,15 +14,15 @@ const Navbar = () => {
                 
                 <div className="navbar-links">
                     <Link to="/">Inicio</Link>
-                    <Link to="/rubros-y-actividades">Rubros</Link>
+                    <Link to="/rubros-y-actividades">Rubros Y Actividades</Link>
                     <Link to="/ordenanzas">Ordenanzas</Link>
                     
-                    {/* Botón resaltante de Solicitud */}
+                   
                     <Link to="/registro-solicitud" className="btn-solicitud">
                         Solicitar Licencia
                     </Link>
                     
-                    {/* Botón de Acceso */}
+                  
                     <Link to="/login" className="btn-acceso">Acceder</Link>
                 </div>
             </div>
