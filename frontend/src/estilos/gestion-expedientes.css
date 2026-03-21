@@ -184,23 +184,32 @@
 }
 
 .btn-actualizar-circular {
-    background-color: #00bcd4; 
-    color: white;
-    border: none;
-    width: 40px !important;   
-    height: 40px !important;
+    background-color: #00bcd4 !important; 
+    color: white !important;
+    border: none !important;
+    
+    width: 45px !important; 
+    height: 45px !important;
+    min-width: 45px !important; 
+    
     border-radius: 50% !important;
     
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    
     padding: 0 !important;
-    flex-shrink: 0; 
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
 .btn-actualizar-circular svg {
-    font-size: 1.2rem; 
+    font-size: 1.2rem !important;
+}
+
+.btn-actualizar-circular:active {
+    transform: scale(0.9);
+    background-color: #008ba3 !important;
 }
 
 .btn-emitir.carnet-comercio {
