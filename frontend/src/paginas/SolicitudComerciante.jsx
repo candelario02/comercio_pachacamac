@@ -162,15 +162,30 @@ const SolicitudComerciante = () => {
 
                            {!formData.desea_tramitar_carnet && (
     <div className="campo-archivo">
-        <label className="subir-archivo-info">Subir documento aquí (Solo Imagen):</label>
+    <label className="subir-archivo-info">Subir documento aquí (Solo Imagen):</label>
+    
+   
+    <div className="contenedor-diseno-subida">
+        <label htmlFor="archivo_carnet" className="diseno-carnet">
+            <FaUpload />
+            <span>Seleccionar Foto de Carnet</span>
+        </label>
         <input 
+            id="archivo_carnet" 
             type="file" 
             name="archivo_carnet" 
             accept="image/png, image/jpeg, image/jpg" 
             onChange={handleChange} 
             required 
+            style={{ display: 'none' }} 
         />
+        {formData.archivo_carnet && (
+            <div className="nombre-archivo-elegido">
+                ✅ {formData.archivo_carnet.name}
+            </div>
+        )}
     </div>
+</div>
 )}
                         </div>
                     )}

@@ -96,7 +96,31 @@
     margin-bottom: 5px;
 }
 
-/* 5. Botón de Acción */
+
+
+.diseno-carnet {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: #f8f9fa; 
+    border: 2px dashed #28a745; 
+    border-radius: 8px;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.diseno-carnet:hover {
+    background-color: #e2f0e6;
+}
+
+.nombre-archivo-elegido {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #28a745;
+}
 .btn-enviar {
     width: 100%;
     padding: 16px;
@@ -119,12 +143,12 @@
     cursor: not-allowed;
 }
 
-/* 6. Optimización Móvil */
+
 @media (max-width: 768px) {
     .formulario-solicitud {
         margin: 10px;
         padding: 15px;
-        max-height: 80vh; /* Un poco más de espacio en móvil */
+        max-height: 80vh;
     }
 
     .bloque {
@@ -134,7 +158,7 @@
     .bloque input, 
     .bloque select {
         padding: 14px;
-        font-size: 16px !important; /* Evita zoom automático en móviles */
+        font-size: 16px !important; 
     }
 
     .btn-enviar {
