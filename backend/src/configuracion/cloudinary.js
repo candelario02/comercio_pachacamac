@@ -8,20 +8,17 @@ cloudinary.config({
 });
 
 
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async (req, file) => {
-    
-    const esPdf = file.mimetype === 'application/pdf';
-    
-    return {
-      folder: 'comercio_pachacamac',
-   
-      resource_type: esPdf ? 'raw' : 'image', 
-      public_id: `doc-${Date.now()}`,
-      
-    };
+  params: {
+    folder: 'comercio_pachacamac',
+    resource_type: 'auto', 
+    public_id: (req, file) => `doc-${Date.now()}`
   },
 });
+
+
+
 
 module.exports = { cloudinary, storage };

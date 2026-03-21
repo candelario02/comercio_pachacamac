@@ -151,20 +151,14 @@ const ListaPendientes = () => {
                                     {seleccionado.foto_carnet ? (
                                         <button 
                                             className="btn-ver-foto" 
-                                            onClick={() => {
-                                                const url = seleccionado?.foto_carnet;
-                                                if (!url) {
-                                                    alert("No hay foto disponible para este carnet.");
-                                                    return;
-                                                }
-                                                if (!url.startsWith('http')) {
-                                                    console.error("URL no válida en base de datos:", url);
-                                                    alert("El archivo no es una URL válida de Cloudinary. Es un registro antiguo o corrupto.");
-                                                    return;
-                                                }
-                                                console.log("Abriendo carnet desde Cloudinary:", url);
-                                                window.open(url, '_blank');
-                                            }}
+                                           onClick={() => {
+    const url = seleccionado?.foto_carnet;
+    if (!url) {
+        alert("No hay archivo.");
+        return;
+    }
+    window.open(url, '_blank');
+}}
                                         >
                                             <FaEye /> Ver Foto Adjunta
                                         </button>
