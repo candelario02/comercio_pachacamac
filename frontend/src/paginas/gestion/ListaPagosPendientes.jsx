@@ -31,17 +31,21 @@ const ListaPagosPendientes = () => {
         } finally { setCargando(false); }
     };
 
-    const verComprobante = (nombreArchivo) => {
-        if (!nombreArchivo) {
-            alert("No hay archivo adjunto para este pago.");
-            return;
-        }
-        const servidorRaiz = BASE_URL.endsWith('/api') 
-            ? BASE_URL.replace('/api', '') 
-            : BASE_URL;
-        const urlFinal = `${servidorRaiz}/uploads/vouchers/${nombreArchivo}`;
-        window.open(urlFinal, '_blank');
-    };
+const verComprobante = (urlCloudinary) => {
+    if (!urlCloudinary) {
+        alert("No hay archivo adjunto para este pago.");
+        return;
+    }
+
+    if (!urlCloudinary.startsWith('http')) {
+        console.error("Error: El registro no tiene una URL de Cloudinary válida:", urlCloudinary);
+        alert("El archivo no se encuentra en la nube. Es un registro antiguo o corrupto.");
+        return;
+    }
+
+    console.log("Abriendo desde Cloudinary:", urlCloudinary);
+    window.open(urlCloudinary, '_blank');
+};
 
     const handleConfirmarPago = (s) => {
         const montoValido = parseFloat(s.monto_pagado) > 0 || s.exento_pago;

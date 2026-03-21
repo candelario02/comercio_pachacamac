@@ -157,11 +157,16 @@ const ListaPendientes = () => {
                                     <p><strong>Actividad:</strong> {seleccionado.actividad_nombre}</p>
                                     <p><strong>Carnet de Sanidad:</strong> 
                                         {seleccionado.foto_carnet ? (
-                                          <button 
+  <button 
     className="btn-ver-foto" 
     onClick={() => {
-        const url = `https://comercio-pachacamac-v2.onrender.com/uploads/carnets/${seleccionado.foto_carnet}`;
-        window.open(url, '_blank');
+        
+        if (seleccionado && seleccionado.foto_carnet) {
+         
+            window.open(seleccionado.foto_carnet, '_blank');
+        } else {
+            alert("No hay foto disponible para este carnet.");
+        }
     }}
 >
     <FaEye /> Ver Foto Adjunta
