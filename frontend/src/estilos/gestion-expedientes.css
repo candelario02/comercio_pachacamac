@@ -163,22 +163,44 @@
     grid-template-columns: 1fr 1fr; 
     gap: 12px; 
 }
+.buscador-caja {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 25px; 
+    padding: 5px 15px;
+    width: 100%;
+    max-width: 300px; 
+}
+
+.buscador-caja input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    width: 100%;
+    font-size: 14px;
+    background: transparent;
+}
 
 .btn-actualizar-circular {
-    background-color: var(--cian-institucional);
+    background-color: #00bcd4; 
     color: white;
     border: none;
-    width: 40px;  
-    height: 40px;
-    border-radius: 50%;
+    width: 40px !important;   
+    height: 40px !important;
+    border-radius: 50% !important;
+    
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0; 
+    padding: 0 !important;
     flex-shrink: 0; 
+}
 
+.btn-actualizar-circular svg {
+    font-size: 1.2rem; 
 }
 
 .btn-emitir.carnet-comercio {

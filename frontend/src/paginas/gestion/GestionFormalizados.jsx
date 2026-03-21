@@ -39,7 +39,7 @@ const GestionFormalizados = () => {
                         <FaSearch className="icon-search" />
                         <input 
                             type="text" 
-                            className="input-buscador"
+                            className="buscador-caja input"
                             placeholder="Buscar por DNI o Nombre..." 
                             value={filtro}
                             onChange={(e) => setFiltro(e.target.value)}
@@ -73,25 +73,23 @@ const GestionFormalizados = () => {
                                         </span>
                                     </td>
                                     <td>
-                                        <div className="acciones-botones-flex">
-                                        
-                                            <button 
-                                                className="btn-emitir.carnet-comercio" 
-                                                onClick={() => generarCarnetPDF(item, 'comercio')}
-                                            >
-                                                <FaStore /> Comercio
-                                            </button>
+                                       <div className="acciones-botones-flex">
+    <button 
+        className="btn-emitir carnet-comercio"
+        onClick={() => generarCarnetPDF(item, 'comercio')}
+    >
+        <FaStore /> Comercio
+    </button>
 
-                                          
-                                            {item.desea_tramitar_carnet && (
-                                                <button 
-                                                    className="btn-emitir.carnet-sanidad" 
-                                                    onClick={() => generarCarnetPDF(item, 'sanidad')}
-                                                >
-                                                    <FaMedkit /> Sanidad
-                                                </button>
-                                            )}
-                                        </div>
+    {item.desea_tramitar_carnet && (
+        <button 
+            className="btn-emitir carnet-sanidad" 
+            onClick={() => generarCarnetPDF(item, 'sanidad')}
+        >
+            <FaMedkit /> Sanidad
+        </button>
+    )}
+</div>
                                     </td>
                                 </tr>
                             ))
