@@ -63,14 +63,12 @@ const listarPagosPendientes = async (req, res) => {
 };
 
 const aprobarTramiteYGenerarDeuda = async (req, res) => {
-    const { id } = req.params; // UUID del comerciante
+    const { id } = req.params; 
     const { monto_confirmado } = req.body;
-    const adminId = req.usuario.id; // Asumiendo que obtienes el ID del admin del token
+    const adminId = req.usuario.id; 
 
     try {
         await pool.query('BEGIN');
-
-        // 1. Obtener info del comerciante y su actividad
         const resInfo = await pool.query(
             `SELECT c.id, c.usuario_id, c.exento_pago, a.costo, a.descripcion as actividad_nombre
              FROM comerciantes c 
@@ -81,7 +79,6 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
         if (resInfo.rows.length === 0) throw new Error("Comerciante no encontrado");
         const comerciante = resInfo.rows[0];
         
-        // Calculamos el monto: si el admin no envió uno, usamos el de la actividad
         const montoFinal = parseFloat(monto_confirmado) || parseFloat(comerciante.costo) || 0;
 
         const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
@@ -89,8 +86,6 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
         const mesActual = meses[new Date().getMonth()];
         const numeroOP = `OP-${Date.now().toString().slice(-8)}`;
 
-        // 2. CREAR LA ORDEN DE PAGO (Primero)
-        // Esto es lo más profesional: dejar registro de quién creó la orden y el detalle
         const resOrden = await pool.query(
             `INSERT INTO ordenes_pago (comerciante_id, monto_total, detalle, estado, creado_por) 
              VALUES ($1, $2, $3, $4, $5) RETURNING id`,
@@ -100,10 +95,8 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
         const ordenId = resOrden.rows[0].id;
 
         if (comerciante.exento_pago) {
-            // REGLA: Si tu BD aún no acepta 'formalizado', cámbialo a 'aprobado' o actualiza el CHECK en la BD
             await pool.query("UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", [id]);
             
-            // Insertar pago con monto 0 vinculado a la orden
             await pool.query(
                 `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, estado, orden_pago_id) 
                  VALUES ($1, 0, $2, $3, 'pagado', $4)`,
@@ -111,10 +104,8 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
             );
 
         } else {
-            // Flujo normal: Esperando pago
             await pool.query("UPDATE comerciantes SET estado_tramite = 'aprobado' WHERE id = $1", [id]);
 
-            // Generar la deuda vinculada a la orden
             await pool.query(
                 `INSERT INTO pagos_municipales (comerciante_id, monto_pagado, numero_operacion, mes_correspondiente, estado, orden_pago_id) 
                  VALUES ($1, $2, $3, $4, 'pendiente', $5)`,
@@ -144,8 +135,8 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
 
 /// --- Confirmar pago final y Formalizar ---
 const confirmarPagoYFinalizar = async (req, res) => {
-    const { id } = req.params; // ID del pago (pagos_municipales.id)
-    const { vigencia_comercio, vigencia_sanidad } = req.body; // Los meses que el admin digitó
+    const { id } = req.params; 
+    const { vigencia_comercio, vigencia_sanidad } = req.body; 
 
     try {
         await pool.query('BEGIN');
@@ -160,17 +151,12 @@ const confirmarPagoYFinalizar = async (req, res) => {
 
         if (resPago.rows.length === 0) throw new Error("Pago no encontrado");
         const { comerciante_id, orden_pago_id } = resPago.rows[0];
-
-        // 2. Actualizamos la ORDEN DE PAGO a 'pagado'
         if (orden_pago_id) {
             await pool.query(
                 `UPDATE ordenes_pago SET estado = 'pagado' WHERE id = $1`, 
                 [orden_pago_id]
             );
         }
-
-        // 3. PASO CRÍTICO: El comerciante ahora es FORMALIZADO
-        // Asegúrate de haber corrido el SQL del ALTER TABLE para aceptar 'formalizado'
         const resCom = await pool.query(
             `UPDATE comerciantes 
              SET estado_tramite = 'formalizado' 
@@ -179,13 +165,9 @@ const confirmarPagoYFinalizar = async (req, res) => {
         );
         const { usuario_id, desea_tramitar_carnet } = resCom.rows[0];
 
-        // 4. GENERACIÓN DE VIGENCIA (Control Total)
-        // Calculamos las fechas basadas en lo que el admin digitó
-        const mesesFinalesComercio = parseInt(vigencia_comercio) || 12; // default 1 año
+        const mesesFinalesComercio = parseInt(vigencia_comercio) || 12; 
         const mesesFinalesSanidad = desea_tramitar_carnet ? (parseInt(vigencia_sanidad) || 6) : 0;
 
-        // Insertamos o Actualizamos la tabla 'autorizaciones'
-        // Usamos un QR único (puedes usar el UUID del comerciante o un hash)
         const qrUnico = `QR-${comerciante_id.slice(0, 8)}-${Date.now()}`;
 
         await pool.query(
@@ -279,6 +261,58 @@ const obtenerRubros = async (req, res) => {
         res.status(500).json({ error: "Error al obtener la lista." });
     }
 };
+const ExcelJS = require('exceljs');
+
+const exportarExcelFormalizados = async (req, res) => {
+    try {
+        const { buscar, mes, anio } = req.query;
+        let consulta = "SELECT * FROM vista_formalizados WHERE 1=1";
+        let parametros = [];
+        let pIndex = 1;
+
+        if (buscar) {
+            consulta += ` AND dni LIKE $${pIndex++}`;
+            parametros.push(`%${buscar}%`);
+        }
+
+        if (mes) {
+            consulta += ` AND EXTRACT(MONTH FROM fecha_confirmacion) = $${pIndex++}`;
+            parametros.push(mes);
+        }
+        if (anio) {
+            consulta += ` AND EXTRACT(YEAR FROM fecha_confirmacion) = $${pIndex++}`;
+            parametros.push(anio);
+        }
+
+        consulta += " ORDER BY fecha_vencimiento ASC";
+
+        const { rows } = await pool.query(consulta, parametros);
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Padron_Formalizados');
+
+        worksheet.columns = [
+            { header: 'DNI', key: 'dni', width: 15 },
+            { header: 'NOMBRES', key: 'nombres', width: 25 },
+            { header: 'APELLIDOS', key: 'apellidos', width: 25 },
+            { header: 'ACTIVIDAD', key: 'actividad_nombre', width: 30 },
+            { header: 'ESTADO', key: 'estado_tramite', width: 15 },
+            { header: 'VENCIMIENTO', key: 'fecha_vencimiento', width: 15 }
+        ];
+
+        worksheet.addRows(rows);
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=Reporte_Formalizados.xlsx');
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (error) {
+        console.error("Error al exportar:", error);
+        res.status(500).json({ mensaje: "Error al generar el reporte" });
+    }
+};
 
 module.exports = { 
     obtenerEstadisticas, 
@@ -287,6 +321,7 @@ module.exports = {
     aprobarTramiteYGenerarDeuda, 
     confirmarPagoYFinalizar, 
     obtenerFormalizados, 
+     exportarExcelFormalizados,
     actualizarEstado, 
     gestionarActividad, 
     listarActividades, 

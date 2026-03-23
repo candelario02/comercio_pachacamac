@@ -3,7 +3,7 @@ const router = express.Router();
 const { verificarAdmin } = require('../intermediarios/authIntermediario');
 const adminControlador = require('../controladores/adminControlador');
 
-// --- rutas administrativas
+
 
 router.get('/estadisticas', verificarAdmin, adminControlador.obtenerEstadisticas);
 router.get('/solicitudes-pendientes', verificarAdmin, adminControlador.obtenerSolicitudesPendientes);
@@ -11,6 +11,7 @@ router.put('/solicitudes/:id/estado', verificarAdmin, adminControlador.actualiza
 router.get('/pagos-pendientes', verificarAdmin, adminControlador.listarPagosPendientes);
 router.put('/confirmar-pago/:id', verificarAdmin, adminControlador.confirmarPagoYFinalizar);
 router.get('/formalizados', verificarAdmin, adminControlador.obtenerFormalizados);
+router.get('/formalizados/exportar', verificarAdmin, adminControlador.exportarExcelFormalizados);
 
 router.put('/aprobar-tramite/:id', verificarAdmin, adminControlador.aprobarTramiteYGenerarDeuda);
 

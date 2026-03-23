@@ -1,7 +1,5 @@
-import { BASE_URL } from '../api/apiConfig'; // 1. Mantenemos el import
+import { BASE_URL } from '../api/apiConfig'; 
 
-// 2. CAMBIO CLAVE: Ahora API_URL es dinámica. 
-// Si estás en PC es localhost, si estás en la web es Render.
 const API_URL = `${BASE_URL}/admin`; 
 
 export const AdminServicio = {
@@ -71,5 +69,24 @@ confirmarPago: async (id, token, datos = {}) => {
 
     if (!res.ok) throw new Error('Error al obtener lista de formalizados');
     return await res.json();
+},
+
+
+exportarExcel: (token, buscar = "", mes = "", anio = "") => {
+    const url = `${API_URL}/formalizados/exportar?buscar=${buscar}&mes=${mes}&anio=${anio}`;
+    
+    fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => res.blob())
+    .then(blob => {
+        const urlBlob = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.download = `Reporte_${mes || 'Anual'}_${anio || ''}.xlsx`;
+        a.click();
+    });
 }
+
+
 };

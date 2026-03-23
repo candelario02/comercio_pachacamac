@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AdminServicio } from '../../servicios/adminApi';
-import { FaSync, FaMedkit, FaStore, FaSearch } from 'react-icons/fa'; 
+// IMPORTANTE: Se agregó FaFileExcel a la lista de iconos
+import { FaSync, FaMedkit, FaStore, FaSearch, FaFileExcel } from 'react-icons/fa'; 
 import { generarCarnetPDF } from '../../herramientas/generadorDocumentos'; 
 import '../../estilos/gestion-expedientes.css';
 
@@ -8,6 +9,14 @@ const GestionFormalizados = () => {
     const [formalizados, setFormalizados] = useState([]);
     const [filtro, setFiltro] = useState(""); 
     const [cargando, setCargando] = useState(true);
+    const [mesSeleccionado, setMesSeleccionado] = useState("");
+    const [anioSeleccionado, setAnioSeleccionado] = useState(new Date().getFullYear());
+
+    const manejarExportarExcel = () => {
+        const token = localStorage.getItem('token');
+        // Enviamos el filtro del buscador, el mes y el año
+        AdminServicio.exportarExcel(token, filtro, mesSeleccionado, anioSeleccionado);
+    };
 
     const cargarFormalizados = async (dniABuscar = "") => {
         try {
@@ -21,6 +30,7 @@ const GestionFormalizados = () => {
             setCargando(false);
         }
     };
+
     useEffect(() => {
         const timer = setTimeout(() => {
             cargarFormalizados(filtro);
@@ -41,24 +51,62 @@ const GestionFormalizados = () => {
 
     return (
         <div className="gestion-contenedor">
-            <header className="gestion-header-pro">
-                <h2>Control de Formalizados</h2>
-                <div className="header-acciones">
-                    <div className="buscador-caja">
-                        <FaSearch className="icon-search" />
-                        <input 
-                            type="text" 
-                            className="buscador-input" 
-                            placeholder="Ingrese DNI para buscar..." 
-                            value={filtro}
-                            onChange={(e) => setFiltro(e.target.value)}
-                        />
-                    </div>
-                    <button onClick={() => cargarFormalizados(filtro)} className="btn-actualizar-circular">
-                        <FaSync className={cargando ? 'spin' : ''} />
-                    </button>
-                </div>
-            </header>
+           <header className="gestion-header-pro">
+    <h2>Control de Formalizados</h2>
+    <div className="header-acciones">
+        <div className="buscador-caja">
+            <FaSearch className="icon-search" />
+            <input 
+                type="text" 
+                className="buscador-input" 
+                placeholder="Ingrese DNI para buscar..." 
+                value={filtro}
+                onChange={(e) => setFiltro(e.target.value)}
+            />
+        </div>
+
+        <select 
+            className="buscador-input select-mes" 
+            value={mesSeleccionado}
+            onChange={(e) => setMesSeleccionado(e.target.value)}
+        >
+            <option value="">Mes (Todos)</option>
+            <option value="1">Enero</option>
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option>
+            <option value="5">Mayo</option>
+            <option value="6">Junio</option>
+            <option value="7">Julio</option>
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+        </select>
+        <select 
+            className="buscador-input" 
+            style={{ width: '100px' }}
+            value={anioSeleccionado}
+            onChange={(e) => setAnioSeleccionado(e.target.value)}
+        >
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+        </select>
+        <button 
+            onClick={manejarExportarExcel} 
+            className="btn-excel-formalizados" 
+            title="Exportar a Excel"
+        >
+            <FaFileExcel />
+            <span>Excel</span>
+        </button>
+        <button onClick={() => cargarFormalizados(filtro)} className="btn-actualizar-circular">
+            <FaSync className={cargando ? 'spin' : ''} />
+        </button>
+    </div>
+</header>
 
             <div className="tabla-card">
                 <table className="tabla-gestion">
