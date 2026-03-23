@@ -18,6 +18,7 @@ import SubirPago from './paginas/SubirPago';
 import MisCarnets from './paginas/MisCarnets';
 import PortalComerciante from './paginas/PortalComerciante';
 import Ordenanzas from './paginas/Ordenanzas';
+import Definiciones from './paginas/Definiciones';
 import "./estilos/Globales.css"
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
           <Route path="/" element={<LayoutFondo><InicioPublico /></LayoutFondo>} />
           <Route path="/rubros-y-actividades" element={<LayoutFondo><ListaPublicaRubrosActividad /></LayoutFondo>} />
           <Route path="/ordenanzas" element={<LayoutFondo><Ordenanzas /></LayoutFondo>} />
+          <Route path="/categorias" element={<LayoutFondo><Categorias /></LayoutFondo>} />
+<Route path="/definiciones" element={<LayoutFondo><Definiciones /></LayoutFondo>} />
+<Route path="/requisitos" element={<LayoutFondo><Requisitos /></LayoutFondo>} />
+<Route path="/vigencia" element={<LayoutFondo><Vigencia /></LayoutFondo>} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro-solicitud" element={<LayoutFondo><SolicitudComerciante /></LayoutFondo>} />
           <Route path="/ordenanzas" element={<Ordenanzas />} />
