@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AdminServicio } from '../../servicios/adminApi';
 import { FaSync, FaMedkit, FaStore, FaSearch } from 'react-icons/fa'; 
 import { generarCarnetPDF } from '../../herramientas/generadorDocumentos'; 
@@ -26,24 +26,23 @@ const GestionFormalizados = () => {
         cargarFormalizados(); 
     }, []);
 
-    // === CORRECCIÓN DEL BUSCADOR ===
-    const datosFiltrados = formalizados.filter(item => {
-        // Si el buscador está vacío, mostramos todos (limpiamos espacios)
-        const valorBusqueda = filtro.trim().toLowerCase();
-        if (!valorBusqueda) return true;
+    // ESTA ES LA CLAVE: useMemo hace que el filtro sea "inteligente"
+    // No borra nada, solo decide qué mostrar de la lista original
+    const datosFiltrados = useMemo(() => {
+        const busqueda = filtro.trim().toLowerCase();
+        if (!busqueda) return formalizados; // Si borras el buscador, vuelve toda la lista
 
-        // Aseguramos que los datos existan y sean strings para poder usar .includes
-        const dni = item.dni ? String(item.dni) : "";
-        const nombres = item.nombres ? String(item.nombres).toLowerCase() : "";
-        const apellidos = item.apellidos ? String(item.apellidos).toLowerCase() : "";
+        return formalizados.filter(item => {
+            const dni = item.dni ? String(item.dni) : "";
+            const nombres = item.nombres ? String(item.nombres).toLowerCase() : "";
+            const apellidos = item.apellidos ? String(item.apellidos).toLowerCase() : "";
 
-        // Solo retorna TRUE si el valor buscado está en DNI, Nombres o Apellidos
-        return dni.includes(valorBusqueda) || 
-               nombres.includes(valorBusqueda) || 
-               apellidos.includes(valorBusqueda);
-    });
+            return dni.includes(busqueda) || 
+                   nombres.includes(busqueda) || 
+                   apellidos.includes(busqueda);
+        });
+    }, [filtro, formalizados]); 
 
-    // LÓGICA DEL SEMÁFORO (Mantenida igual para no romper visuales)
     const obtenerEstadoVencimiento = (fecha) => {
         if (!fecha) return "fecha-pendiente";
         const hoy = new Date();
@@ -102,6 +101,7 @@ const GestionFormalizados = () => {
                                     </td>
                                     <td>
                                         <div className="acciones-botones-flex">
+                                            {/* BOTÓN COMERCIO (INTACTO) */}
                                             <button 
                                                 className="btn-emitir carnet-comercio"
                                                 onClick={() => generarCarnetPDF(item, 'comercio')}
@@ -109,6 +109,7 @@ const GestionFormalizados = () => {
                                                 <FaStore /> Comercio
                                             </button>
 
+                                            {/* BOTÓN SANIDAD (INTACTO - SOLO SI DESEA TRAMITAR) */}
                                             {item.desea_tramitar_carnet && (
                                                 <button 
                                                     className="btn-emitir carnet-sanidad" 
