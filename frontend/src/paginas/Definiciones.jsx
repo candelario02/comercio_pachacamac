@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FaBook, FaArrowLeft, FaPlus, FaMinus } from 'react-icons/fa';
 import '../estilos/Definiciones.css';
 
 const Definiciones = () => {
-  const navigate = useNavigate();
   const [expandedCard, setExpandedCard] = useState(null);
 
   const toggleCard = (index) => {
@@ -31,9 +29,7 @@ const Definiciones = () => {
 
   return (
     <div className="definiciones-main">
-      <button className="btn-volver-atras" onClick={() => navigate('/ordenanzas')}>
-        <FaArrowLeft /> Volver a Ordenanzas
-      </button>
+      
 
       <div className="titulo-cabecera">
         <h1>📋 Glosario de Términos</h1>
