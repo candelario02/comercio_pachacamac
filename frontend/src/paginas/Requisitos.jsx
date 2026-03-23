@@ -39,24 +39,52 @@ export default function Requisitos() {
                     </div>
                 </div>
             </div>
-            <div className={`tarjeta-requisito ${activeAccordion === 'proceso' ? 'activa' : ''}`}
-                 onClick={() => toggleAccordion('proceso')}>
-                <div className="req-header">
-                    <h3>Paso 2: Pago y Visto Bueno</h3>
-                    <div className="req-icon-box"><FaMoneyCheckAlt /></div>
-                </div>
-                <div className="req-detalles">
-                    <p>Una vez que el área correspondiente reciba y verifique sus documentos físicos:</p>
-                    <ol className="lista-numerada-luz">
-                        <li>El personal técnico revisará su expediente en ventanilla.</li>
-                        <li>Se le otorgará el <strong>"Visto Bueno"</strong> tras confirmar que la información coincide con su solicitud web.</li>
-                        <li>Con el visto bueno, procederá a realizar el <strong>Pago por Derecho de Trámite</strong> en caja.</li>
-                    </ol>
-                    <div className="warning-alert">
-                        ⚠️ Sin la entrega de documentos físicos, el proceso de pago no podrá ser habilitado.
-                    </div>
-                </div>
+            {/* TARJETA 2: PAGO Y VISTO BUENO */}
+<div className={`tarjeta-requisito ${activeAccordion === 'proceso' ? 'activa' : ''}`}
+     onClick={() => toggleAccordion('proceso')}>
+    <div className="req-header">
+        <h3>Paso 2: Pago y Visto Bueno</h3>
+        <div className="req-icon-box"><FaMoneyCheckAlt /></div>
+    </div>
+    <div className="req-detalles">
+        <p>Una vez que el área correspondiente reciba y verifique sus documentos físicos:</p>
+        <ol className="lista-numerada-luz">
+            <li>El personal técnico revisará su expediente en ventanilla.</li>
+            <li>Se le otorgará el <strong>"Visto Bueno"</strong> tras confirmar la información.</li>
+            <li>Con el visto bueno, procederá a realizar el <strong>Pago por Derecho de Trámite</strong> en caja.</li>
+        </ol>
+        <div className="warning-alert">
+            ⚠️ Sin la entrega de documentos físicos, el proceso de pago no podrá ser habilitado.
+        </div>
+    </div>
+</div>
+
+{/* NUEVA TARJETA 3: FINALIZACIÓN DIGITAL */}
+<div className={`tarjeta-requisito ${activeAccordion === 'finalizacion' ? 'activa' : ''}`}
+     onClick={() => toggleAccordion('finalizacion')}>
+    <div className="req-header">
+        <h3>Paso 3: Finalización y Entrega Digital</h3>
+        <div className="req-icon-box"><FaCloudUploadAlt /></div>
+    </div>
+    <div className="req-detalles">
+        <div className="pasos-finales">
+            <p><strong>¡Usted ya no necesita esperar en la municipalidad!</strong> Tras realizar el pago:</p>
+            <div className="box-digital">
+                <p>1️⃣ Tome una foto a su <strong>comprobante de pago</strong>.</p>
+                <p>2️⃣ Suba el comprobante a través de su <strong>Portal del Comerciante</strong> en esta web.</p>
+                <p>3️⃣ Nuestro equipo validará el pago en el sistema.</p>
             </div>
+            
+            <div className="notificacion-exito">
+                <FaCheckCircle /> 
+                <p>
+                    Sus carnets autorizados serán enviados directamente a su <strong>portal personal</strong>. 
+                    Podrá descargarlos e imprimirlos cuando desee.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <div className={`tarjeta-requisito ${activeAccordion === 'silencio' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('silencio')}>
