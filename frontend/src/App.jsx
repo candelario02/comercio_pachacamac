@@ -21,7 +21,7 @@ import Ordenanzas from './paginas/Ordenanzas';
 import Definiciones from './paginas/Definiciones';
 import Categorias from './paginas/Categorias';
 import Requisitos from './paginas/Requisitos';
-
+import Vigencia from './paginas/Vigencia';
 import "./estilos/Globales.css"
 
 function App() {
@@ -35,6 +35,7 @@ function App() {
           <Route path="/ordenanzas" element={<LayoutFondo><Ordenanzas /></LayoutFondo>} />
          <Route path="/categorias" element={<LayoutFondo><Categorias /></LayoutFondo>} />
 <Route path="/requisitos" element={<LayoutFondo><Requisitos /></LayoutFondo>} />
+<Route path="/vigencia" element={<LayoutFondo><Vigencia /></LayoutFondo>} />
 
 <Route path="/definiciones" element={<LayoutFondo><Definiciones /></LayoutFondo>} />
 
