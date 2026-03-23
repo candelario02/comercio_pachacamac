@@ -74,7 +74,7 @@
     width: 100%; 
     border-collapse: collapse; 
 }
-/* Estilos para etiquetas de formulario */
+/* estilos para etiquetas de formulario */
 .label-standard {
     display: block;
     margin-bottom: 5px;
@@ -83,7 +83,7 @@
     font-weight: 600;
 }
 
-/* Epara el detalle de liquidacion */
+/* para el detalle de liquidacion */
 .input-standard {
     width: 100%;
     padding: 8px;
@@ -263,6 +263,10 @@
     background-color: #00bf92 !important;
     color: white !important;
 }
+.fecha-badge.fecha-vigente { background-color: #28a745; color: white; }
+.fecha-badge.fecha-proxima { background-color: #ffc107; color: #000; } 
+.fecha-badge.fecha-vencida { background-color: #dc3545; color: white; }
+.fecha-badge.fecha-pendiente { background-color: #6c757d; color: white; }
 
 .btn-footer { background: #95a5a6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;}
 .btn-orden-pago { background: var(--dorado-mun); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;}

@@ -16,19 +16,40 @@ const GestionFormalizados = () => {
             const res = await AdminServicio.obtenerFormalizados(token);
             setFormalizados(res.data || []);
         } catch (err) {
-            console.error("Error:", err);
+            console.error("Error al cargar formalizados:", err);
         } finally {
             setCargando(false);
         }
     };
 
-    useEffect(() => { cargarFormalizados(); }, []);
+    useEffect(() => { 
+        cargarFormalizados(); 
+    }, []);
 
-    const datosFiltrados = formalizados.filter(item => 
-        item.dni.includes(filtro) || 
-        item.nombres.toLowerCase().includes(filtro.toLowerCase()) ||
-        item.apellidos.toLowerCase().includes(filtro.toLowerCase())
-    );
+    // 1. LÓGICA DE BÚSQUEDA BLINDADA
+    // Usamos variables auxiliares para evitar errores si DNI o nombres son null
+    const datosFiltrados = formalizados.filter(item => {
+        const query = filtro.toLowerCase();
+        const dni = item.dni ? item.dni.toString() : "";
+        const nombreCompleto = `${item.nombres || ""} ${item.apellidos || ""}`.toLowerCase();
+        
+        return dni.includes(query) || nombreCompleto.includes(query);
+    });
+
+    // 2. LÓGICA DEL SEMÁFORO (Ordenanza Municipal)
+    const obtenerEstadoVencimiento = (fecha) => {
+        if (!fecha) return "fecha-pendiente";
+        
+        const hoy = new Date();
+        const vencimiento = new Date(fecha);
+        // Calculamos la diferencia en días
+        const difTiempo = vencimiento - hoy;
+        const difDias = Math.ceil(difTiempo / (1000 * 60 * 60 * 24));
+
+        if (difDias < 0) return "fecha-vencida";      // Rojo (Ya venció)
+        if (difDias <= 30) return "fecha-proxima";    // Dorado/Amarillo (Falta 1 mes o menos)
+        return "fecha-vigente";                       // Verde (Más de un mes)
+    };
 
     return (
         <div className="gestion-contenedor">
@@ -39,13 +60,13 @@ const GestionFormalizados = () => {
                         <FaSearch className="icon-search" />
                         <input 
                             type="text" 
-                            className="buscador-caja input"
+                            className="buscador-input" // Clase limpia para el input
                             placeholder="Buscar por DNI o Nombre..." 
                             value={filtro}
                             onChange={(e) => setFiltro(e.target.value)}
                         />
                     </div>
-                    <button onClick={cargarFormalizados} className="btn-actualizar-circular">
+                    <button onClick={cargarFormalizados} className="btn-actualizar-circular" title="Sincronizar datos">
                         <FaSync className={cargando ? 'spin' : ''} />
                     </button>
                 </div>
@@ -68,35 +89,38 @@ const GestionFormalizados = () => {
                                     <td>{item.dni}</td>
                                     <td><strong>{item.nombres} {item.apellidos}</strong></td>
                                     <td>
-                                        <span className="fecha-badge">
-                                            {item.fecha_vencimiento ? new Date(item.fecha_vencimiento).toLocaleDateString() : 'Pendiente'}
+                                        {/* Aplicamos la clase dinámica según la fecha */}
+                                        <span className={`fecha-badge ${obtenerEstadoVencimiento(item.fecha_vencimiento)}`}>
+                                            {item.fecha_vencimiento 
+                                                ? new Date(item.fecha_vencimiento).toLocaleDateString('es-PE') 
+                                                : 'Sin fecha'}
                                         </span>
                                     </td>
                                     <td>
-                                       <div className="acciones-botones-flex">
-    <button 
-        className="btn-emitir carnet-comercio"
-        onClick={() => generarCarnetPDF(item, 'comercio')}
-    >
-        <FaStore /> Comercio
-    </button>
+                                        <div className="acciones-botones-flex">
+                                            <button 
+                                                className="btn-emitir carnet-comercio"
+                                                onClick={() => generarCarnetPDF(item, 'comercio')}
+                                            >
+                                                <FaStore /> Comercio
+                                            </button>
 
-    {item.desea_tramitar_carnet && (
-        <button 
-            className="btn-emitir carnet-sanidad" 
-            onClick={() => generarCarnetPDF(item, 'sanidad')}
-        >
-            <FaMedkit /> Sanidad
-        </button>
-    )}
-</div>
+                                            {item.desea_tramitar_carnet && (
+                                                <button 
+                                                    className="btn-emitir carnet-sanidad" 
+                                                    onClick={() => generarCarnetPDF(item, 'sanidad')}
+                                                >
+                                                    <FaMedkit /> Sanidad
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4" style={{textAlign: 'center', padding: '20px'}}>
-                                    {cargando ? "Cargando..." : "No se encontraron registros."}
+                                <td colSpan="4" style={{textAlign: 'center', padding: '40px'}}>
+                                    {cargando ? "Consultando base de datos..." : "No se encontraron resultados para tu búsqueda."}
                                 </td>
                             </tr>
                         )}
