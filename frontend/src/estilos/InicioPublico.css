@@ -80,3 +80,10 @@
         font-size: 1.8rem;
     }
 }
+.icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem; 
+    color: #00e5ff;    
+}

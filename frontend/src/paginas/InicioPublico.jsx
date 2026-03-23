@@ -1,22 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  FaTags,      
+  FaBook,      
+  FaClipboardList, 
+  FaCalendarCheck 
+} from 'react-icons/fa'; 
 import '../estilos/InicioPublico.css';
 
 const InicioPublico = () => {
-    const rubros = [
-        { id: 1, nombre: 'Licencias' },
-        { id: 2, nombre: 'Comercio' },
-        { id: 3, nombre: 'Pagos' },
-        { id: 4, nombre: 'Fiscalización' }
-    ];
+    const navigate = useNavigate();
 
-    const obtenerIcono = (nombre) => {
-        const n = nombre.toLowerCase();
-        if (n.includes('licencia')) return '📜';
-        if (n.includes('comercio')) return '🏪';
-        if (n.includes('pago')) return '💰';
-        if (n.includes('fiscalización') || n.includes('fiscalizacion')) return '⚖️';
-        return '🏢'; 
-    };
+    const rubros = [
+        { id: 1, nombre: 'Categorías', path: '/categorias', icono: <FaTags /> },
+        { id: 2, nombre: 'Definiciones', path: '/definiciones', icono: <FaBook /> },
+        { id: 3, nombre: 'Requisitos', path: '/requisitos', icono: <FaClipboardList /> },
+        { id: 4, nombre: 'Vigencia', path: '/vigencia', icono: <FaCalendarCheck /> }
+    ];
 
     return (
         <div className="inicio-container">
@@ -24,9 +24,14 @@ const InicioPublico = () => {
 
             <div className="accesos-grid">
                 {rubros.map((rubro) => (
-                    <div key={rubro.id} className="acceso-item-dark">
+                    <div 
+                        key={rubro.id} 
+                        className="acceso-item-dark"
+                        onClick={() => navigate(rubro.path)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <div className="acceso-icono-circle-cian">
-                            <span className="icono">{obtenerIcono(rubro.nombre)}</span>
+                            <span className="icono">{rubro.icono}</span>
                         </div>
                         <span className="acceso-titulo-dark">{rubro.nombre}</span>
                     </div>

@@ -1,33 +1,35 @@
-/* Eliminamos el overlay negro porque el Layout ya tiene el fondo */
+/*contenedor principal*/
 .ordenanzas-main {
   padding: 40px 20px;
-  max-width: 600px; /* Ancho controlado para que se vea como el ejemplo */
+  max-width: 600px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/*titulo */
 .titulo-cabecera {
   text-align: center;
   margin-bottom: 30px;
   color: white;
 }
 
+/* grid doc */
 .grid-documentos {
   display: flex;
-  flex-direction: column; /* Una tarjeta encima de otra */
+  flex-direction: column;
   gap: 25px;
 }
 
+/* tarjetas pdf*/
 .tarjeta-pdf {
-  /* Fondo semi-transparente para que se vea el fondo del Layout */
   background: rgba(255, 255, 255, 0.1); 
   border-radius: 20px;
   padding: 25px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px); /* Efecto cristal */
+  backdrop-filter: blur(10px);
   transition: transform 0.3s ease;
 }
 
@@ -36,6 +38,7 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
+/* deseno de tarejtas */
 .tarjeta-top {
   display: flex;
   justify-content: space-between;
@@ -57,6 +60,7 @@
   font-weight: bold;
 }
 
+/* texto */
 .tarjeta-pdf h3 {
   color: white;
   margin-bottom: 10px;
@@ -69,6 +73,7 @@
   margin-bottom: 20px;
 }
 
+/*botones*/
 .botones-contenedor {
   display: flex;
   gap: 15px;
@@ -86,6 +91,7 @@
   font-weight: bold;
   font-size: 0.9rem;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .btn-accion.leer {
@@ -98,21 +104,25 @@
   color: white;
 }
 
+.btn-accion:hover {
+  opacity: 0.85;
+}
+
+/* pdf nodal sobre las tarjetas*/
 .visor-pdf {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
-  background: rgba(0, 0, 0, 0.8); 
+  background: rgba(0, 0, 0, 0.8); /* no tocado */
   display: flex;
   justify-content: center;
   align-items: center;
-
-  z-index: 9999; 
+  z-index: 9999;
 }
 
+/* contenido del visor pdf*/
 .visor-contenido {
   width: 80%;
   height: 80%;
@@ -122,7 +132,7 @@
   display: flex;
   flex-direction: column;
 }
-
+/* visor pdf*/
 .visor-header {
   display: flex;
   justify-content: flex-end;
