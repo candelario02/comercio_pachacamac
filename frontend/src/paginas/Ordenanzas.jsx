@@ -3,8 +3,8 @@ import { FaFilePdf, FaDownload, FaExternalLinkAlt } from 'react-icons/fa';
 import '../estilos/Ordenanzas.css'; 
 
 const Ordenanzas = () => {
-  // Configuración de tu nube según tus capturas
-  const cloudName = "comercio_pachacamac";
+  // Configuración de tu Cloudinary según las capturas
+  const cloudName = "drkrsfxlc"; 
   const carpeta = "pachacamac";
 
   const documentos = [
@@ -13,15 +13,13 @@ const Ordenanzas = () => {
       titulo: "Ordenanza N° 108-2012-MDP/C",
       anio: "2012",
       descripcion: "Reglamento General que establece las normas para el comercio ambulatorio y ferial en el distrito de Pachacámac.",
-      // Corregido: Nombre exacto que se ve en tu captura
-      nombreArchivo: "ORDENANZA%20108-2012-MDP-C%20-%20COMERCIO%20AMBULATORIO%20-%20ESCANEADO.pdf"
+      nombreArchivo: "ORDENANZA%20108-2012-MDP-C%20-%20COMERCIO%20AMBULATORIO%20-%20ESCANEADO.pdf.pdf"
     },
     {
       id: 2,
       titulo: "Ordenanza N° 227-2019-MDP/C",
       anio: "2019",
       descripcion: "Actualización de los procedimientos administrativos y requisitos para la obtención de autorizaciones municipales.",
-      // CORRECCIÓN CRÍTICA: En tu imagen se ve que termina en .pdf.pdf
       nombreArchivo: "ORDENANZA%20MUNICIPAL%20227-2019-MDP-C%20-%20COMERCIO%20AMBULATORIO.pdf.pdf"
     }
   ];
@@ -35,7 +33,7 @@ const Ordenanzas = () => {
 
       <div className="grid-documentos">
         {documentos.map((doc) => {
-          // Construcción de la URL base
+          // Construcción de la URL base para cada documento
           const urlBase = `https://res.cloudinary.com/${cloudName}/image/upload/v1/${carpeta}/${doc.nombreArchivo}`;
 
           return (
@@ -44,10 +42,12 @@ const Ordenanzas = () => {
                 <FaFilePdf className="icono-pdf-rojo" />
                 <span className="anio-badge">{doc.anio}</span>
               </div>
+              
               <h3>{doc.titulo}</h3>
               <p>{doc.descripcion}</p>
               
               <div className="botones-contenedor">
+                {/* BOTÓN VER ONLINE */}
                 <a 
                   href={urlBase} 
                   target="_blank" 
@@ -57,6 +57,7 @@ const Ordenanzas = () => {
                   <FaExternalLinkAlt /> Ver Online
                 </a>
 
+                {/* BOTÓN DESCARGAR */}
                 <a 
                   href={urlBase.replace('/upload/', '/upload/fl_attachment/')} 
                   target="_blank" 
