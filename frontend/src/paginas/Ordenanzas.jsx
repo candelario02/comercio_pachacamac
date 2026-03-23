@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaFilePdf, FaDownload, FaExternalLinkAlt } from 'react-icons/fa';
 import '../estilos/Ordenanzas.css'; 
 
 const Ordenanzas = () => {
+
+  const [pdfActivo, setPdfActivo] = useState(null);
 
   const documentos = [
     {
@@ -23,6 +25,7 @@ const Ordenanzas = () => {
 
   return (
     <div className="ordenanzas-main">
+      
       <div className="titulo-cabecera">
         <h1>Ordenanzas Municipales</h1>
         <p>Base legal actualizada del distrito</p>
@@ -31,6 +34,7 @@ const Ordenanzas = () => {
       <div className="grid-documentos">
         {documentos.map((doc) => (
           <div key={doc.id} className="tarjeta-pdf">
+            
             <div className="tarjeta-top">
               <FaFilePdf className="icono-pdf-rojo" />
               <span className="anio-badge">{doc.anio}</span>
@@ -40,16 +44,14 @@ const Ordenanzas = () => {
             <p>{doc.descripcion}</p>
             
             <div className="botones-contenedor">
-              
-              {/* VER ONLINE */}
-              <a 
-                href={doc.url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+
+              {/* VER EN MISMA PANTALLA */}
+              <button 
+                onClick={() => setPdfActivo(doc.url)} 
                 className="btn-accion leer"
               >
-                <FaExternalLinkAlt /> Ver Online
-              </a>
+                <FaExternalLinkAlt /> Ver aquí
+              </button>
 
               {/* DESCARGAR */}
               <a 
@@ -64,6 +66,30 @@ const Ordenanzas = () => {
           </div>
         ))}
       </div>
+
+      {/* VISOR PDF */}
+      {pdfActivo && (
+        <div className="visor-pdf">
+          
+          <div className="visor-header">
+            <button 
+              className="btn-cerrar"
+              onClick={() => setPdfActivo(null)}
+            >
+              ✖ Cerrar
+            </button>
+          </div>
+
+          <iframe
+            src={pdfActivo}
+            title="Visor PDF"
+            width="100%"
+            height="600px"
+          ></iframe>
+
+        </div>
+      )}
+
     </div>
   );
 };
