@@ -3,7 +3,7 @@ import { FaFilePdf, FaDownload, FaExternalLinkAlt } from 'react-icons/fa';
 import '../estilos/Ordenanzas.css'; 
 
 const Ordenanzas = () => {
-  // CONFIGURACIÓN DE NUBE (Sacada de tus capturas)
+  // Configuración de tu nube según tus capturas
   const cloudName = "comercio_pachacamac";
   const carpeta = "pachacamac";
 
@@ -13,7 +13,7 @@ const Ordenanzas = () => {
       titulo: "Ordenanza N° 108-2012-MDP/C",
       anio: "2012",
       descripcion: "Reglamento General que establece las normas para el comercio ambulatorio y ferial en el distrito de Pachacámac.",
-      // Nombre exacto del archivo en tu Cloudinary
+      // Corregido: Nombre exacto que se ve en tu captura
       nombreArchivo: "ORDENANZA%20108-2012-MDP-C%20-%20COMERCIO%20AMBULATORIO%20-%20ESCANEADO.pdf"
     },
     {
@@ -21,8 +21,8 @@ const Ordenanzas = () => {
       titulo: "Ordenanza N° 227-2019-MDP/C",
       anio: "2019",
       descripcion: "Actualización de los procedimientos administrativos y requisitos para la obtención de autorizaciones municipales.",
-      // Nombre exacto del archivo en tu Cloudinary
-      nombreArchivo: "ORDENANZA%20MUNICIPAL%20227-2019-MDP-C%20-%20COMERCIO%20AMBULATORIO.pdf"
+      // CORRECCIÓN CRÍTICA: En tu imagen se ve que termina en .pdf.pdf
+      nombreArchivo: "ORDENANZA%20MUNICIPAL%20227-2019-MDP-C%20-%20COMERCIO%20AMBULATORIO.pdf.pdf"
     }
   ];
 
@@ -35,12 +35,8 @@ const Ordenanzas = () => {
 
       <div className="grid-documentos">
         {documentos.map((doc) => {
-          // CONSTRUCCIÓN DE LINKS
-          // Ver Online: Usamos image/upload para que Cloudinary permita la visualización
-          const urlVer = `https://res.cloudinary.com/${cloudName}/image/upload/v1/${carpeta}/${doc.nombreArchivo}`;
-          
-          // Descargar: Forzamos la descarga con fl_attachment
-          const urlDescargar = `https://res.cloudinary.com/${cloudName}/image/upload/fl_attachment/v1/${carpeta}/${doc.nombreArchivo}`;
+          // Construcción de la URL base
+          const urlBase = `https://res.cloudinary.com/${cloudName}/image/upload/v1/${carpeta}/${doc.nombreArchivo}`;
 
           return (
             <div key={doc.id} className="tarjeta-pdf">
@@ -53,7 +49,7 @@ const Ordenanzas = () => {
               
               <div className="botones-contenedor">
                 <a 
-                  href={urlVer} 
+                  href={urlBase} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="btn-accion leer"
@@ -62,7 +58,7 @@ const Ordenanzas = () => {
                 </a>
 
                 <a 
-                  href={urlDescargar} 
+                  href={urlBase.replace('/upload/', '/upload/fl_attachment/')} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="btn-accion bajar"
