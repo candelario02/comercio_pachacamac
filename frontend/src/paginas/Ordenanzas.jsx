@@ -3,7 +3,7 @@ import { FaFilePdf, FaDownload, FaExternalLinkAlt } from 'react-icons/fa';
 import '../estilos/Ordenanzas.css'; 
 
 const Ordenanzas = () => {
-  // Datos confirmados de tu cuenta
+  // Datos confirmados de tu cuenta en las capturas
   const cloudName = "drkrsfxlc";
   const carpeta = "pachacamac";
 
@@ -13,7 +13,7 @@ const Ordenanzas = () => {
       titulo: "Ordenanza N° 108-2012-MDP/C",
       anio: "2012",
       descripcion: "Reglamento General que establece las normas para el comercio ambulatorio y ferial en el distrito de Pachacámac.",
-      // Probamos con el nombre simple. Si falla, Cloudinary suele requerir el nombre sin extensión en el path de imagen
+      // NOTA: Si Cloudinary le agregó .pdf.pdf úsalo así, si no, déjalo con uno solo
       nombreArchivo: "ORDENANZA%20108-2012-MDP-C%20-%20COMERCIO%20AMBULATORIO%20-%20ESCANEADO.pdf"
     },
     {
@@ -34,8 +34,8 @@ const Ordenanzas = () => {
 
       <div className="grid-documentos">
         {documentos.map((doc) => {
-          // ESTRUCTURA SEGURA: res.cloudinary.com/cloudname/image/upload/fl_attachment/v1/carpeta/archivo.pdf
-          const urlBase = `https://res.cloudinary.com/${cloudName}/image/upload/v1/${carpeta}/${doc.nombreArchivo}`;
+          // LA CLAVE: Usamos 'raw' para el documento original de varias páginas
+          const urlBase = `https://res.cloudinary.com/${cloudName}/raw/upload/v1/${carpeta}/${doc.nombreArchivo}`;
 
           return (
             <div key={doc.id} className="tarjeta-pdf">
@@ -47,7 +47,7 @@ const Ordenanzas = () => {
               <p>{doc.descripcion}</p>
               
               <div className="botones-contenedor">
-                {/* Ver Online */}
+                {/* VER ONLINE: Al ser 'raw', el navegador lo abrirá como PDF nativo */}
                 <a 
                   href={urlBase} 
                   target="_blank" 
@@ -57,7 +57,7 @@ const Ordenanzas = () => {
                   <FaExternalLinkAlt /> Ver Online
                 </a>
 
-                {/* Descargar - Forzamos con el flag fl_attachment */}
+                {/* DESCARGAR: Forzamos descarga agregando el flag fl_attachment */}
                 <a 
                   href={urlBase.replace('/upload/', '/upload/fl_attachment/')} 
                   target="_blank" 
