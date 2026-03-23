@@ -221,9 +221,20 @@ const confirmarPagoYFinalizar = async (req, res) => {
 
 const obtenerFormalizados = async (req, res) => {
     try {
-        const { rows } = await pool.query("SELECT * FROM vista_formalizados");
+        const { buscar } = req.query; 
+        
+        let consulta = "SELECT * FROM vista_formalizados";
+        let parametros = [];
+        if (buscar) {
+            consulta += " WHERE dni LIKE $1";
+            parametros.push(`%${buscar}%`); 
+        }
+                consulta += " ORDER BY fecha_vencimiento ASC";
+
+        const { rows } = await pool.query(consulta, parametros);
         res.json({ success: true, data: rows });
     } catch (error) {
+        console.error("Error en obtenerFormalizados:", error);
         res.status(500).json({ success: false, mensaje: "Error al cargar formalizados" });
     }
 };
