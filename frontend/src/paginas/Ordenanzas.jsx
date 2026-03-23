@@ -10,14 +10,14 @@ const Ordenanzas = () => {
       anio: "2012",
       descripcion: "Reglamento General que establece las normas para el comercio ambulatorio y ferial en el distrito de Pachacámac.",
       // Link base (sin /raw/ y sin /image/) para manipularlo abajo
-      path: "drkrsfxlc/upload/v1/pachacamac/ORDENANZA%20108-2012-MDP-C%20-%20COMERCIO%20AMBULATORIO%20-%20ESCANEADO.pdf",
+      path: "drkrsfxlc/upload/v1/comercio_pachacamac/ORDENANZA%20108-2012-MDP-C%20-%20COMERCIO%20AMBULATORIO%20-%20ESCANEADO.pdf",
     },
     {
       id: 2,
       titulo: "Ordenanza N° 227-2019-MDP/C",
       anio: "2019",
       descripcion: "Actualización de los procedimientos administrativos y requisitos para la obtención de autorizaciones municipales.",
-      path: "drkrsfxlc/upload/v1/pachacamac/ORDENANZA%20MUNICIPAL%20227-2019-MDP-C%20-%20COMERCIO%20AMBULATORIO.pdf",
+      path: "drkrsfxlc/upload/v1/comercio_pachacamac/ORDENANZA%20MUNICIPAL%20227-2019-MDP-C%20-%20COMERCIO%20AMBULATORIO.pdf",
     }
   ];
 
