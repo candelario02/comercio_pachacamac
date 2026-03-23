@@ -26,29 +26,34 @@ const GestionFormalizados = () => {
         cargarFormalizados(); 
     }, []);
 
-    // 1. LÓGICA DE BÚSQUEDA BLINDADA
-    // Usamos variables auxiliares para evitar errores si DNI o nombres son null
+    // === CORRECCIÓN DEL BUSCADOR ===
     const datosFiltrados = formalizados.filter(item => {
-        const query = filtro.toLowerCase();
-        const dni = item.dni ? item.dni.toString() : "";
-        const nombreCompleto = `${item.nombres || ""} ${item.apellidos || ""}`.toLowerCase();
-        
-        return dni.includes(query) || nombreCompleto.includes(query);
+        // Si el buscador está vacío, mostramos todos (limpiamos espacios)
+        const valorBusqueda = filtro.trim().toLowerCase();
+        if (!valorBusqueda) return true;
+
+        // Aseguramos que los datos existan y sean strings para poder usar .includes
+        const dni = item.dni ? String(item.dni) : "";
+        const nombres = item.nombres ? String(item.nombres).toLowerCase() : "";
+        const apellidos = item.apellidos ? String(item.apellidos).toLowerCase() : "";
+
+        // Solo retorna TRUE si el valor buscado está en DNI, Nombres o Apellidos
+        return dni.includes(valorBusqueda) || 
+               nombres.includes(valorBusqueda) || 
+               apellidos.includes(valorBusqueda);
     });
 
-    // 2. LÓGICA DEL SEMÁFORO (Ordenanza Municipal)
+    // LÓGICA DEL SEMÁFORO (Mantenida igual para no romper visuales)
     const obtenerEstadoVencimiento = (fecha) => {
         if (!fecha) return "fecha-pendiente";
-        
         const hoy = new Date();
         const vencimiento = new Date(fecha);
-        // Calculamos la diferencia en días
         const difTiempo = vencimiento - hoy;
         const difDias = Math.ceil(difTiempo / (1000 * 60 * 60 * 24));
 
-        if (difDias < 0) return "fecha-vencida";      // Rojo (Ya venció)
-        if (difDias <= 30) return "fecha-proxima";    // Dorado/Amarillo (Falta 1 mes o menos)
-        return "fecha-vigente";                       // Verde (Más de un mes)
+        if (difDias < 0) return "fecha-vencida";
+        if (difDias <= 30) return "fecha-proxima";
+        return "fecha-vigente";
     };
 
     return (
@@ -60,7 +65,7 @@ const GestionFormalizados = () => {
                         <FaSearch className="icon-search" />
                         <input 
                             type="text" 
-                            className="buscador-input" // Clase limpia para el input
+                            className="buscador-input" 
                             placeholder="Buscar por DNI o Nombre..." 
                             value={filtro}
                             onChange={(e) => setFiltro(e.target.value)}
@@ -89,7 +94,6 @@ const GestionFormalizados = () => {
                                     <td>{item.dni}</td>
                                     <td><strong>{item.nombres} {item.apellidos}</strong></td>
                                     <td>
-                                        {/* Aplicamos la clase dinámica según la fecha */}
                                         <span className={`fecha-badge ${obtenerEstadoVencimiento(item.fecha_vencimiento)}`}>
                                             {item.fecha_vencimiento 
                                                 ? new Date(item.fecha_vencimiento).toLocaleDateString('es-PE') 
