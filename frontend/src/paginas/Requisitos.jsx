@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-/* Importación corregida añadiendo los iconos faltantes */
 import { 
     FaChevronDown, 
     FaExclamationTriangle, 
@@ -25,7 +24,7 @@ export default function Requisitos() {
                 <p>Guía paso a paso para la obtención de su autorización municipal</p>
             </div>
 
-            {/* PASO 1 */}
+            {/* Paso 1: Documentación */}
             <div className={`tarjeta-requisito ${activeAccordion === 'requisitos' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('requisitos')}>
                 <div className="req-header">
@@ -33,24 +32,21 @@ export default function Requisitos() {
                     <div className="req-icon-box"><FaIdCard /></div>
                 </div>
                 <div className="req-detalles">
-                    <p>Para su inscripción en el Padrón Municipal, asegúrese de contar con los siguientes documentos vigentes:</p>
+                    <p>Para su inscripción en el Padrón Municipal, asegúrese de contar con los siguientes documentos:</p>
                     <ul className="lista-requisitos-check">
-                        <li><strong>DNI:</strong> Copia simple con dirección en el distrito (preferente).</li>
-                        <li><strong>Certificado de Salud:</strong> Obligatorio si el giro es de alimentos/bebidas.</li>
-                        <li><strong>Declaración Jurada:</strong> No superar las 2 UIT anuales de ingresos.</li>
-                        <li><strong>Record Administrativo:</strong> No tener multas o infracciones en los últimos 4 años.</li>
+                        <li><strong>DNI:</strong> Copia simple con dirección en el distrito.</li>
+                        <li><strong>Certificado de Salud:</strong> Obligatorio para alimentos.</li>
+                        <li><strong>Declaración Jurada:</strong> No superar las 2 UIT anuales.</li>
+                        <li><strong>Record Administrativo:</strong> Sin multas en los últimos 4 años.</li>
                     </ul>
-                    
                     <div className="obs-entrega-fisica">
                         <h4>📢 OBSERVACIÓN IMPORTANTE:</h4>
-                        <p>
-                            Aunque usted inicie su trámite vía web, <strong>todos los documentos originales y copias deben ser entregados de manera física</strong> en la ventanilla de atención al momento de realizar su pago.
-                        </p>
+                        <p>Todos los documentos deben ser entregados de manera física en ventanilla al momento de realizar su pago.</p>
                     </div>
                 </div>
             </div>
 
-            {/* PASO 2 */}
+            {/* Paso 2: Pago */}
             <div className={`tarjeta-requisito ${activeAccordion === 'proceso' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('proceso')}>
                 <div className="req-header">
@@ -58,19 +54,18 @@ export default function Requisitos() {
                     <div className="req-icon-box"><FaMoneyCheckAlt /></div>
                 </div>
                 <div className="req-detalles">
-                    <p>Una vez que el área correspondiente reciba y verifique sus documentos físicos:</p>
                     <ol className="lista-numerada-luz">
-                        <li>El personal técnico revisará su expediente en ventanilla.</li>
-                        <li>Se le otorgará el <strong>"Visto Bueno"</strong> tras confirmar que la información coincide con su solicitud web.</li>
-                        <li>Con el visto bueno, procederá a realizar el <strong>Pago por Derecho de Trámite</strong> en caja.</li>
+                        <li>Revisión de expediente físico en ventanilla.</li>
+                        <li>Obtención del <strong>"Visto Bueno"</strong> del técnico.</li>
+                        <li>Pago por Derecho de Trámite en caja.</li>
                     </ol>
                     <div className="warning-alert">
-                        <FaExclamationTriangle /> Sin la entrega de documentos físicos, el proceso de pago no podrá ser habilitado.
+                        <FaExclamationTriangle /> Sin la entrega de documentos físicos, el pago no podrá ser habilitado.
                     </div>
                 </div>
             </div>
 
-            {/* PASO 3 */}
+            {/* Paso 3: Finalización Digital */}
             <div className={`tarjeta-requisito ${activeAccordion === 'finalizacion' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('finalizacion')}>
                 <div className="req-header">
@@ -78,26 +73,20 @@ export default function Requisitos() {
                     <div className="req-icon-box"><FaCloudUploadAlt /></div>
                 </div>
                 <div className="req-detalles">
-                    <div className="pasos-finales">
-                        <p><strong>¡Usted ya no necesita esperar en la municipalidad!</strong> Tras realizar el pago:</p>
-                        <div className="box-digital">
-                            <p>1️⃣ Tome una foto a su <strong>comprobante de pago</strong>.</p>
-                            <p>2️⃣ Suba el comprobante a través de su <strong>Portal del Comerciante</strong> en esta web.</p>
-                            <p>3️⃣ Nuestro equipo validará el pago en el sistema.</p>
-                        </div>
-                        
-                        <div className="notificacion-exito">
-                            <FaCheckCircle /> 
-                            <p>
-                                Sus carnets autorizados serán enviados directamente a su <strong>portal personal</strong>. 
-                                Podrá descargarlos e imprimirlos cuando desee.
-                            </p>
-                        </div>
+                    <p><strong>¡No necesita esperar en el local!</strong></p>
+                    <div className="box-digital">
+                        <p>1️⃣ Tome foto a su comprobante.</p>
+                        <p>2️⃣ Súbalo a su <strong>Portal del Comerciante</strong>.</p>
+                        <p>3️⃣ Sus carnets llegarán directamente a su portal para descargar.</p>
+                    </div>
+                    <div className="notificacion-exito">
+                        <FaCheckCircle /> 
+                        <p>Sus carnets autorizados serán enviados digitalmente.</p>
                     </div>
                 </div>
             </div>
 
-            {/* SILENCIO ADMINISTRATIVO */}
+            {/* Resolución */}
             <div className={`tarjeta-requisito ${activeAccordion === 'silencio' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('silencio')}>
                 <div className="req-header">
@@ -105,15 +94,9 @@ export default function Requisitos() {
                     <div className="req-icon-box"><FaFileSignature /></div>
                 </div>
                 <div className="req-detalles">
-                    <p>
-                        De acuerdo al <strong>Artículo 8º de la Ordenanza N° 227</strong>, este trámite está sujeto a 
-                        Evaluación Previa con <strong>Silencio Administrativo Negativo</strong>.
-                    </p>
+                    <p>Sujeto a <strong>Silencio Administrativo Negativo</strong>.</p>
                     <div className="info-legal-box">
-                        <p>
-                            El plazo máximo de respuesta es de <strong>30 días hábiles</strong>. Si transcurrido este tiempo 
-                            no recibe notificación, la ley establece que la solicitud se considera denegada.
-                        </p>
+                        <p>El plazo máximo es de 30 días hábiles. Si no hay respuesta, se considera denegada.</p>
                     </div>
                 </div>
             </div>
