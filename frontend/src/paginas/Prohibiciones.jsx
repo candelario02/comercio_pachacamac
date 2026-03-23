@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
   FaArrowLeft, 
   FaClipboardList, 
@@ -11,7 +10,6 @@ import {
 import '../estilos/Requisitos.css'; 
 
 export default function Prohibiciones() {
-  const navigate = useNavigate();
   const [activeAccordion, setActiveAccordion] = useState(null);
 
   const toggleAccordion = (id) => {
@@ -48,9 +46,6 @@ export default function Prohibiciones() {
   return (
     <div className="requisitos-main">
       <div className="container">
-        <button type="button" className="btn-back" onClick={() => navigate('/inicio-publico')}>
-          <FaArrowLeft /> Volver
-        </button>
 
         <div className="titulo-cabecera">
           <h1>🚫 Prohibiciones Legales</h1>
