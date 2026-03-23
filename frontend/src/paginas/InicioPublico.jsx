@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FaTags,      
-  FaBook,      
+  FaBook, 
+  FaBan,     
   FaClipboardList, 
   FaCalendarCheck 
 } from 'react-icons/fa'; 
@@ -16,7 +17,7 @@ const InicioPublico = () => {
         { id: 2, nombre: 'Definiciones', path: '/definiciones', icono: <FaBook /> },
         { id: 3, nombre: 'Requisitos', path: '/requisitos', icono: <FaClipboardList /> },
         { id: 4, nombre: 'Vigencia', path: '/vigencia', icono: <FaCalendarCheck /> },
-        { id: 5, nombre: 'Prohibiciones', path: '/prohibiciones', icono: <FaClipboardList /> }
+        { id: 5, nombre: 'Prohibiciones', path: '/prohibiciones', icono: <FaBan /> },
     ];
 
     return (
