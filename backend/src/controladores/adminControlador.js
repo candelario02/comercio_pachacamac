@@ -225,11 +225,13 @@ const obtenerFormalizados = async (req, res) => {
         
         let consulta = "SELECT * FROM vista_formalizados";
         let parametros = [];
-        if (buscar) {
+
+        if (buscar && buscar.trim() !== "") {
             consulta += " WHERE dni LIKE $1";
-            parametros.push(`%${buscar}%`); 
+            parametros.push(`%${buscar.trim()}%`); 
         }
-                consulta += " ORDER BY fecha_vencimiento ASC";
+
+        consulta += " ORDER BY fecha_vencimiento ASC";
 
         const { rows } = await pool.query(consulta, parametros);
         res.json({ success: true, data: rows });
