@@ -20,6 +20,7 @@ import PortalComerciante from './paginas/PortalComerciante';
 import Ordenanzas from './paginas/Ordenanzas';
 import Definiciones from './paginas/Definiciones';
 import Categorias from './paginas/Categorias';
+import Requisitos from './paginas/Requisitos';
 
 import "./estilos/Globales.css"
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/rubros-y-actividades" element={<LayoutFondo><ListaPublicaRubrosActividad /></LayoutFondo>} />
           <Route path="/ordenanzas" element={<LayoutFondo><Ordenanzas /></LayoutFondo>} />
          <Route path="/categorias" element={<LayoutFondo><Categorias /></LayoutFondo>} />
+<Route path="/requisitos" element={<LayoutFondo><Requisitos /></LayoutFondo>} />
 
 <Route path="/definiciones" element={<LayoutFondo><Definiciones /></LayoutFondo>} />
 

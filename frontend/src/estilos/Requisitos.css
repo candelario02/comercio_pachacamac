@@ -1,0 +1,140 @@
+/*contenedor principal*/
+.requisitos-main { 
+    padding: 40px 20px; 
+    max-width: 900px; 
+    margin: 0 auto; 
+}
+
+.titulo-cabecera {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.titulo-cabecera h1 {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+}
+
+/* tarjetas cristal */
+.tarjeta-requisito {
+    background: rgba(0, 0, 0, 0.55); 
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tarjeta-requisito:hover {
+    background: rgba(0, 0, 0, 0.65);
+    border-color: #00bcd4;
+}
+
+.tarjeta-requisito.activa {
+    border-color: #00bcd4;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+/* contenido interno*/
+.req-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.req-header h3 {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.req-icon-box {
+    background: #00bcd4;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.tarjeta-requisito.activa .req-icon-box {
+    transform: rotate(180deg);
+}
+
+.req-detalles {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+
+.tarjeta-requisito.activa .req-detalles {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* estilo para listas y textos */
+.req-detalles p, .req-detalles li {
+    color: #f0f0f0;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.warning-alert {
+    background: rgba(157, 2, 8, 0.3);
+    border-left: 4px solid #ff4d4d;
+    padding: 15px;
+    border-radius: 10px;
+    color: #ffcccc;
+    font-weight: 600;
+    margin: 15px 0;
+}
+
+/* simulador interactivo*/
+.simulador-container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.btn-simular {
+    background: #00bcd4;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-simular:hover {
+    background: #008ba3;
+    transform: scale(1.05);
+}
+
+.resultado-texto {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-height: 30px;
+}
+
+.status-proceso { color: #ffa500; }
+.status-denegado { color: #ff4d4d; }
