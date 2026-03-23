@@ -67,28 +67,31 @@ const Ordenanzas = () => {
         ))}
       </div>
 
-      {/* VISOR PDF */}
       {pdfActivo && (
-        <div className="visor-pdf">
-          
-          <div className="visor-header">
-            <button 
-              className="btn-cerrar"
-              onClick={() => setPdfActivo(null)}
-            >
-              ✖ Cerrar
-            </button>
-          </div>
+  <div className="visor-pdf">
+    
+    <div className="visor-contenido">
 
-          <iframe
-            src={pdfActivo}
-            title="Visor PDF"
-            width="100%"
-            height="600px"
-          ></iframe>
+      <div className="visor-header">
+        <button 
+          className="btn-cerrar"
+          onClick={() => setPdfActivo(null)}
+        >
+          ✖ Cerrar
+        </button>
+      </div>
 
-        </div>
-      )}
+      <iframe
+        src={pdfActivo}
+        title="Visor PDF"
+        width="100%"
+        height="100%"
+      ></iframe>
+
+    </div>
+
+  </div>
+)}
 
     </div>
   );
