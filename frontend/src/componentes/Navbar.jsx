@@ -17,6 +17,7 @@ const Navbar = () => {
                     <Link to="/rubros-y-actividades">Rubros Y Actividades</Link>
                     <Link to="/ordenanzas">Ordenanzas</Link>
                     
+                    
                    
                     <Link to="/registro-solicitud" className="btn-solicitud">
                         Solicitar Licencia

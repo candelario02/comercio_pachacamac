@@ -3,7 +3,7 @@ import QRCode from 'qrcode';
 import escudo from '../assets/imagenes/logos/selloparagenerardoc.png'; 
 
 // Configuración global
-const VIGENCIA_MESES_COMERCIO = 6;
+const VIGENCIA_MESES_COMERCIO = 6;//comercio
 const VIGENCIA_MESES_SANIDAD = 12; // Sanidad suele durar un año
 
 export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
