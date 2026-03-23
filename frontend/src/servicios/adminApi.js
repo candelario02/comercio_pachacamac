@@ -57,14 +57,19 @@ confirmarPago: async (id, token, datos = {}) => {
 
 
 
-    obtenerFormalizados: async (token) => {
-        const res = await fetch(`${API_URL}/formalizados`, {
-            headers: { 
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!res.ok) throw new Error('Error al obtener lista de formalizados');
-        return await res.json();
-    }
+   obtenerFormalizados: async (token, buscar = "") => { 
+    const url = buscar 
+        ? `${API_URL}/formalizados?buscar=${buscar}` 
+        : `${API_URL}/formalizados`;
+
+    const res = await fetch(url, {
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!res.ok) throw new Error('Error al obtener lista de formalizados');
+    return await res.json();
+}
 };
