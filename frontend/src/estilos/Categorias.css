@@ -1,27 +1,157 @@
-.categorias-main { padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
-.grid-categorias { display: flex; flex-direction: column; gap: 20px; }
+/* contededor principal*/
+.categorias-main { 
+    padding: 40px 20px; 
+    max-width: 900px; 
+    margin: 0 auto; 
+}
 
+.titulo-cabecera {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.titulo-cabecera h1 {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+    margin-bottom: 10px;
+}
+
+.titulo-cabecera p {
+    color: #00e5ff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* estructura grid */
+.grid-categorias { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+}
+
+/* tarjetas color oscuro cristal*/
 .tarjeta-categoria {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.55); 
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 25px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.tarjeta-categoria:hover { background: rgba(255, 255, 255, 0.12); }
-.cat-header { display: flex; align-items: center; gap: 15px; }
-.cat-icon-box { 
-    background: #00bcd4; 
-    padding: 12px; 
-    border-radius: 10px; 
-    color: white; 
-    font-size: 1.5rem; 
+.tarjeta-categoria:hover { 
+    background: rgba(0, 0, 0, 0.65);
+    border-color: #00bcd4;
+    transform: translateY(-3px);
 }
-.cat-badge { background: #2d5a27; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; }
-.cat-detalles { max-height: 0; overflow: hidden; transition: 0.4s; }
-.tarjeta-categoria.expandida .cat-detalles { max-height: 500px; margin-top: 15px; }
-.giros-lista { list-style: none; padding-left: 20px; margin-top: 10px; }
-.giros-lista li::before { content: "•"; color: #00bcd4; font-weight: bold; margin-right: 10px; }
+
+.tarjeta-categoria.expandida {
+    border-color: #00bcd4;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+/* titulo principal */
+.cat-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.cat-icon-box { 
+    background: linear-gradient(135deg, #00bcd4, #008ba3); 
+    padding: 12px; 
+    border-radius: 12px; 
+    color: white; 
+    font-size: 1.6rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
+}
+
+.cat-info h3 {
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.cat-badge { 
+    background: #2d5a27; 
+    color: white; 
+    padding: 3px 10px; 
+    border-radius: 6px; 
+    font-size: 0.75rem; 
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+/* donde expandimos el contenido*/
+.tarjeta-categoria p {
+    color: #f0f0f0; 
+    margin: 12px 0;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.cat-detalles { 
+    max-height: 0; 
+    overflow: hidden; 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.tarjeta-categoria.expandida .cat-detalles { 
+    max-height: 600px; 
+    margin-top: 15px; 
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 1;
+}
+
+.giros-lista { 
+    list-style: none; 
+    padding-left: 5px; 
+    margin-top: 15px; 
+}
+
+.giros-lista li {
+    color: #ffffff;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.giros-lista li::before { 
+    content: "•"; 
+    color: #00bcd4; 
+    font-size: 1.5rem;
+    font-weight: bold; 
+    margin-right: 12px; 
+    line-height: 0;
+}
+
+.cat-footer-info {
+    text-align: right;
+    color: #00bcd4;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* confi para cel */
+@media (max-width: 768px) {
+    .titulo-cabecera h1 { font-size: 1.8rem; }
+    .tarjeta-categoria { padding: 15px; }
+    .cat-icon-box { font-size: 1.2rem; padding: 10px; }
+}
