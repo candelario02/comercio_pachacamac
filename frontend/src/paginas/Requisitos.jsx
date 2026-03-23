@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { FaChevronDown, FaExclamationTriangle, FaFileSignature, FaIdCard, FaMoneyCheckAlt } from 'react-icons/fa';
+/* Importación corregida añadiendo los iconos faltantes */
+import { 
+    FaChevronDown, 
+    FaExclamationTriangle, 
+    FaFileSignature, 
+    FaIdCard, 
+    FaMoneyCheckAlt, 
+    FaCloudUploadAlt, 
+    FaCheckCircle 
+} from 'react-icons/fa';
 import '../estilos/Requisitos.css';
 
 export default function Requisitos() {
@@ -16,6 +25,7 @@ export default function Requisitos() {
                 <p>Guía paso a paso para la obtención de su autorización municipal</p>
             </div>
 
+            {/* PASO 1 */}
             <div className={`tarjeta-requisito ${activeAccordion === 'requisitos' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('requisitos')}>
                 <div className="req-header">
@@ -39,53 +49,55 @@ export default function Requisitos() {
                     </div>
                 </div>
             </div>
-            {/* TARJETA 2: PAGO Y VISTO BUENO */}
-<div className={`tarjeta-requisito ${activeAccordion === 'proceso' ? 'activa' : ''}`}
-     onClick={() => toggleAccordion('proceso')}>
-    <div className="req-header">
-        <h3>Paso 2: Pago y Visto Bueno</h3>
-        <div className="req-icon-box"><FaMoneyCheckAlt /></div>
-    </div>
-    <div className="req-detalles">
-        <p>Una vez que el área correspondiente reciba y verifique sus documentos físicos:</p>
-        <ol className="lista-numerada-luz">
-            <li>El personal técnico revisará su expediente en ventanilla.</li>
-            <li>Se le otorgará el <strong>"Visto Bueno"</strong> tras confirmar la información.</li>
-            <li>Con el visto bueno, procederá a realizar el <strong>Pago por Derecho de Trámite</strong> en caja.</li>
-        </ol>
-        <div className="warning-alert">
-            ⚠️ Sin la entrega de documentos físicos, el proceso de pago no podrá ser habilitado.
-        </div>
-    </div>
-</div>
 
-{/* NUEVA TARJETA 3: FINALIZACIÓN DIGITAL */}
-<div className={`tarjeta-requisito ${activeAccordion === 'finalizacion' ? 'activa' : ''}`}
-     onClick={() => toggleAccordion('finalizacion')}>
-    <div className="req-header">
-        <h3>Paso 3: Finalización y Entrega Digital</h3>
-        <div className="req-icon-box"><FaCloudUploadAlt /></div>
-    </div>
-    <div className="req-detalles">
-        <div className="pasos-finales">
-            <p><strong>¡Usted ya no necesita esperar en la municipalidad!</strong> Tras realizar el pago:</p>
-            <div className="box-digital">
-                <p>1️⃣ Tome una foto a su <strong>comprobante de pago</strong>.</p>
-                <p>2️⃣ Suba el comprobante a través de su <strong>Portal del Comerciante</strong> en esta web.</p>
-                <p>3️⃣ Nuestro equipo validará el pago en el sistema.</p>
+            {/* PASO 2 */}
+            <div className={`tarjeta-requisito ${activeAccordion === 'proceso' ? 'activa' : ''}`}
+                 onClick={() => toggleAccordion('proceso')}>
+                <div className="req-header">
+                    <h3>Paso 2: Pago y Visto Bueno</h3>
+                    <div className="req-icon-box"><FaMoneyCheckAlt /></div>
+                </div>
+                <div className="req-detalles">
+                    <p>Una vez que el área correspondiente reciba y verifique sus documentos físicos:</p>
+                    <ol className="lista-numerada-luz">
+                        <li>El personal técnico revisará su expediente en ventanilla.</li>
+                        <li>Se le otorgará el <strong>"Visto Bueno"</strong> tras confirmar que la información coincide con su solicitud web.</li>
+                        <li>Con el visto bueno, procederá a realizar el <strong>Pago por Derecho de Trámite</strong> en caja.</li>
+                    </ol>
+                    <div className="warning-alert">
+                        <FaExclamationTriangle /> Sin la entrega de documentos físicos, el proceso de pago no podrá ser habilitado.
+                    </div>
+                </div>
             </div>
-            
-            <div className="notificacion-exito">
-                <FaCheckCircle /> 
-                <p>
-                    Sus carnets autorizados serán enviados directamente a su <strong>portal personal</strong>. 
-                    Podrá descargarlos e imprimirlos cuando desee.
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
 
+            {/* PASO 3 */}
+            <div className={`tarjeta-requisito ${activeAccordion === 'finalizacion' ? 'activa' : ''}`}
+                 onClick={() => toggleAccordion('finalizacion')}>
+                <div className="req-header">
+                    <h3>Paso 3: Finalización y Entrega Digital</h3>
+                    <div className="req-icon-box"><FaCloudUploadAlt /></div>
+                </div>
+                <div className="req-detalles">
+                    <div className="pasos-finales">
+                        <p><strong>¡Usted ya no necesita esperar en la municipalidad!</strong> Tras realizar el pago:</p>
+                        <div className="box-digital">
+                            <p>1️⃣ Tome una foto a su <strong>comprobante de pago</strong>.</p>
+                            <p>2️⃣ Suba el comprobante a través de su <strong>Portal del Comerciante</strong> en esta web.</p>
+                            <p>3️⃣ Nuestro equipo validará el pago en el sistema.</p>
+                        </div>
+                        
+                        <div className="notificacion-exito">
+                            <FaCheckCircle /> 
+                            <p>
+                                Sus carnets autorizados serán enviados directamente a su <strong>portal personal</strong>. 
+                                Podrá descargarlos e imprimirlos cuando desee.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* SILENCIO ADMINISTRATIVO */}
             <div className={`tarjeta-requisito ${activeAccordion === 'silencio' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('silencio')}>
                 <div className="req-header">
@@ -100,8 +112,7 @@ export default function Requisitos() {
                     <div className="info-legal-box">
                         <p>
                             El plazo máximo de respuesta es de <strong>30 días hábiles</strong>. Si transcurrido este tiempo 
-                            no recibe notificación, la ley establece que la solicitud se considera denegada, 
-                            habilitando su derecho a presentar recursos de impugnación.
+                            no recibe notificación, la ley establece que la solicitud se considera denegada.
                         </p>
                     </div>
                 </div>
