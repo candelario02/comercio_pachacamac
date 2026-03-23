@@ -15,7 +15,8 @@ const InicioPublico = () => {
         { id: 1, nombre: 'Categorías', path: '/categorias', icono: <FaTags /> },
         { id: 2, nombre: 'Definiciones', path: '/definiciones', icono: <FaBook /> },
         { id: 3, nombre: 'Requisitos', path: '/requisitos', icono: <FaClipboardList /> },
-        { id: 4, nombre: 'Vigencia', path: '/vigencia', icono: <FaCalendarCheck /> }
+        { id: 4, nombre: 'Vigencia', path: '/vigencia', icono: <FaCalendarCheck /> },
+        { id: 5, nombre: 'Prohibiciones', path: '/prohibiciones', icono: <FaClipboardList /> }
     ];
 
     return (

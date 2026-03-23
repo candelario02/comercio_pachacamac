@@ -22,6 +22,7 @@ import Definiciones from './paginas/Definiciones';
 import Categorias from './paginas/Categorias';
 import Requisitos from './paginas/Requisitos';
 import Vigencia from './paginas/Vigencia';
+import Prohibiciones from './paginas/Prohibiciones';
 import "./estilos/Globales.css"
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="/requisitos" element={<LayoutFondo><Requisitos /></LayoutFondo>} />
           <Route path="/vigencia" element={<LayoutFondo><Vigencia /></LayoutFondo>} />
           <Route path="/definiciones" element={<LayoutFondo><Definiciones /></LayoutFondo>} />
+          <Route path="/prohibiciones" element={<LayoutFondo><Prohibiciones /></LayoutFondo>} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro-solicitud" element={<LayoutFondo><SolicitudComerciante /></LayoutFondo>} />
           <Route path="/ordenanzas" element={<Ordenanzas />} />
