@@ -1,0 +1,27 @@
+.categorias-main { padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+.grid-categorias { display: flex; flex-direction: column; gap: 20px; }
+
+.tarjeta-categoria {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tarjeta-categoria:hover { background: rgba(255, 255, 255, 0.12); }
+.cat-header { display: flex; align-items: center; gap: 15px; }
+.cat-icon-box { 
+    background: #00bcd4; 
+    padding: 12px; 
+    border-radius: 10px; 
+    color: white; 
+    font-size: 1.5rem; 
+}
+.cat-badge { background: #2d5a27; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; }
+.cat-detalles { max-height: 0; overflow: hidden; transition: 0.4s; }
+.tarjeta-categoria.expandida .cat-detalles { max-height: 500px; margin-top: 15px; }
+.giros-lista { list-style: none; padding-left: 20px; margin-top: 10px; }
+.giros-lista li::before { content: "•"; color: #00bcd4; font-weight: bold; margin-right: 10px; }
