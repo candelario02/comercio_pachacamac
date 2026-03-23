@@ -1,4 +1,4 @@
-/*contenedor principal*/
+/*contenedor principal modelo crital oscuro */
 .requisitos-main { 
     padding: 40px 20px; 
     max-width: 900px; 
@@ -17,14 +17,20 @@
     text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
 }
 
-/* tarjetas cristal */
+.titulo-cabecera p {
+    color: #00e5ff;
+    font-weight: 600;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* modelo de tarjetas */
 .tarjeta-requisito {
     background: rgba(0, 0, 0, 0.55); 
     backdrop-filter: blur(20px); 
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
-    padding: 20px;
+    padding: 22px;
     margin-bottom: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -41,7 +47,7 @@
     background: rgba(0, 0, 0, 0.75);
 }
 
-/* contenido interno*/
+/* titulos de tarjetas */
 .req-header {
     display: flex;
     justify-content: space-between;
@@ -51,26 +57,29 @@
 
 .req-header h3 {
     color: #ffffff;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
     margin: 0;
 }
 
 .req-icon-box {
-    background: #00bcd4;
+    background: linear-gradient(135deg, #00bcd4, #008ba3);
     color: white;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
 }
 
 .tarjeta-requisito.activa .req-icon-box {
     transform: rotate(180deg);
 }
 
+/* para el contenido expandible*/
 .req-detalles {
     max-height: 0;
     overflow: hidden;
@@ -79,62 +88,105 @@
 }
 
 .tarjeta-requisito.activa .req-detalles {
-    max-height: 1000px;
+    max-height: 1200px;
     opacity: 1;
     margin-top: 20px;
-    padding-top: 15px;
+    padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* estilo para listas y textos */
-.req-detalles p, .req-detalles li {
-    color: #f0f0f0;
+.req-detalles p {
+    color: #e0e0e0;
     line-height: 1.6;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     text-align: justify;
 }
 
+/* listas de requisitos */
+.lista-requisitos-check {
+    list-style: none;
+    padding-left: 0;
+    margin: 15px 0;
+}
+
+.lista-requisitos-check li {
+    color: #ffffff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.lista-requisitos-check li::before {
+    content: "✔️";
+    margin-right: 12px;
+    font-size: 0.9rem;
+}
+
+.lista-numerada-luz {
+    padding-left: 20px;
+    color: #ffffff;
+}
+
+.lista-numerada-luz li {
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+.lista-numerada-luz li strong {
+    color: #00e5ff;
+}
+
+/*sesion de botones de advertencia*/
+
+/* para el aviso*/
+.obs-entrega-fisica {
+    background: rgba(0, 188, 212, 0.1);
+    border: 2px dashed rgba(0, 229, 255, 0.4);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.obs-entrega-fisica h4 {
+    color: #00e5ff;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* advertencia */
 .warning-alert {
-    background: rgba(157, 2, 8, 0.3);
+    background: rgba(157, 2, 8, 0.25);
     border-left: 4px solid #ff4d4d;
     padding: 15px;
     border-radius: 10px;
     color: #ffcccc;
     font-weight: 600;
     margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* simulador interactivo*/
-.simulador-container {
+
+.info-legal-box {
     background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.btn-simular {
-    background: #00bcd4;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.info-legal-box p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    font-style: italic;
 }
 
-.btn-simular:hover {
-    background: #008ba3;
-    transform: scale(1.05);
+/* para vista en cell */
+@media (max-width: 768px) {
+    .titulo-cabecera h1 { font-size: 1.8rem; }
+    .req-header h3 { font-size: 1.1rem; }
+    .tarjeta-requisito { padding: 15px; }
 }
-
-.resultado-texto {
-    margin-top: 15px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    min-height: 30px;
-}
-
-.status-proceso { color: #ffa500; }
-.status-denegado { color: #ff4d4d; }

@@ -8,14 +8,14 @@ export const ModalProvider = ({ children }) => {
         abierto: false,
         mensaje: "",
         tipo: "alerta",
-        accion: () => {} // Valor inicial como función vacía
+        accion: () => {} 
     });
 
     const cerrarModal = () => {
         setModal({ abierto: false, mensaje: "", tipo: "alerta", accion: () => {} });
     };
 
-   // En ModalContext.jsx, modifica esta función:
+  
 const lanzarAlerta = (mensaje, tipo = "alerta", accion = () => {}) => {
     setModal({ abierto: true, mensaje, tipo, accion });
 };

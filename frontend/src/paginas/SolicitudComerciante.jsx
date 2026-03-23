@@ -109,7 +109,7 @@ const SolicitudComerciante = () => {
             await registrarSolicitud(data);
             setModal({ 
                 abierto: true, 
-                mensaje: "¡Solicitud enviada con éxito! El administrador revisará tu información.", 
+                mensaje: "¡Solicitud enviada con éxito! Recuerda que para completar el trámite debes acercarte a la Municipalidad con tus documentos físicos para el Visto Bueno y Pago correspondiente.", 
                 tipo: 'info', 
                 accion: () => navigate('/login') 
             });
