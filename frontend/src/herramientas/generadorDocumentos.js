@@ -14,10 +14,14 @@ const agregarQRConLogo = async (doc, x, y, size, text) => {
             margin: 1,
             errorCorrectionLevel: 'H' 
         });
+        
         doc.addImage(qrDataUrl, 'PNG', x, y, size, size);
-        const logoSize = size * 0.25;
-        const logoPos = x + (size / 2) - (logoSize / 2);
-        doc.addImage(escudo, 'PNG', logoPos, logoPos, logoSize, logoSize);
+
+        const logoSize = size * 0.25; 
+        const centroX = x + (size / 2) - (logoSize / 2);
+        const centroY = y + (size / 2) - (logoSize / 2); 
+        doc.addImage(escudo, 'PNG', centroX, centroY, logoSize, logoSize);
+        
     } catch (err) {
         console.error("Error generando QR con logo:", err);
     }
