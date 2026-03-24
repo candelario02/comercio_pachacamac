@@ -8,8 +8,8 @@ import '../estilos/Validacion-publica.css';
 const ValidacionPublica = () => {
     const [searchParams] = useSearchParams();
     const dni = searchParams.get("dni");
-    const tipoCarnet = searchParams.get("tipo"); // Extraído correctamente de los params
-    
+    const tipoUrl = searchParams.get("tipo") || 'comercio'; // 'comercio' por defecto
+
     const [datos, setDatos] = useState(null);
     const [cargando, setCargando] = useState(true);
 
@@ -20,13 +20,10 @@ const ValidacionPublica = () => {
                 return;
             }
             try {
-                // IMPORTANTE: Enviamos el tipo al servicio para que el backend sepa qué buscar
-                const res = await AdminServicio.validarQRPublico(dni, tipoCarnet);
-                
+                // Pasamos el DNI y el tipo que viene en el QR al backend
+                const res = await AdminServicio.validarQRPublico(dni, tipoUrl);
                 if (res && res.data) {
                     setDatos(res.data);
-                } else {
-                    setDatos(null);
                 }
             } catch (err) {
                 console.error("Error validando:", err);
@@ -36,50 +33,52 @@ const ValidacionPublica = () => {
             }
         };
         validar();
-    }, [dni, tipoCarnet]);
+    }, [dni, tipoUrl]);
 
-    if (cargando) {
-        return (
-            <div className="validacion-contenedor">
-                <div className="cargando-spinner">Verificando en sistema...</div>
-            </div>
-        );
-    }
+    if (cargando) return <div className="cargando">Verificando credencial...</div>;
+
+    // Determinamos el estilo basado en lo que el servidor nos responda
+    // Si el servidor confirma que es 'SANIDAD', usamos verde.
+    const esSanidad = tipoUrl === 'sanidad' || datos?.tipo_autorizacion?.toUpperCase() === 'SANIDAD';
 
     return (
         <div className="validacion-contenedor">
             <img src={escudo} alt="Escudo" className="validacion-escudo" />
             <h2 className="validacion-titulo">MUNICIPALIDAD DE PACHACÁMAC</h2>
-            <p className="validacion-subtitulo">SISTEMA DE IDENTIFICACIÓN DIGITAL</p>
             
             <hr className="validacion-separador" />
 
             {datos ? (
-                <div className={`card-valido ${tipoCarnet === 'sanidad' ? 'azul' : 'verde'}`}>
+                <div className={`card-valido ${esSanidad ? 'card-sanidad' : 'card-comercio'}`}>
                     <FaCheckCircle className="icon-valido" />
-                    <h3 className="texto-valido">
-                        {tipoCarnet === 'sanidad' ? 'CARNET DE SANIDAD VIGENTE' : 'CARNET DE COMERCIANTE VIGENTE'}
-                    </h3>
+                    
+                    {/* TÍTULO GRANDE E IMPACTANTE */}
+                    <h1 className="texto-valido">
+                        {esSanidad ? 'SANIDAD' : 'FORMALIZADO'}
+                    </h1>
+                    
+                    <p className="subtexto-valido">
+                        {esSanidad ? 'Carnet de Sanidad Vigente' : 'Carnet de Comercio Vigente'}
+                    </p>
                     
                     <p className="datos-nombre">{datos.nombres} {datos.apellidos}</p>
                     
                     <div className="info-detallada">
                         <p><strong>DNI:</strong> {datos.dni}</p>
-                        <p><strong>Vencimiento:</strong> {datos.fecha_vencimiento ? new Date(datos.fecha_vencimiento).toLocaleDateString('es-PE') : 'No registra'}</p>
-                        <p><strong>Estado:</strong> <span className="tag-aprobado">ACTIVO / VIGENTE</span></p>
+                        <p><strong>Vencimiento:</strong> {new Date(datos.fecha_vencimiento).toLocaleDateString('es-PE')}</p>
+                        <p><strong>Estado:</strong> <span className="tag-aprobado">VIGENTE</span></p>
                     </div>
                 </div>
             ) : (
                 <div className="card-invalido">
                     <FaTimesCircle className="icon-invalido" />
                     <h3 className="texto-invalido">NO ENCONTRADO</h3>
-                    <p>La credencial consultada no existe, ha expirado o el DNI es incorrecto.</p>
+                    <p>La credencial no existe o ha expirado.</p>
                 </div>
             )}
 
             <div className="footer-seguridad">
-                <FaUserShield /> 
-                <span>Consulta oficial: {new Date().toLocaleDateString()}</span>
+                <FaUserShield /> <span>Validación Oficial - {new Date().getFullYear()}</span>
             </div>
         </div>
     );

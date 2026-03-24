@@ -1,4 +1,4 @@
-/* contenedor principal  */
+/* Estructura principal del contenedor de validacion */
 .validacion-contenedor {
     padding: 20px;
     max-width: 400px;
@@ -10,7 +10,7 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-/*  encabezado  */
+/* Identidad institucional */
 .validacion-escudo {
     width: 90px;
     margin-bottom: 15px;
@@ -18,7 +18,7 @@
 
 .validacion-titulo {
     font-size: 1.2rem;
-    color: #004684;
+    color: #004684; /* Azul Institucional */
     margin-bottom: 5px;
     font-weight: 800;
 }
@@ -36,41 +36,53 @@
     margin: 20px 0;
 }
 
-/* tarjeta tipo de carnet */
+/* Estilo base para Tarjeta de Exito */
 .card-valido {
     border-radius: 15px;
     padding: 25px;
     margin-top: 20px;
     animation: fadeIn 0.5s ease;
-    color: #1a202c;
+    color: #1a202c; /* Texto oscuro para legibilidad */
 }
 
-.card-valido.verde {
-    background-color: #f0fff4;
-    border: 2px solid #276749;
+/* CLASE COMERCIO (Formalizado): Diseño AZUL */
+.card-comercio {
+    background-color: #ebf8ff; /* Azul muy clarito */
+    border: 2px solid #2b6cb0; /* Azul fuerte */
 }
 
-.card-valido.azul {
-    background-color: #ebf8ff;
-    border: 2px solid #2b6cb0;
+/* CLASE SANIDAD: Diseño VERDE */
+.card-sanidad {
+    background-color: #f0fff4; /* Verde clarito (el que ya tenias) */
+    border: 2px solid #276749; /* Verde fuerte */
 }
 
-/* iconos y letras para resultados validos */
+/* Iconos Dinamicos */
 .icon-valido {
     font-size: 60px;
     margin-bottom: 10px;
 }
 
-.card-valido.verde .icon-valido { color: #2f855a; }
-.card-valido.azul .icon-valido { color: #2b6cb0; }
+/* El icono cambia de color segun el contenedor padre */
+.card-comercio .icon-valido { color: #2b6cb0; } /* Icono Azul */
+.card-sanidad .icon-valido { color: #2f855a; }   /* Icono Verde */
 
+/* Texto Principal GRANDE como pediste */
 .texto-valido {
     font-weight: 800;
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.8rem; /* Aumentado a 1.8rem */
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    color: #1a202c;
 }
 
-/* tarjeta de resultado negativo */
+.subtexto-valido {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #4a5568;
+}
+
+/* Tarjeta de Error */
 .card-invalido {
     background-color: #fff5f5;
     border: 2px solid #9b2c2c;
@@ -89,9 +101,11 @@
 .texto-invalido {
     font-weight: 800;
     color: #9b2c2c;
+    font-size: 1.3rem;
+    text-transform: uppercase;
 }
 
-/* bloque de informacion comerciante y etiquetas */
+/* Bloque de informacion del comerciante y etiquetas */
 .datos-nombre {
     margin: 10px 0;
     font-weight: bold;
@@ -103,7 +117,7 @@
 .info-detallada {
     text-align: left;
     font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
     padding: 10px;
     border-radius: 10px;
 }
@@ -117,7 +131,7 @@
     font-weight: bold;
 }
 
-/* pie de pagina y animaciones de transicion */
+/* Pie de pagina y animaciones */
 .footer-seguridad {
     margin-top: 30px;
     font-size: 0.75rem;

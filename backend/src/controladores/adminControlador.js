@@ -141,7 +141,6 @@ const confirmarPagoYFinalizar = async (req, res) => {
     try {
         await pool.query('BEGIN');
 
-        // 1. Confirmamos el pago y obtenemos el comerciante_id
         const resPago = await pool.query(
             `UPDATE pagos_municipales 
              SET estado = 'pagado' 
@@ -151,12 +150,14 @@ const confirmarPagoYFinalizar = async (req, res) => {
 
         if (resPago.rows.length === 0) throw new Error("Pago no encontrado");
         const { comerciante_id, orden_pago_id } = resPago.rows[0];
+        
         if (orden_pago_id) {
             await pool.query(
                 `UPDATE ordenes_pago SET estado = 'pagado' WHERE id = $1`, 
                 [orden_pago_id]
             );
         }
+
         const resCom = await pool.query(
             `UPDATE comerciantes 
              SET estado_tramite = 'formalizado' 
@@ -167,25 +168,27 @@ const confirmarPagoYFinalizar = async (req, res) => {
 
         const mesesFinalesComercio = parseInt(vigencia_comercio) || 12; 
         const mesesFinalesSanidad = desea_tramitar_carnet ? (parseInt(vigencia_sanidad) || 6) : 0;
-
-        const qrUnico = `QR-${comerciante_id.slice(0, 8)}-${Date.now()}`;
-
+        const qrComercio = `QR-COM-${comerciante_id.toString().slice(-5)}-${Date.now()}`;
         await pool.query(
-            `INSERT INTO autorizaciones (comerciante_id, fecha_emision, fecha_vencimiento, codigo_qr_unico)
-             VALUES ($1, CURRENT_DATE, CURRENT_DATE + ($2 || ' months')::interval, $3)
-             ON CONFLICT (comerciante_id) DO UPDATE 
-             SET fecha_emision = CURRENT_DATE, 
-                 fecha_vencimiento = CURRENT_DATE + ($2 || ' months')::interval,
-                 codigo_qr_unico = $3`,
-            [comerciante_id, mesesFinalesComercio, qrUnico]
+            `INSERT INTO autorizaciones (comerciante_id, tipo_autorizacion, fecha_emision, fecha_vencimiento, codigo_qr_unico)
+             VALUES ($1, 'COMERCIO', CURRENT_DATE, CURRENT_DATE + ($2 || ' months')::interval, $3)`,
+            [comerciante_id, mesesFinalesComercio, qrComercio]
         );
+        if (desea_tramitar_carnet) {
+            const qrSanidad = `QR-SAN-${comerciante_id.toString().slice(-5)}-${Date.now()}`;
+            await pool.query(
+                `INSERT INTO autorizaciones (comerciante_id, tipo_autorizacion, fecha_emision, fecha_vencimiento, codigo_qr_unico)
+                 VALUES ($1, 'SANIDAD', CURRENT_DATE, CURRENT_DATE + ($2 || ' months')::interval, $3)`,
+                [comerciante_id, mesesFinalesSanidad, qrSanidad]
+            );
+        }
 
-        // 5. Notificación Final
+        // 5. notificación Final
         await pool.query(
-    `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
-     VALUES ($1, $2, $3)`,
-    [usuario_id, `¡Felicidades! Tu pago ha sido verificado.`, 'exito']
-);
+            `INSERT INTO notificaciones (usuario_id, mensaje, tipo) 
+             VALUES ($1, $2, $3)`,
+            [usuario_id, `¡Felicidades! Tu pago ha sido verificado.`, 'exito']
+        );
 
         await pool.query('COMMIT');
         res.json({ 
@@ -316,30 +319,42 @@ const exportarExcelFormalizados = async (req, res) => {
 // validar QR depende del tipo
 const validarQRPublico = async (req, res) => {
     const { dni } = req.params;
-    const { tipo } = req.query; 
+    const { tipo } = req.query;
 
     try {
-       
         let query;
+        let tipoValidado;
+
         if (tipo === 'sanidad') {
             query = `
-                SELECT c.nombres, c.apellidos, c.dni, a.fecha_vencimiento 
+                SELECT 
+                    c.nombres, 
+                    c.apellidos, 
+                    c.dni, 
+                    a.fecha_vencimiento
                 FROM comerciantes c
                 JOIN autorizaciones a ON c.id = a.comerciante_id
                 WHERE c.dni = $1 AND a.codigo_qr_unico LIKE '%SANIDAD%'
             `;
+            tipoValidado = 'sanidad';
         } else {
-            query = `SELECT nombres, apellidos, dni, fecha_vencimiento FROM public.vista_formalizados WHERE dni = $1`;
+            query = `
+                SELECT nombres, apellidos, dni, fecha_vencimiento 
+                FROM public.vista_formalizados 
+                WHERE dni = $1
+            `;
+            tipoValidado = 'comercio';
         }
 
         const resultado = await pool.query(query, [dni]);
 
         if (resultado.rows.length > 0) {
-            res.json({ ...resultado.rows[0], tipoValidado: tipo || 'comercio' });
+            res.json({ ...resultado.rows[0], tipoValidado });
         } else {
-            res.status(404).json({ mensaje: "Credencial no válida" });
+            res.status(404).json({ mensaje: "Credencial no válida o vencida" });
         }
     } catch (error) {
+        console.error("Error en validación pública:", error);
         res.status(500).json({ mensaje: "Error en el servidor" });
     }
 };

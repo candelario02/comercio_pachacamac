@@ -2,11 +2,10 @@ import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import escudo from '../assets/imagenes/logos/selloparagenerardoc.png'; 
 
-
 const VIGENCIA_MESES_COMERCIO = 6;
 const VIGENCIA_MESES_SANIDAD = 12;
 
-// funcion con logo en el qr
+// función con logo en el QR
 const agregarQRConLogo = async (doc, x, y, size, text) => {
     try {
         const qrDataUrl = await QRCode.toDataURL(text, { 
@@ -26,13 +25,15 @@ const agregarQRConLogo = async (doc, x, y, size, text) => {
         console.error("Error generando QR con logo:", err);
     }
 };
-//generador generarCarnetPDF formalizado 
+
+// generador generarCarnetPDF formalizado 
 export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
     if (tipo === 'sanidad') {
         return await generarCarnetSanidadPDF(comerciante);
     }
 
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [90, 100] });
+    
     doc.setDrawColor(0, 102, 204); 
     doc.setLineWidth(1.5);
     doc.rect(5, 5, 80, 90); 
@@ -58,8 +59,7 @@ export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
     currentY += spacing;
     doc.text(`DNI: ${comerciante.dni}`, marginX, currentY);
     currentY += spacing;
-
-    doc.setTextColor(0, 128, 0);
+    doc.setTextColor(0, 102, 204);
     doc.setFont("helvetica", "bold");
     doc.text('Estado: FORMALIZADO', marginX, currentY); 
     doc.setTextColor(0, 0, 0);
@@ -74,15 +74,16 @@ export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
         : 'Consultar';
     doc.text(`Vencimiento: ${fVen}`, marginX, currentY);
 
-    // URL dinámica que apunta a tu nuevo JSX de validación
-    const urlValidacion = `${window.location.origin}/validar?dni=${comerciante.dni}`;
+    const urlValidacion = `${window.location.origin}/validar?dni=${comerciante.dni}&tipo=comercio`;
     await agregarQRConLogo(doc, 35, 70, 20, urlValidacion);
 
     doc.save(`Carnet_Comercio_${comerciante.dni}.pdf`);
 };
-//generador generarCarnetSanidadPDF 
+
+// generador generarCarnetSanidadPDF 
 export const generarCarnetSanidadPDF = async (comerciante) => {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [90, 100] });
+    
     doc.setDrawColor(34, 139, 34); 
     doc.setLineWidth(1.5);
     doc.rect(5, 5, 80, 90); 
@@ -122,8 +123,10 @@ export const generarCarnetSanidadPDF = async (comerciante) => {
     doc.text(`Emisión: ${new Date().toLocaleDateString()}`, marginX, currentY);
     currentY += 6;
 
-    const fVen = new Date();
-    fVen.setMonth(fVen.getMonth() + 6);
+    const fVenRaw = comerciante.fecha_vencimiento_sanidad || comerciante.fecha_vencimiento;
+    const fVen = fVenRaw ? new Date(fVenRaw) : new Date();
+    if (!fVenRaw) fVen.setMonth(fVen.getMonth() + 6);
+    
     doc.text(`Vencimiento: ${fVen.toLocaleDateString()}`, marginX, currentY);
 
     const urlValidacion = `${window.location.origin}/validar?dni=${comerciante.dni}&tipo=sanidad`;
@@ -131,7 +134,8 @@ export const generarCarnetSanidadPDF = async (comerciante) => {
 
     doc.save(`Carnet_Sanidad_${comerciante.dni}.pdf`);
 };
-//generador generarOrdenPagoPDF 
+
+// generador generarOrdenPagoPDF
 export const generarOrdenPagoPDF = async (comerciante, montos) => {
     const { total, derecho, carnet } = montos;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [100, 150] });
@@ -185,5 +189,4 @@ export const generarOrdenPagoPDF = async (comerciante, montos) => {
     await agregarQRConLogo(doc, 35, currentY + 10, 30, dataPago);
 
     doc.save(`Orden_${comerciante.dni}.pdf`);
-
 };
