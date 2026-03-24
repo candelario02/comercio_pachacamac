@@ -6,24 +6,30 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recha
 import { BASE_URL } from '../api/apiConfig';
 import '../estilos/DashboardAdmin.css';
 
+// CONSTANTES DE DISEÑO (Fuera del componente para no ensuciar la lógica)
+const COLORES_RUBROS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#ff4444'];
+const COLOR_SANIDAD_OK = '#00C49F';
+const COLOR_SANIDAD_FALTA = '#D1D5DB';
+
 const DashboardAdmin = () => {
     const navigate = useNavigate();
     const [stats, setStats] = useState({ total: 0, pendientes: 0, formalizados: 0 });
     const [graficos, setGraficos] = useState({ datosRubros: [], datosSanidad: [] });
     const [loading, setLoading] = useState(true);
 
-    const COLORES = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#ff4444'];
-
     useEffect(() => {
-        const cargarTodo = async () => {
+        const cargarDatosDashboard = async () => {
             try {
                 const token = localStorage.getItem('token');
                 const headers = { Authorization: `Bearer ${token}` };
                 
-                const resStats = await axios.get(`${BASE_URL}/admin/estadisticas`, { headers });
-                setStats(resStats.data);
+                // Peticiones paralelas para mayor velocidad
+                const [resStats, resGraficos] = await Promise.all([
+                    axios.get(`${BASE_URL}/admin/estadisticas`, { headers }),
+                    axios.get(`${BASE_URL}/admin/estadisticas-graficos`, { headers })
+                ]);
 
-                const resGraficos = await axios.get(`${BASE_URL}/admin/estadisticas-graficos`, { headers });
+                setStats(resStats.data);
                 if(resGraficos.data.success) {
                     setGraficos({
                         datosRubros: resGraficos.data.datosRubros,
@@ -37,7 +43,7 @@ const DashboardAdmin = () => {
                 setLoading(false);
             }
         };
-        cargarTodo();
+        cargarDatosDashboard();
     }, [navigate]);
 
     if (loading) return <div className="dashboard-container">Cargando datos...</div>;
@@ -81,7 +87,7 @@ const DashboardAdmin = () => {
                                         nameKey="etiqueta"
                                     >
                                         {graficos.datosRubros.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORES[index % COLORES.length]} />
+                                            <Cell key={`cell-${index}`} fill={COLORES_RUBROS[index % COLORES_RUBROS.length]} />
                                         ))}
                                     </Pie>
                                     <Tooltip />
@@ -106,8 +112,8 @@ const DashboardAdmin = () => {
                                         dataKey="valor"
                                         nameKey="etiqueta"
                                     >
-                                        <Cell fill="#00C49F" />
-                                        <Cell fill="#D1D5DB" />
+                                        <Cell fill={COLOR_SANIDAD_OK} />
+                                        <Cell fill={COLOR_SANIDAD_FALTA} />
                                     </Pie>
                                     <Tooltip />
                                     <Legend />
