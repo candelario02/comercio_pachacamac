@@ -319,16 +319,9 @@ const validarQRPublico = async (req, res) => {
 
     try {
         const query = `
-            SELECT 
-                c.nombres, 
-                c.apellidos, 
-                c.dni, 
-                a.fecha_vencimiento
-            FROM comerciantes c
-            INNER JOIN autorizaciones a ON c.id = a.comerciante_id
-            WHERE c.dni = $1 
-              AND c.estado_tramite = 'aprobado' 
-              AND a.fecha_vencimiento >= CURRENT_DATE
+            SELECT nombres, apellidos, dni, fecha_vencimiento 
+            FROM public.vista_formalizados 
+            WHERE dni = $1
         `;
 
         const resultado = await pool.query(query, [dni]);
@@ -336,8 +329,7 @@ const validarQRPublico = async (req, res) => {
         if (resultado.rows.length > 0) {
             res.json(resultado.rows[0]);
         } else {
-
-            res.status(404).json({ mensaje: "Credencial no válida o inexistente" });
+            res.status(404).json({ mensaje: "Credencial no válida o no formalizada" });
         }
     } catch (error) {
         console.error("Error en validación pública:", error);
