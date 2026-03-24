@@ -118,8 +118,12 @@
     }
 
     .contenedor-grafico-dona {
-        height: 250px;
-    }
+    width: 100%;
+    height: 300px; 
+    min-height: 300px; 
+    position: relative;
+    display: block; 
+}
 }
 
 @media (max-width: 480px) {

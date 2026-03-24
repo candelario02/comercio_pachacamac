@@ -6,7 +6,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recha
 import { BASE_URL } from '../api/apiConfig';
 import '../estilos/DashboardAdmin.css';
 
-// CONSTANTES DE DISEÑO (Fuera del componente para no ensuciar la lógica)
+// constantes para dibujar el grafico
 const COLORES_RUBROS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#ff4444'];
 const COLOR_SANIDAD_OK = '#00C49F';
 const COLOR_SANIDAD_FALTA = '#D1D5DB';
@@ -23,7 +23,6 @@ const DashboardAdmin = () => {
                 const token = localStorage.getItem('token');
                 const headers = { Authorization: `Bearer ${token}` };
                 
-                // Peticiones paralelas para mayor velocidad
                 const [resStats, resGraficos] = await Promise.all([
                     axios.get(`${BASE_URL}/admin/estadisticas`, { headers }),
                     axios.get(`${BASE_URL}/admin/estadisticas-graficos`, { headers })
@@ -102,23 +101,24 @@ const DashboardAdmin = () => {
                     <h3>Control de Carnets de Sanidad</h3>
                     <div className="contenedor-grafico-dona">
                         {graficos.datosSanidad.length > 0 && (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={graficos.datosSanidad}
-                                        cx="50%" cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        dataKey="valor"
-                                        nameKey="etiqueta"
-                                    >
-                                        <Cell fill={COLOR_SANIDAD_OK} />
-                                        <Cell fill={COLOR_SANIDAD_FALTA} />
-                                    </Pie>
-                                    <Tooltip />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
+                           <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
+    <PieChart>
+        <Pie
+            data={graficos.datosSanidad}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={80}
+            dataKey="valor"
+            nameKey="etiqueta"
+        >
+            <Cell fill={COLOR_SANIDAD_OK} />
+            <Cell fill={COLOR_SANIDAD_FALTA} />
+        </Pie>
+        <Tooltip />
+        <Legend />
+    </PieChart>
+</ResponsiveContainer>
                         )}
                     </div>
                 </div>
