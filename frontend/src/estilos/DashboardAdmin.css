@@ -60,32 +60,31 @@
     justify-content: center;
     color: #999;
 }
-/* --- AJUSTE RESPONSIVO PARA DASHBOARD (MÓVIL Y PANTALLA DIVIDIDA) --- */
 @media (max-width: 768px) {
     .dashboard-container {
-        padding: 20px 15px; /* Reducimos márgenes laterales para ganar espacio */
+        padding: 20px 15px;
     }
 
     .dashboard-title {
-        font-size: 1.6rem; /* Título más acorde al tamaño móvil */
+        font-size: 1.6rem; 
         margin-bottom: 25px;
     }
 
     .kpi-container {
-        gap: 15px; /* Menos espacio entre tarjetas para que quepan mejor */
-        flex-direction: column; /* Las tarjetas se apilan verticalmente */
+        gap: 15px; 
+        flex-direction: column;
         align-items: center;
     }
 
     .kpi-card {
-        width: 100%; /* Ocupan todo el ancho disponible */
-        max-width: 320px; /* Pero no crecen infinitamente para no verse deformes */
+        width: 100%; 
+        max-width: 320px; 
         padding: 20px;
-        min-width: unset; /* Quitamos el mínimo de PC */
+        min-width: unset; 
     }
 
     .kpi-card p {
-        font-size: 1.8rem; /* Número un poco más pequeño para que no desborde */
+        font-size: 1.8rem; 
     }
 
     .kpi-icon {
@@ -93,19 +92,49 @@
     }
 
     .dashboard-chart-placeholder {
-        min-height: 200px; /* El gráfico se hace más bajo para no obligar a mucho scroll */
+        min-height: 200px; 
         font-size: 0.9rem;
         margin: 10px;
     }
 }
 
-/* Optimización extra para celulares muy pequeños */
-@media (max-width: 480px) {
-    .dashboard-title {
-        font-size: 1.4rem;
-    }
+.graficos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+    padding-bottom: 40px;
+}
+
+.grafico-card {
+    background: var(--blanco);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid var(--verde-pachacamac); 
+}
+
+.grafico-card h3 {
+    color: #444;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+
+@media (max-width: 768px) {
+    /* Ajustes generales para tablets y celulares */
+    .dashboard-container { padding: 20px 15px; }
+    .kpi-container { flex-direction: column; align-items: center; }
+    .kpi-card { width: 100%; max-width: 320px; }
     
-    .kpi-card {
-        padding: 15px;
-    }
+    /* Ajuste para que los gráficos se apilen */
+    .graficos-grid { grid-template-columns: 1fr; } 
+    .grafico-card { padding: 15px; }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes extremos solo para celulares pequeños */
+    .dashboard-title { font-size: 1.4rem; }
+    .kpi-card { padding: 10px; }
 }

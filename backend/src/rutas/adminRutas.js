@@ -12,6 +12,7 @@ router.get('/pagos-pendientes', verificarAdmin, adminControlador.listarPagosPend
 router.put('/confirmar-pago/:id', verificarAdmin, adminControlador.confirmarPagoYFinalizar);
 router.get('/formalizados', verificarAdmin, adminControlador.obtenerFormalizados);
 router.get('/formalizados/exportar', verificarAdmin, adminControlador.exportarExcelFormalizados);
+router.get('/estadisticas-graficos', verificarAdmin,adminControlador.obtenerEstadisticasGraficos);
 router.get('/publico/validar/:dni', adminControlador.validarQRPublico);
 
 router.put('/aprobar-tramite/:id', verificarAdmin, adminControlador.aprobarTramiteYGenerarDeuda);

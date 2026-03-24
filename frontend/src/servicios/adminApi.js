@@ -95,5 +95,18 @@ validarQRPublico: async (dni, tipo) => {
     return { data: await res.json() };
 },
 
+obtenerEstadisticasGraficos: async (token) => {
+        const res = await fetch(`${API_URL}/estadisticas-graficos`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
 
+        if (!res.ok) {
+            throw new Error('Error al obtener datos para los gráficos');
+        }
+
+        return await res.json();
+    }
 };

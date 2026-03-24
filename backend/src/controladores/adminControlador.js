@@ -18,6 +18,28 @@ const obtenerEstadisticas = async (req, res) => {
     }
 };
 
+const obtenerEstadisticasGraficos = async (req, res) => {
+    try {
+        const [resRubros, resSanidad] = await Promise.all([
+            pool.query('SELECT * FROM vista_conteo_rubros'),
+            pool.query('SELECT * FROM vista_conteo_sanidad')
+        ]);
+
+        res.json({
+            success: true,
+            datosRubros: resRubros.rows,
+            datosSanidad: resSanidad.rows
+        });
+    } catch (error) {
+        console.error('Error al obtener datos para gráficos:', error);
+        res.status(500).json({ 
+            success: false, 
+            mensaje: "Error al cargar los datos de los gráficos" 
+        });
+    }
+};
+
+
 // --- Solicitudes Pendientes ---
 const obtenerSolicitudesPendientes = async (req, res) => {
     try {
@@ -368,6 +390,7 @@ const validarQRPublico = async (req, res) => {
 
 module.exports = { 
     obtenerEstadisticas, 
+  obtenerEstadisticasGraficos,
     obtenerSolicitudesPendientes, 
     listarPagosPendientes, 
     aprobarTramiteYGenerarDeuda, 
