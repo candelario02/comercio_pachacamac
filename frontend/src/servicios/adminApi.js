@@ -3,9 +3,9 @@ import { BASE_URL } from '../api/apiConfig';
 const API_URL = `${BASE_URL}/admin`; 
 
 export const AdminServicio = {
-    
+
     aprobarTramiteYGenerarDeuda: async (id, token, datosPago) => {
-        // Aquí se usa la nueva API_URL dinámica automáticamente
+    
         const res = await fetch(`${API_URL}/aprobar-tramite/${id}`, {
             method: 'PUT', 
             headers: { 
@@ -86,7 +86,14 @@ exportarExcel: (token, buscar = "", mes = "", anio = "") => {
         a.download = `Reporte_${mes || 'Anual'}_${anio || ''}.xlsx`;
         a.click();
     });
-}
+},
+
+
+validarQRPublico: async (dni) => {
+        const res = await fetch(`${API_URL}/publico/validar/${dni}`);
+        if (!res.ok) throw new Error('Credencial no encontrada');
+        return { data: await res.json() };
+    },
 
 
 };

@@ -313,6 +313,27 @@ const exportarExcelFormalizados = async (req, res) => {
         res.status(500).json({ mensaje: "Error al generar el reporte" });
     }
 };
+// validar QR
+const validarQRPublico = async (req, res) => {
+    const { dni } = req.params;
+
+    try {
+    
+        const resultado = await pool.query(
+            "SELECT nombres, apellidos, dni, fecha_vencimiento FROM comerciantes WHERE dni = $1 AND estado = 'FORMALIZADO'",
+            [dni]
+        );
+
+        if (resultado.rows.length > 0) {
+            res.json(resultado.rows[0]);
+        } else {
+            res.status(404).json({ mensaje: "Credencial no encontrada o vencida" });
+        }
+    } catch (error) {
+        console.error("Error en validación pública:", error);
+        res.status(500).json({ mensaje: "Error en el servidor" });
+    }
+};
 
 module.exports = { 
     obtenerEstadisticas, 
@@ -321,6 +342,7 @@ module.exports = {
     aprobarTramiteYGenerarDeuda, 
     confirmarPagoYFinalizar, 
     obtenerFormalizados, 
+    validarQRPublico,
      exportarExcelFormalizados,
     actualizarEstado, 
     gestionarActividad, 

@@ -1,0 +1,96 @@
+.validacion-contenedor {
+    padding: 20px;
+    max-width: 400px;
+    margin: 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.validacion-escudo {
+    width: 90px;
+    margin-bottom: 15px;
+}
+
+.validacion-titulo {
+    font-size: 1.2rem;
+    color: #004684; /* Azul Institucional */
+    margin-bottom: 5px;
+    font-weight: 800;
+}
+
+.validacion-subtitulo {
+    font-size: 0.9rem;
+    color: #666;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.validacion-separador {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+/* Tarjeta de Éxito */
+.card-valido {
+    background-color: #f0fff4;
+    border: 2px solid #276749;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.icon-valido {
+    font-size: 60px;
+    color: #2f855a;
+    margin-bottom: 10px;
+}
+
+/* Tarjeta de Error */
+.card-invalido {
+    background-color: #fff5f5;
+    border: 2px solid #9b2c2c;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 20px;
+    animation: shake 0.4s ease;
+}
+
+.icon-invalido {
+    font-size: 60px;
+    color: #c53030;
+    margin-bottom: 10px;
+}
+
+.datos-nombre {
+    margin: 10px 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #1a202c;
+    text-transform: uppercase;
+}
+
+.footer-seguridad {
+    margin-top: 30px;
+    font-size: 0.75rem;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    25% {transform: translateX(-5px);}
+    75% {transform: translateX(5px);}
+}
