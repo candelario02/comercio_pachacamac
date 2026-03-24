@@ -14,12 +14,20 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+const boundsPachacamac = [
+  [-12.28, -76.95],
+  [-12.05, -76.70] 
+];
+
 function MapClickHandler({ onLocationSelect }) {
   useMapEvents({
     click(e) {
+      const lat = e.latlng.lat;
+      const lng = e.latlng.lng;
+      
       onLocationSelect({ 
-          lat: parseFloat(e.latlng.lat.toFixed(6)), 
-          lng: parseFloat(e.latlng.lng.toFixed(6)) 
+          lat: parseFloat(lat.toFixed(6)), 
+          lng: parseFloat(lng.toFixed(6)) 
       });
     },
   });
@@ -37,13 +45,17 @@ const MapaUbicacion = ({ onCoordsChange }) => {
   return (
     <div className="mapa-contenedor">
       <MapContainer 
-        center={[-12.15, -76.86]} 
+        center={[-12.1287, -76.8589]} 
         zoom={13} 
+        minZoom={12} 
+        maxBounds={boundsPachacamac} 
+        maxBoundsViscosity={1.0} 
         style={{ height: "300px", width: "100%", borderRadius: "8px" }}
       >
         <TileLayer
- url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-/>
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; OpenStreetMap contributors'
+        />
         <MapClickHandler onLocationSelect={handleLocationSelect} />
         {position && <Marker position={[position.lat, position.lng]} />}
       </MapContainer>
