@@ -89,11 +89,11 @@ exportarExcel: (token, buscar = "", mes = "", anio = "") => {
 },
 
 
-validarQRPublico: async (dni) => {
-        const res = await fetch(`${API_URL}/publico/validar/${dni}`);
-        if (!res.ok) throw new Error('Credencial no encontrada');
-        return { data: await res.json() };
-    },
+validarQRPublico: async (dni, tipo) => {
+    const res = await fetch(`${API_URL}/publico/validar/${dni}?tipo=${tipo}`);
+    if (!res.ok) throw new Error('Credencial no encontrada');
+    return { data: await res.json() };
+},
 
 
 };

@@ -1,3 +1,4 @@
+/* contenedor principal  */
 .validacion-contenedor {
     padding: 20px;
     max-width: 400px;
@@ -9,6 +10,7 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
+/*  encabezado  */
 .validacion-escudo {
     width: 90px;
     margin-bottom: 15px;
@@ -16,7 +18,7 @@
 
 .validacion-titulo {
     font-size: 1.2rem;
-    color: #004684; /* Azul Institucional */
+    color: #004684;
     margin-bottom: 5px;
     font-weight: 800;
 }
@@ -34,23 +36,41 @@
     margin: 20px 0;
 }
 
-/* Tarjeta de Éxito */
+/* tarjeta tipo de carnet */
 .card-valido {
-    background-color: #f0fff4;
-    border: 2px solid #276749;
     border-radius: 15px;
     padding: 25px;
     margin-top: 20px;
     animation: fadeIn 0.5s ease;
+    color: #1a202c;
 }
 
+.card-valido.verde {
+    background-color: #f0fff4;
+    border: 2px solid #276749;
+}
+
+.card-valido.azul {
+    background-color: #ebf8ff;
+    border: 2px solid #2b6cb0;
+}
+
+/* iconos y letras para resultados validos */
 .icon-valido {
     font-size: 60px;
-    color: #2f855a;
     margin-bottom: 10px;
 }
 
-/* Tarjeta de Error */
+.card-valido.verde .icon-valido { color: #2f855a; }
+.card-valido.azul .icon-valido { color: #2b6cb0; }
+
+.texto-valido {
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+/* tarjeta de resultado negativo */
 .card-invalido {
     background-color: #fff5f5;
     border: 2px solid #9b2c2c;
@@ -66,6 +86,12 @@
     margin-bottom: 10px;
 }
 
+.texto-invalido {
+    font-weight: 800;
+    color: #9b2c2c;
+}
+
+/* bloque de informacion comerciante y etiquetas */
 .datos-nombre {
     margin: 10px 0;
     font-weight: bold;
@@ -74,6 +100,24 @@
     text-transform: uppercase;
 }
 
+.info-detallada {
+    text-align: left;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.tag-aprobado {
+    background: #2f855a;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* pie de pagina y animaciones de transicion */
 .footer-seguridad {
     margin-top: 30px;
     font-size: 0.75rem;

@@ -313,26 +313,33 @@ const exportarExcelFormalizados = async (req, res) => {
         res.status(500).json({ mensaje: "Error al generar el reporte" });
     }
 };
-// validar QR
+// validar QR depende del tipo
 const validarQRPublico = async (req, res) => {
     const { dni } = req.params;
+    const { tipo } = req.query; 
 
     try {
-        const query = `
-            SELECT nombres, apellidos, dni, fecha_vencimiento 
-            FROM public.vista_formalizados 
-            WHERE dni = $1
-        `;
+       
+        let query;
+        if (tipo === 'sanidad') {
+            query = `
+                SELECT c.nombres, c.apellidos, c.dni, a.fecha_vencimiento 
+                FROM comerciantes c
+                JOIN autorizaciones a ON c.id = a.comerciante_id
+                WHERE c.dni = $1 AND a.codigo_qr_unico LIKE '%SANIDAD%'
+            `;
+        } else {
+            query = `SELECT nombres, apellidos, dni, fecha_vencimiento FROM public.vista_formalizados WHERE dni = $1`;
+        }
 
         const resultado = await pool.query(query, [dni]);
 
         if (resultado.rows.length > 0) {
-            res.json(resultado.rows[0]);
+            res.json({ ...resultado.rows[0], tipoValidado: tipo || 'comercio' });
         } else {
-            res.status(404).json({ mensaje: "Credencial no válida o no formalizada" });
+            res.status(404).json({ mensaje: "Credencial no válida" });
         }
     } catch (error) {
-        console.error("Error en validación pública:", error);
         res.status(500).json({ mensaje: "Error en el servidor" });
     }
 };

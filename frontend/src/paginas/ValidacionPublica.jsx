@@ -8,6 +8,8 @@ import '../estilos/Validacion-publica.css';
 const ValidacionPublica = () => {
     const [searchParams] = useSearchParams();
     const dni = searchParams.get("dni");
+    const tipoCarnet = searchParams.get("tipo"); // Extraído correctamente de los params
+    
     const [datos, setDatos] = useState(null);
     const [cargando, setCargando] = useState(true);
 
@@ -18,8 +20,9 @@ const ValidacionPublica = () => {
                 return;
             }
             try {
-                const res = await AdminServicio.validarQRPublico(dni);
-                // Verificamos que res y res.data existan antes de setear
+                // IMPORTANTE: Enviamos el tipo al servicio para que el backend sepa qué buscar
+                const res = await AdminServicio.validarQRPublico(dni, tipoCarnet);
+                
                 if (res && res.data) {
                     setDatos(res.data);
                 } else {
@@ -33,12 +36,12 @@ const ValidacionPublica = () => {
             }
         };
         validar();
-    }, [dni]);
+    }, [dni, tipoCarnet]);
 
     if (cargando) {
         return (
             <div className="validacion-contenedor">
-                <div className="cargando-spinner">Verificando...</div>
+                <div className="cargando-spinner">Verificando en sistema...</div>
             </div>
         );
     }
@@ -52,13 +55,18 @@ const ValidacionPublica = () => {
             <hr className="validacion-separador" />
 
             {datos ? (
-                <div className="card-valido">
+                <div className={`card-valido ${tipoCarnet === 'sanidad' ? 'azul' : 'verde'}`}>
                     <FaCheckCircle className="icon-valido" />
-                    <h3 className="texto-valido">CARNET VIGENTE</h3>
+                    <h3 className="texto-valido">
+                        {tipoCarnet === 'sanidad' ? 'CARNET DE SANIDAD VIGENTE' : 'CARNET DE COMERCIANTE VIGENTE'}
+                    </h3>
+                    
                     <p className="datos-nombre">{datos.nombres} {datos.apellidos}</p>
+                    
                     <div className="info-detallada">
                         <p><strong>DNI:</strong> {datos.dni}</p>
                         <p><strong>Vencimiento:</strong> {datos.fecha_vencimiento ? new Date(datos.fecha_vencimiento).toLocaleDateString('es-PE') : 'No registra'}</p>
+                        <p><strong>Estado:</strong> <span className="tag-aprobado">ACTIVO / VIGENTE</span></p>
                     </div>
                 </div>
             ) : (
