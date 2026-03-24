@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { obtenerActividades, gestionarActividad } from '../servicios/actividadApi';
-// Importamos el servicio de rubros para llenar el select
 import { obtenerRubros } from '../servicios/rubroApi'; 
 import { useModal } from '../context/ModalContext';
 import '../estilos/GestionActividades.css';
 
 const GestionActividades = () => {
     const [actividades, setActividades] = useState([]);
-    const [rubros, setRubros] = useState([]); // Nuevo estado para los rubros
+    const [rubros, setRubros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
     const [formData, setFormData] = useState({ 
@@ -19,7 +18,6 @@ const GestionActividades = () => {
     const cargarDatos = useCallback(async () => {
         setLoading(true);
         try {
-            // Cargamos actividades y rubros en paralelo
             const [resAct, resRub] = await Promise.all([
                 obtenerActividades(),
                 obtenerRubros()
@@ -75,7 +73,6 @@ const GestionActividades = () => {
             <form className="formulario-fijo" onSubmit={guardarActividad}>
                 <h4>{actividadSeleccionada ? 'Editar Actividad' : 'Registrar Nueva Actividad'}</h4>
                 <div className="form-inputs">
-                    {/* CAMBIO: Ahora es un Select que lista los rubros automáticamente */}
                     <select 
                         value={formData.rubro_id} 
                         onChange={(e) => setFormData({...formData, rubro_id: e.target.value})} 
