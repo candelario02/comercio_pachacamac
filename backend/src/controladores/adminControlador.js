@@ -7,7 +7,7 @@ const obtenerEstadisticas = async (req, res) => {
             SELECT 
                 COUNT(*)::INT AS total,
                 COUNT(*) FILTER (WHERE estado_tramite = 'pendiente')::INT AS pendientes,
-                COUNT(*) FILTER (WHERE estado_tramite = 'aprobado')::INT AS formalizados
+                COUNT(*) FILTER (WHERE estado_tramite = 'formalizado')::INT AS formalizados
             FROM comerciantes WHERE eliminado = false;
         `;
         const result = await pool.query(query);
