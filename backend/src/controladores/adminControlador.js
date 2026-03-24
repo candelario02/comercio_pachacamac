@@ -316,14 +316,15 @@ const exportarExcelFormalizados = async (req, res) => {
         res.status(500).json({ mensaje: "Error al generar el reporte" });
     }
 };
-// validar QR depende del tipo
+//para validra que el comerciante sea formalizado mendiande QR
 const validarQRPublico = async (req, res) => {
     const { dni } = req.params;
-    const { tipo } = req.query;
+    const { tipo } = req.query; 
 
     try {
         let query;
-        let tipoValidado;
+        let params = [dni];
+        let tipoValidado = tipo === 'sanidad' ? 'sanidad' : 'comercio';
 
         if (tipo === 'sanidad') {
             query = `
@@ -331,27 +332,33 @@ const validarQRPublico = async (req, res) => {
                     c.nombres, 
                     c.apellidos, 
                     c.dni, 
-                    a.fecha_vencimiento
+                    a.fecha_vencimiento,
+                    a.tipo_autorizacion
                 FROM comerciantes c
                 JOIN autorizaciones a ON c.id = a.comerciante_id
-                WHERE c.dni = $1 AND a.codigo_qr_unico LIKE '%SANIDAD%'
+                WHERE c.dni = $1 
+                  AND (a.tipo_autorizacion = 'SANIDAD' OR a.codigo_qr_unico LIKE '%SAN%')
+                ORDER BY a.fecha_emision DESC
+                LIMIT 1
             `;
-            tipoValidado = 'sanidad';
         } else {
             query = `
-                SELECT nombres, apellidos, dni, fecha_vencimiento 
-                FROM public.vista_formalizados 
-                WHERE dni = $1
+                SELECT c.nombres, c.apellidos, c.dni, a.fecha_vencimiento, a.tipo_autorizacion
+                FROM comerciantes c
+                JOIN autorizaciones a ON c.id = a.comerciante_id
+                WHERE c.dni = $1 
+                  AND (a.tipo_autorizacion = 'COMERCIO' OR a.tipo_autorizacion IS NULL)
+                ORDER BY a.fecha_emision DESC
+                LIMIT 1
             `;
-            tipoValidado = 'comercio';
         }
 
-        const resultado = await pool.query(query, [dni]);
+        const resultado = await pool.query(query, params);
 
         if (resultado.rows.length > 0) {
             res.json({ ...resultado.rows[0], tipoValidado });
         } else {
-            res.status(404).json({ mensaje: "Credencial no válida o vencida" });
+            res.status(404).json({ mensaje: "Credencial no válida o no encontrada" });
         }
     } catch (error) {
         console.error("Error en validación pública:", error);
