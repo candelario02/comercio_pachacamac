@@ -101,24 +101,23 @@ const DashboardAdmin = () => {
                     <h3>Control de Carnets de Sanidad</h3>
                     <div className="contenedor-grafico-dona">
                         {graficos.datosSanidad.length > 0 && (
-                           <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
-    <PieChart>
-        <Pie
-            data={graficos.datosSanidad}
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={80}
-            dataKey="valor"
-            nameKey="etiqueta"
-        >
-            <Cell fill={COLOR_SANIDAD_OK} />
-            <Cell fill={COLOR_SANIDAD_FALTA} />
-        </Pie>
-        <Tooltip />
-        <Legend />
-    </PieChart>
-</ResponsiveContainer>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={graficos.datosSanidad}
+                                        cx="50%" cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        dataKey="valor"
+                                        nameKey="etiqueta"
+                                    >
+                                        <Cell fill={COLOR_SANIDAD_OK} />
+                                        <Cell fill={COLOR_SANIDAD_FALTA} />
+                                    </Pie>
+                                    <Tooltip />
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
                         )}
                     </div>
                 </div>
