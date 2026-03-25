@@ -103,9 +103,7 @@ const GestionRubros = () => {
                     </div>
                 </div>
             </form>
-            
-            {/* Escudo para que la tabla no rompa el diseño en celular */}
-            <div className="table-responsive">
+                        <div className="table-responsive">
                 <table className="tabla-base">
                     <thead>
                         <tr>

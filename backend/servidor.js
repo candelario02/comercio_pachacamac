@@ -1,11 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // Asegúrate de que esté aquí arriba
+const path = require('path'); 
 require('dotenv').config();
 
 const app = express();
 
-// 1. CONFIGURACIÓN DE SEGURIDAD (CORS) - DEBE IR PRIMERO
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || 

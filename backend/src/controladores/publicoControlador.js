@@ -11,7 +11,7 @@ const listarRubros = async (req, res) => {
     }
 };
 
-// 2. Listar todas las Actividades para filtrar en el frontend
+// 2. Listar todas las Actividades 
 const listarActividades = async (req, res) => {
     try {
         const result = await pool.query('SELECT id, rubro_id, descripcion, requiere_carnet_sanidad FROM actividades ORDER BY descripcion ASC');
@@ -22,7 +22,7 @@ const listarActividades = async (req, res) => {
     }
 };
 
-// 3. Info combinada (por si la usas en algún otro lado del form)
+// 3. Info combinada 
 const listarInfoPublicaRubrosActividad = async (req, res) => {
     try {
         const query = `

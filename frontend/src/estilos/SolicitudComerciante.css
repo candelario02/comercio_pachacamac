@@ -48,7 +48,7 @@
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    box-sizing: border-box; /* Evita que el input se salga del bloque */
+    box-sizing: border-box; 
     font-size: 1rem;
 }
 

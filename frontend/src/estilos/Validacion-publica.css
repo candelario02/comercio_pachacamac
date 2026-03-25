@@ -18,7 +18,7 @@
 
 .validacion-titulo {
     font-size: 1.2rem;
-    color: #004684; /* Azul Institucional */
+    color: #004684; 
     margin-bottom: 5px;
     font-weight: 800;
 }
@@ -42,19 +42,17 @@
     padding: 25px;
     margin-top: 20px;
     animation: fadeIn 0.5s ease;
-    color: #1a202c; /* Texto oscuro para legibilidad */
+    color: #1a202c; 
 }
 
-/* CLASE COMERCIO (Formalizado): Diseño AZUL */
 .card-comercio {
-    background-color: #ebf8ff; /* Azul muy clarito */
-    border: 2px solid #2b6cb0; /* Azul fuerte */
+    background-color: #ebf8ff; 
+    border: 2px solid #2b6cb0; 
 }
 
-/* CLASE SANIDAD: Diseño VERDE */
 .card-sanidad {
-    background-color: #f0fff4; /* Verde clarito (el que ya tenias) */
-    border: 2px solid #276749; /* Verde fuerte */
+    background-color: #f0fff4; 
+    border: 2px solid #276749; 
 }
 
 /* Iconos Dinamicos */
@@ -63,14 +61,12 @@
     margin-bottom: 10px;
 }
 
-/* El icono cambia de color segun el contenedor padre */
-.card-comercio .icon-valido { color: #2b6cb0; } /* Icono Azul */
-.card-sanidad .icon-valido { color: #2f855a; }   /* Icono Verde */
+.card-comercio .icon-valido { color: #2b6cb0; } 
+.card-sanidad .icon-valido { color: #2f855a; }   
 
-/* Texto Principal GRANDE como pediste */
 .texto-valido {
     font-weight: 800;
-    font-size: 1.8rem; /* Aumentado a 1.8rem */
+    font-size: 1.8rem; 
     margin-bottom: 5px;
     text-transform: uppercase;
     color: #1a202c;
@@ -105,7 +101,6 @@
     text-transform: uppercase;
 }
 
-/* Bloque de informacion del comerciante y etiquetas */
 .datos-nombre {
     margin: 10px 0;
     font-weight: bold;
@@ -117,7 +112,7 @@
 .info-detallada {
     text-align: left;
     font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
+    background: rgba(255, 255, 255, 0.5); 
     padding: 10px;
     border-radius: 10px;
 }

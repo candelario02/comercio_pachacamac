@@ -5,7 +5,6 @@ import LayoutFondo from '../componentes/LayoutFondo';
 import '../estilos/Login.css';
 import escudopacha from '../assets/imagenes/logos/escudopacha.ico';
 
-// 1. IMPORTAMOS EL SERVICIO
 import { loginUsuario } from '../servicios/authApi';
 
 const Login = () => {
@@ -20,7 +19,6 @@ const Login = () => {
         e.preventDefault();
         setCargando(true);
         try {
-            // 2. USAMOS EL SERVICIO EN LUGAR DE AXIOS DIRECTO
             const datos = await loginUsuario(correo, contrasena);
             
             const { token, usuario, success } = datos;
@@ -37,7 +35,6 @@ const Login = () => {
                 });
             }
         } catch (error) {
-            // 3. El manejo de errores se mantiene igual de robusto
             lanzarAlerta(error.response?.data?.mensaje || "Error de conexión", "alerta"); 
         } finally {
             setCargando(false);
@@ -46,7 +43,6 @@ const Login = () => {
 
     return (
         <LayoutFondo>
-            {/* ... todo tu código de retorno se mantiene igual ... */}
             <div className="login-container">
                 <form className="login-card" onSubmit={manejarEnvio}>
                     <div className="login-header">

@@ -6,7 +6,7 @@
 }
 
 .login-card {
-    background-color: rgba(0, 188, 212, 0.85); /* Turquesa institucional con transparencia */
+    background-color: rgba(0, 188, 212, 0.85); 
     backdrop-filter: blur(8px);
     border-radius: 20px;
     width: 100%;

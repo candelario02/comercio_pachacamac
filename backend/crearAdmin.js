@@ -15,7 +15,6 @@ const crearUsuario = async () => {
     try {
         console.log(`⏳ Llamando al procedimiento almacenado para: ${correo}...`);
 
-        // encriptamos la clave (esto siempre se hace en el Backend)
         const hashedClave = await bcrypt.hash(clavePlana, saltRounds);
 
       

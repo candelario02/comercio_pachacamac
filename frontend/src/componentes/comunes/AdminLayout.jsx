@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTachometerAlt, FaListUl, FaBriefcase, FaSignOutAlt, FaFileAlt, FaIdCard } from 'react-icons/fa';
 
-// 1. IMPORTAMOS LA BASE DINÁMICA
 import { BASE_URL } from '../../api/apiConfig';
 import '../../estilos/AdminLayout.css';
 
@@ -17,7 +16,6 @@ const AdminLayout = ({ children }) => {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                // 2. CAMBIAMOS LA URL FIJA POR LA VARIABLE
                 const res = await axios.get(`${BASE_URL}/admin/estadisticas`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -33,8 +31,6 @@ const AdminLayout = ({ children }) => {
         return () => clearInterval(intervaloId);
     }, []);
 
-    // ... el resto del return se queda exactamente igual
-
     return (
         <div className="admin-layout">
             <aside className="sidebar">
@@ -44,7 +40,6 @@ const AdminLayout = ({ children }) => {
                         <FaTachometerAlt /> Dashboard
                     </button>
                     
-                    {/* Nueva sección de Solicitudes con el Badge */}
                     <button onClick={() => navigate('/admin/solicitudes')} className="btn-notificacion">
                         <FaFileAlt /> Solicitudes
                         {pendientes > 0 && (

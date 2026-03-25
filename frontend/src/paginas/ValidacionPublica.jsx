@@ -8,7 +8,7 @@ import '../estilos/Validacion-publica.css';
 const ValidacionPublica = () => {
     const [searchParams] = useSearchParams();
     const dni = searchParams.get("dni");
-    const tipoUrl = searchParams.get("tipo") || 'comercio'; // 'comercio' por defecto
+    const tipoUrl = searchParams.get("tipo") || 'comercio'; 
 
     const [datos, setDatos] = useState(null);
     const [cargando, setCargando] = useState(true);
@@ -20,7 +20,6 @@ const ValidacionPublica = () => {
                 return;
             }
             try {
-                // Pasamos el DNI y el tipo que viene en el QR al backend
                 const res = await AdminServicio.validarQRPublico(dni, tipoUrl);
                 if (res && res.data) {
                     setDatos(res.data);
@@ -36,9 +35,6 @@ const ValidacionPublica = () => {
     }, [dni, tipoUrl]);
 
     if (cargando) return <div className="cargando">Verificando credencial...</div>;
-
-    // Determinamos el estilo basado en lo que el servidor nos responda
-    // Si el servidor confirma que es 'SANIDAD', usamos verde.
     const esSanidad = tipoUrl === 'sanidad' || datos?.tipo_autorizacion?.toUpperCase() === 'SANIDAD';
 
     return (
@@ -52,7 +48,6 @@ const ValidacionPublica = () => {
                 <div className={`card-valido ${esSanidad ? 'card-sanidad' : 'card-comercio'}`}>
                     <FaCheckCircle className="icon-valido" />
                     
-                    {/* TÍTULO GRANDE E IMPACTANTE */}
                     <h1 className="texto-valido">
                         {esSanidad ? 'SANIDAD' : 'FORMALIZADO'}
                     </h1>

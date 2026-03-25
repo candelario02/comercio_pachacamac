@@ -3,7 +3,6 @@ import axios from 'axios';
 import { BASE_URL } from '../api/apiConfig';
 import { FaFilePdf, FaArrowLeft, FaIdCard, FaHistory } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-// Importación corregida a tu carpeta 'herramientas'
 import { 
     generarCarnetPDF, 
     generarCarnetSanidadPDF, 
@@ -20,7 +19,6 @@ const MisCarnets = () => {
         const obtenerDatosParaCarnet = async () => {
             try {
                 const token = localStorage.getItem('token');
-                // Traemos el perfil para validar que el estado sea 'formalizado'
                 const res = await axios.get(`${BASE_URL}/comerciante/perfil`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -57,7 +55,6 @@ const MisCarnets = () => {
                     ) : datosTramite ? (
                         <div className="lista-documentos">
                             
-                            {/* 1. CARNET DE COMERCIO */}
                             <div className="documento-item">
                                 <div className="doc-info">
                                     <FaFilePdf className="pdf-icon" style={{ color: '#0066cc' }} />
@@ -74,7 +71,6 @@ const MisCarnets = () => {
                                 </button>
                             </div>
 
-                            {/* 2. CARNET DE SANIDAD */}
                             <div className="documento-item">
                                 <div className="doc-info">
                                     <FaFilePdf className="pdf-icon" style={{ color: '#228b22' }} />
@@ -92,7 +88,6 @@ const MisCarnets = () => {
                                 </button>
                             </div>
 
-                            {/* 3. HISTORIAL: ORDEN DE PAGO */}
                             <div className="documento-item historial" style={{ opacity: 0.8, marginTop: '20px', borderStyle: 'dashed' }}>
                                 <div className="doc-info">
                                     <FaHistory className="pdf-icon" style={{ color: '#666' }} />

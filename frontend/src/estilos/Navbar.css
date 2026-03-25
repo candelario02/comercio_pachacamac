@@ -41,7 +41,6 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    /* PERMITE DESLIZAR EN MÓVIL */
     overflow-x: auto;
     white-space: nowrap;
     scrollbar-width: none;

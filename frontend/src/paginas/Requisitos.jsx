@@ -24,7 +24,6 @@ export default function Requisitos() {
                 <p>Guía paso a paso para la obtención de su autorización municipal</p>
             </div>
 
-            {/* Paso 1: Documentación */}
             <div className={`tarjeta-requisito ${activeAccordion === 'requisitos' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('requisitos')}>
                 <div className="req-header">
@@ -46,7 +45,6 @@ export default function Requisitos() {
                 </div>
             </div>
 
-            {/* Paso 2: Pago */}
             <div className={`tarjeta-requisito ${activeAccordion === 'proceso' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('proceso')}>
                 <div className="req-header">
@@ -65,7 +63,6 @@ export default function Requisitos() {
                 </div>
             </div>
 
-            {/* Paso 3: Finalización Digital */}
             <div className={`tarjeta-requisito ${activeAccordion === 'finalizacion' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('finalizacion')}>
                 <div className="req-header">
@@ -86,7 +83,6 @@ export default function Requisitos() {
                 </div>
             </div>
 
-            {/* Resolución */}
             <div className={`tarjeta-requisito ${activeAccordion === 'silencio' ? 'activa' : ''}`}
                  onClick={() => toggleAccordion('silencio')}>
                 <div className="req-header">

@@ -45,7 +45,6 @@ const Ordenanzas = () => {
             
             <div className="botones-contenedor">
 
-              {/* VER EN MISMA PANTALLA */}
               <button 
                 onClick={() => setPdfActivo(doc.url)} 
                 className="btn-accion leer"
@@ -53,7 +52,6 @@ const Ordenanzas = () => {
                 <FaExternalLinkAlt /> Ver aquí
               </button>
 
-              {/* DESCARGAR */}
               <a 
                 href={doc.url} 
                 download
