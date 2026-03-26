@@ -7,8 +7,15 @@ import '../estilos/LayoutFondo.css';
 
 const LayoutFondo = ({ children }) => {
     const imagenesSlider = [
-        "/img/santuariopacha.jpeg",
-        "/img/munipacha.jpeg"
+       "/img/palaciomunicipalpacha.jpeg",
+        "/img/munipacha.jpeg",
+        "/img/cerro-pan-de-azucar.jpeg",
+        "/img/mirador-turistico-san-miguel.jpeg",
+        "/img/munipacilidadmoderna.webp",
+         "/img/santuariopacha.jpeg",
+        "/img/santuario-arqueologico-pachacamac.jpeg",
+        "/img/trabajandoporunbienestar.jpeg"
+
 
     ];
 
