@@ -25,7 +25,7 @@ const LayoutFondo = ({ children }) => {
                 <Swiper 
                     modules={[Autoplay]} 
                     slidesPerView={1} 
-                    autoplay={{ delay: 4000 }} 
+                    autoplay={{ delay: 60000 }} 
                     loop
                 >
                     {imagenesSlider.map((ruta, index) => (
