@@ -91,8 +91,9 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
 
     try {
         await pool.query('BEGIN');
+        const ipReal = (req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress).split(',')[0].trim();
         await pool.query(`SET LOCAL app.current_admin_id = '${adminId}'`);
-        await pool.query(`SET LOCAL app.current_ip = '${req.ip || '0.0.0.0'}'`);
+        await pool.query(`SET LOCAL app.current_ip = '${ipReal}'`);
         const resInfo = await pool.query(
             `SELECT c.id, c.usuario_id, c.exento_pago, a.costo, a.descripcion as actividad_nombre
              FROM comerciantes c 
@@ -166,8 +167,9 @@ const confirmarPagoYFinalizar = async (req, res) => {
 
     try {
         await pool.query('BEGIN');
+        const ipReal = (req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress).split(',')[0].trim();
         await pool.query(`SET LOCAL app.current_admin_id = '${adminId}'`);
-        await pool.query(`SET LOCAL app.current_ip = '${req.ip || '0.0.0.0'}'`);
+        await pool.query(`SET LOCAL app.current_ip = '${ipReal}'`);
 
         const resPago = await pool.query(
             `UPDATE pagos_municipales 
