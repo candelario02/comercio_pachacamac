@@ -258,11 +258,25 @@ const obtenerFormalizados = async (req, res) => {
 
 const gestionarActividad = async (req, res) => {
     const { accion, id, rubro_id, codigo, descripcion, requiere_sanidad } = req.body;
+    
     try {
+        await pool.query('BEGIN');
+
+        const ipReal = (req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress).split(',')[0].trim();
+
+        await pool.query(`SET LOCAL app.current_admin_id = '${req.usuario.id}'`);
+        await pool.query(`SET LOCAL app.current_ip = '${ipReal}'`);
+
         await pool.query(`CALL sp_gestionar_actividad($1, $2, $3, $4, $5, $6, NULL)`, 
-        [accion, id || null, rubro_id || null, codigo || null, descripcion || null, requiere_sanidad || false]);
+            [accion, id || null, rubro_id || null, codigo || null, descripcion || null, requiere_sanidad || false]
+        );
+
+        await pool.query('COMMIT');
+
         res.json({ success: true, mensaje: `Operación ${accion} realizada.` });
     } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error("Error en gestionarActividad:", error);
         res.status(500).json({ success: false, mensaje: "Error en el servidor." });
     }
 };
@@ -278,10 +292,25 @@ const listarActividades = async (req, res) => {
 
 const gestionarRubro = async (req, res) => {
     const { accion, id, nombre, descripcion } = req.body;
+    
     try {
-        await pool.query(`CALL sp_gestionar_rubro($1, $2, $3, $4, $5)`, [accion, id || null, nombre || null, descripcion || null, false]);
+        await pool.query('BEGIN');
+
+        const ipReal = (req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress).split(',')[0].trim();
+
+        await pool.query(`SET LOCAL app.current_admin_id = '${req.usuario.id}'`);
+        await pool.query(`SET LOCAL app.current_ip = '${ipReal}'`);
+
+        await pool.query(`CALL sp_gestionar_rubro($1, $2, $3, $4, $5)`, 
+            [accion, id || null, nombre || null, descripcion || null, false]
+        );
+
+        await pool.query('COMMIT');
+
         res.status(200).json({ mensaje: "Operación realizada con éxito." });
     } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error("Error en gestionarRubro:", error);
         res.status(500).json({ error: "Error al procesar la solicitud." });
     }
 };
