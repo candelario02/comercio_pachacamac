@@ -39,3 +39,7 @@ const crearUsuario = async () => {
 };
 
 crearUsuario();
+
+/*
+ejecutar desde la consola dentro de backend
+$env:DATABASE_URL="postgresql://neondb_owner:npg_bJfZ9xKztr5W@ep-plain-waterfall-anpu0clm-pooler.c-6.us-east-1.aws.neon.tech/gestion_comercio_ambulatorio?sslmode=require"; node crearAdmin.js jocks@gmail.com 0202*/

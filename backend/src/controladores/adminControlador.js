@@ -83,7 +83,7 @@ const listarPagosPendientes = async (req, res) => {
         res.status(500).json({ success: false, mensaje: "Error al consultar pagos" });
     }
 };
-
+/// --- aprobar y generar orden deuda ---
 const aprobarTramiteYGenerarDeuda = async (req, res) => {
     const { id } = req.params; 
     const { monto_confirmado } = req.body;
@@ -91,6 +91,8 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
 
     try {
         await pool.query('BEGIN');
+        await pool.query(`SET LOCAL app.current_admin_id = '${adminId}'`);
+        await pool.query(`SET LOCAL app.current_ip = '${req.ip || '0.0.0.0'}'`);
         const resInfo = await pool.query(
             `SELECT c.id, c.usuario_id, c.exento_pago, a.costo, a.descripcion as actividad_nombre
              FROM comerciantes c 
@@ -155,13 +157,17 @@ const aprobarTramiteYGenerarDeuda = async (req, res) => {
     }
 };
 
+
 /// --- Confirmar pago final y Formalizar ---
 const confirmarPagoYFinalizar = async (req, res) => {
     const { id } = req.params; 
     const { vigencia_comercio, vigencia_sanidad } = req.body; 
+    const adminId = req.usuario.id;
 
     try {
         await pool.query('BEGIN');
+        await pool.query(`SET LOCAL app.current_admin_id = '${adminId}'`);
+        await pool.query(`SET LOCAL app.current_ip = '${req.ip || '0.0.0.0'}'`);
 
         const resPago = await pool.query(
             `UPDATE pagos_municipales 
