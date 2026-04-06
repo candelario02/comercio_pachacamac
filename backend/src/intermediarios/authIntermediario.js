@@ -21,10 +21,14 @@ const verificarAdmin = (req, res, next) => {
 
     try {
         const decodificado = jwt.verify(token, process.env.JWT_SECRET);
-        if (decodificado.rol !== 'administrador') {
-            return res.status(403).json({ mensaje: "Acceso exclusivo para Administrador" });
+        // Permitimos que entren administradores, tesoreros o fiscalizadores
+        const rolesAutorizados = ['administrador', 'tesoreria', 'fiscalizacion'];
+        
+        if (!rolesAutorizados.includes(decodificado.rol)) {
+            return res.status(403).json({ mensaje: "No tienes permisos para esta acción" });
         }
-        req.usuario = decodificado;
+        
+        req.usuario = decodificado; 
         next();
     } catch (error) {
         return res.status(401).json({ mensaje: "Token inválido" });
