@@ -125,7 +125,9 @@ const GestionFormalizados = () => {
                                 <tr key={item.comerciante_id}>
                                     <td>{item.numero_expediente}</td>
                                     <td>{item.dni}</td>
-                                    <td><strong>{item.nombres} {item.apellidos}</strong></td>
+                                    <td className="comerciante-nombre">
+                                        {(`${item.nombres} ${item.apellidos}`).toLowerCase()}
+                                    </td>
                                     <td>
                                         <span className={`fecha-badge ${obtenerEstadoVencimiento(item.fecha_vencimiento)}`}>
                                             {item.fecha_vencimiento 

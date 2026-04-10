@@ -379,3 +379,9 @@
     font-weight: 500;
     background-color: #fafafa;
 }
+
+.comerciante-nombre {
+    text-transform: capitalize; 
+    font-weight: 600;
+    color: var(--texto-oscuro);
+}

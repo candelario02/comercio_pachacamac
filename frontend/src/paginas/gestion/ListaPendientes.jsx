@@ -112,7 +112,10 @@ const ListaPendientes = () => {
             <tr key={s.comerciante_id}>
                 <td>{s.numero_expediente}</td>
                 <td>{s.dni}</td>                     
-                <td>{s.nombres} {s.apellidos}</td>
+                <td className="comerciante-nombre">
+                    {(`${s.nombres} ${s.apellidos}`).toLowerCase()}
+                </td>
+                
                 <td>{s.celular || 'Sin número'}</td>
                 <td>{s.sector_nombre || 'No asignado'}</td>
                 <td>{s.actividad_nombre}</td>

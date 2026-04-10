@@ -163,7 +163,9 @@ const verComprobante = (urlCloudinary) => {
                                 <tr key={s.id_pago}> 
                                     <td>{s.numero_expediente}</td>
                                     <td>{s.dni}</td>
-                                    <td>{s.nombres} {s.apellidos}</td>
+                                    <td className="comerciante-nombre">
+                                      {(`${s.nombres} ${s.apellidos}`).toLowerCase()}
+                                    </td>
                                     <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
                                     <td><span className="badge-operacion">{s.numero_operacion || '---'}</span></td>
                                     <td>
