@@ -97,6 +97,7 @@ const ListaPendientes = () => {
             <table className="tabla-gestion">
                 <thead>
                     <tr>
+                        <th>Expediente</th>
                         <th>DNI/RUC</th>
                         <th>Comerciante</th>
                         <th>Teléfono</th> 
@@ -106,21 +107,30 @@ const ListaPendientes = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {solicitudes.map((s) => (
-                        <tr key={s.comerciante_id}>
-                            <td>{s.dni}</td>                     
-                            <td>{s.nombres} {s.apellidos}</td>
-                            <td>{s.celular || 'Sin número'}</td>
-                            <td>{s.sector_nombre || 'No asignado'}</td>
-                            <td>{s.actividad_nombre}</td>
-                            <td>
-                                <button className="btn-footer" onClick={() => abrirDetalle(s)}>
-                                    <FaEye /> Detalle
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
+    {solicitudes.length > 0 ? (
+        solicitudes.map((s) => (
+            <tr key={s.comerciante_id}>
+                <td>{s.numero_expediente}</td>
+                <td>{s.dni}</td>                     
+                <td>{s.nombres} {s.apellidos}</td>
+                <td>{s.celular || 'Sin número'}</td>
+                <td>{s.sector_nombre || 'No asignado'}</td>
+                <td>{s.actividad_nombre}</td>
+                <td>
+                    <button className="btn-footer" onClick={() => abrirDetalle(s)}>
+                        <FaEye /> Detalle
+                    </button>
+                </td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan="7" className="tabla-mensaje-estado">
+              {cargando ? "Cargando solicitudes..." : "No hay solicitudes pendientes en este momento."}
+             </td>
+        </tr>
+    )}
+</tbody>
             </table>
         </div>
 

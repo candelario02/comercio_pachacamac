@@ -112,6 +112,7 @@ const GestionFormalizados = () => {
                 <table className="tabla-gestion">
                     <thead>
                         <tr>
+                            <th>Expediente</th>
                             <th>DNI</th>
                             <th>Comerciante</th>
                             <th>Vencimiento</th>
@@ -122,6 +123,7 @@ const GestionFormalizados = () => {
                         {formalizados.length > 0 ? (
                             formalizados.map((item) => (
                                 <tr key={item.comerciante_id}>
+                                    <td>{item.numero_expediente}</td>
                                     <td>{item.dni}</td>
                                     <td><strong>{item.nombres} {item.apellidos}</strong></td>
                                     <td>
@@ -154,7 +156,7 @@ const GestionFormalizados = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4" style={{textAlign: 'center', padding: '40px'}}>
+                                <td colSpan="4"  className="tabla-mensaje-estado">
                                     {cargando ? "Buscando..." : "DNI no encontrado."}
                                 </td>
                             </tr>

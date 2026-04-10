@@ -370,3 +370,12 @@
         font-size: 16px !important;
     }
 }
+/*para mensajes de tablas vacías o cargando */
+.tabla-estado-mensaje {
+    text-align: center;
+    padding: 40px !important; 
+    color: var(--texto-oscuro);
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #fafafa;
+}

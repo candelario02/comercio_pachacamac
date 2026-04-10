@@ -148,6 +148,7 @@ const verComprobante = (urlCloudinary) => {
                 <table className="tabla-gestion">
                     <thead>
                         <tr>
+                            <th>Expediente</th>
                             <th>DNI</th>
                             <th>Comerciante</th>
                             <th>Monto</th>
@@ -160,6 +161,7 @@ const verComprobante = (urlCloudinary) => {
                         {pagos.length > 0 ? (
                             pagos.map((s) => (
                                 <tr key={s.id_pago}> 
+                                    <td>{s.numero_expediente}</td>
                                     <td>{s.dni}</td>
                                     <td>{s.nombres} {s.apellidos}</td>
                                     <td><strong>S/ {parseFloat(s.monto_pagado || 0).toFixed(2)}</strong></td>
@@ -181,7 +183,7 @@ const verComprobante = (urlCloudinary) => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" style={{textAlign: 'center', padding: '20px'}}>
+                                <td colSpan="7" className="tabla-mensaje-estado">
                                     {cargando ? "Cargando..." : "No hay pagos pendientes."}
                                 </td>
                             </tr>
