@@ -10,8 +10,8 @@ const ListaPagosPendientes = () => {
     const [cargando, setCargando] = useState(true);
     const [modalAlerta, setModalAlerta] = useState({ abierto: false, mensaje: '', tipo: '', accion: null });
     
-    const [mesesComercio, setMesesComercio] = useState(6);
-    const [mesesSanidad, setMesesSanidad] = useState(12);
+    const [mesesComercio, setMesesComercio] = useState(12);
+    const [mesesSanidad, setMesesSanidad] = useState(6);
 
     useEffect(() => { 
         cargarPagos(); 
@@ -71,7 +71,7 @@ const verComprobante = (urlCloudinary) => {
                             <input 
                                 type="number" 
                                 className="input-standard"
-                                defaultValue={6} 
+                                defaultValue={mesesComercio}
                                 onChange={(e) => setMesesComercio(parseInt(e.target.value))}
                                 min="1" max="60"
                             />
@@ -81,7 +81,7 @@ const verComprobante = (urlCloudinary) => {
                             <input 
                                 type="number" 
                                 className="input-standard"
-                                defaultValue={12} 
+                                defaultValue={mesesSanidad} 
                                 onChange={(e) => setMesesSanidad(parseInt(e.target.value))}
                                 min="1" max="60"
                             />

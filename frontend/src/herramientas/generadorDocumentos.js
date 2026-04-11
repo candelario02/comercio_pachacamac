@@ -2,9 +2,6 @@ import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import escudo from '../assets/imagenes/logos/selloparagenerardoc.png'; 
 
-const VIGENCIA_MESES_COMERCIO = 6;
-const VIGENCIA_MESES_SANIDAD = 12;
-
 // función con logo en el QR
 const agregarQRConLogo = async (doc, x, y, size, text) => {
     try {
@@ -66,13 +63,13 @@ export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
     currentY += spacing;
 
     doc.setFontSize(9);
-    doc.text(`Emisión: ${new Date().toLocaleDateString()}`, marginX, currentY);
-    currentY += 6;
+    doc.text(`Emisión: ${new Date().toLocaleDateString('es-PE')}`, marginX, currentY);
+    currentY += 12;
 
     const fVen = comerciante.fecha_vencimiento 
-        ? new Date(comerciante.fecha_vencimiento).toLocaleDateString() 
-        : 'Consultar';
-    doc.text(`Vencimiento: ${fVen}`, marginX, currentY);
+    ? new Date(comerciante.fecha_vencimiento).toLocaleDateString('es-PE') 
+    : 'Consultar';
+doc.text(`Vencimiento: ${fVen}`, marginX, currentY);
 
     const urlValidacion = `${window.location.origin}/validar?dni=${comerciante.dni}&tipo=comercio`;
     await agregarQRConLogo(doc, 35, 70, 20, urlValidacion);
@@ -120,14 +117,13 @@ export const generarCarnetSanidadPDF = async (comerciante) => {
     currentY += spacing;
 
     doc.setFontSize(9);
-    doc.text(`Emisión: ${new Date().toLocaleDateString()}`, marginX, currentY);
+    doc.text(`Emisión: ${new Date().toLocaleDateString('es-PE')}`, marginX, currentY);
     currentY += 6;
 
-    const fVenRaw = comerciante.fecha_vencimiento_sanidad || comerciante.fecha_vencimiento;
-    const fVen = fVenRaw ? new Date(fVenRaw) : new Date();
-    if (!fVenRaw) fVen.setMonth(fVen.getMonth() + 6);
-    
-    doc.text(`Vencimiento: ${fVen.toLocaleDateString()}`, marginX, currentY);
+  const fVen = comerciante.fecha_vencimiento_sanidad 
+    ? new Date(comerciante.fecha_vencimiento_sanidad).toLocaleDateString('es-PE') 
+    : 'Consultar';
+doc.text(`Vencimiento: ${fVen}`, marginX, currentY);
 
     const urlValidacion = `${window.location.origin}/validar?dni=${comerciante.dni}&tipo=sanidad`;
     await agregarQRConLogo(doc, 35, 70, 20, urlValidacion);

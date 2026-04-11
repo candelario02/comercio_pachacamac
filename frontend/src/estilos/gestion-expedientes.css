@@ -385,3 +385,14 @@
     font-weight: 600;
     color: var(--texto-oscuro);
 }
+.contador-notificacion {
+    background-color: #2563eb; /* Azul profesional */
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    vertical-align: middle;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
