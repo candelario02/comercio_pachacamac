@@ -242,11 +242,11 @@ const obtenerFormalizados = async (req, res) => {
         let parametros = [];
 
         if (buscar && buscar.trim() !== "") {
-            consulta += " WHERE dni LIKE $1";
-            parametros.push(`%${buscar.trim()}%`); 
-        }
 
-        consulta += " ORDER BY fecha_vencimiento ASC";
+            consulta += " WHERE dni LIKE $1 OR nombres ILIKE $1 OR apellidos ILIKE $1"; 
+            parametros.push(`%${buscar.trim()}%`);
+        }
+        consulta += " ORDER BY fecha_confirmacion DESC";
 
         const { rows } = await pool.query(consulta, parametros);
         res.json({ success: true, data: rows });
