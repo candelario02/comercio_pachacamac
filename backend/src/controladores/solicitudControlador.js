@@ -14,7 +14,7 @@ const registrarSolicitud = async (req, res) => {
             ...datosRestantes,
             correo_electronico: req.body.correo, 
             hashedPassword,
-            archivo: req.file 
+            archivos: req.files
         };
 
        

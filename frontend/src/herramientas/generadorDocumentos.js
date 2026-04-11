@@ -58,13 +58,13 @@ export const generarCarnetPDF = async (comerciante, tipo = 'comercio') => {
     currentY += spacing;
     doc.setTextColor(0, 102, 204);
     doc.setFont("helvetica", "bold");
-    doc.text('Estado: FORMALIZADO', marginX, currentY); 
+    doc.text('Estado: APTO / FORMALIZADO', marginX, currentY); 
     doc.setTextColor(0, 0, 0);
     currentY += spacing;
 
     doc.setFontSize(9);
     doc.text(`Emisión: ${new Date().toLocaleDateString('es-PE')}`, marginX, currentY);
-    currentY += 12;
+    currentY += 6;
 
     const fVen = comerciante.fecha_vencimiento 
     ? new Date(comerciante.fecha_vencimiento).toLocaleDateString('es-PE') 

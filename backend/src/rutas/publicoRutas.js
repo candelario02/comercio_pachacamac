@@ -12,8 +12,15 @@ router.get('/rubros', publicoControlador.listarRubros);
 router.get('/actividades', publicoControlador.listarActividades);
 router.get('/info-completa', publicoControlador.listarInfoPublicaRubrosActividad);
 router.get('/sectores', publicoControlador.listarSectores);
+router.post(
+    '/solicitar-licencia', 
+    upload.fields([
+        { name: 'archivo_carnet', maxCount: 1 },
+        { name: 'archivo_puesto', maxCount: 1 }
+    ]), 
+    solicitudControlador.registrarSolicitud
+);
 
 
-router.post('/solicitar-licencia', upload.single('archivo_carnet'), solicitudControlador.registrarSolicitud);
 
 module.exports = router;

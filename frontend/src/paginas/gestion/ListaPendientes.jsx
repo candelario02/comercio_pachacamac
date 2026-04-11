@@ -146,15 +146,37 @@ const ListaPendientes = () => {
                     
                     <div className="modal-body">
                         <div className="detalle-seccion">
-                            <h4>Información del Comerciante</h4>
-                            <div className="info-grid">
-                                <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
-                                <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
-                                <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
-                                <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
-                                <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
-                            </div>
-                        </div>
+    <h4>Información del Comerciante</h4>
+    <div className="info-grid">
+        <p><strong>Nombres:</strong> {seleccionado.nombres} {seleccionado.apellidos}</p>
+        <p><strong>DNI/RUC:</strong> {seleccionado.dni}</p>
+        <p><strong>Teléfono:</strong> {seleccionado.celular || 'S/N'}</p>
+        <p><strong>Sector:</strong> {seleccionado.sector_nombre}</p>
+
+        {/* --- NUEVO CAMPO DE FOTO DEL PUESTO --- */}
+        <p><strong>Foto Puesto:</strong> 
+            {seleccionado.foto_puesto ? (
+                <button 
+                    className="btn-ver-foto" 
+                    onClick={() => {
+                        const url = seleccionado?.foto_puesto;
+                        if (!url) {
+                            alert("No hay archivo.");
+                            return;
+                        }
+                        window.open(url, '_blank');
+                    }}
+                >
+                    <FaEye /> Ver Foto Adjunta
+                </button>
+            ) : (
+                <span>No adjuntó foto</span>
+            )}
+        </p>
+
+        <p><strong>Ubicación:</strong> Lat: {seleccionado.lat} | Lng: {seleccionado.lng}</p>
+    </div>
+</div>
 
                         <div className="detalle-seccion">
                             <h4>Requisitos de Actividad</h4>
@@ -165,13 +187,13 @@ const ListaPendientes = () => {
                                         <button 
                                             className="btn-ver-foto" 
                                            onClick={() => {
-    const url = seleccionado?.foto_carnet;
-    if (!url) {
-        alert("No hay archivo.");
-        return;
-    }
-    window.open(url, '_blank');
-}}
+                             const url = seleccionado?.foto_carnet;
+                            if (!url) {
+                         alert("No hay archivo.");
+                       return;
+                           }
+                                window.open(url, '_blank');
+                                  }}
                                         >
                                             <FaEye /> Ver Foto Adjunta
                                         </button>

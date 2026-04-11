@@ -16,6 +16,7 @@ const SolicitudComerciante = () => {
         dni: '', nombres: '', apellidos: '', celular: '',
         correo: '', contrasena: '', rubro_id: '', actividad_id: '', 
         sector_id: '', lat: null, lng: null, archivo_carnet: null,
+        archivo_puesto: null,
         desea_tramitar_carnet: false
     });
 
@@ -72,7 +73,7 @@ const SolicitudComerciante = () => {
             return;
         }
 
-        // Lógica de checkbox
+        // logica de checkbox
         if (type === 'checkbox') {
             setFormData(prev => ({ 
                 ...prev, 
@@ -94,6 +95,10 @@ const SolicitudComerciante = () => {
         if (!formData.lat || !formData.lng) {
             setModal({ abierto: true, mensaje: "Por favor, selecciona la ubicación en el mapa.", tipo: 'info' });
             return;
+        }
+        if (!formData.archivo_puesto) {
+        setModal({ abierto: true, mensaje: "Por favor, sube una foto referencial de la ubicación del puesto.", tipo: 'info' });
+        return;
         }
 
         if (requiereCarnet && !formData.archivo_carnet && !formData.desea_tramitar_carnet) {
@@ -181,16 +186,27 @@ const SolicitudComerciante = () => {
                     </select>
                 </div>
 
-                <div className="bloque">
-                    <h3>3. Ubicación del Puesto</h3>
-                    <MapaUbicacion onCoordsChange={(coords) => setFormData(prev => ({ ...prev, lat: coords.lat, lng: coords.lng }))} />
-                    {formData.lat && (
-                        <div className="coordenadas-info">
-                            <p><strong>Ubicación fijada correctamente:</strong></p>
-                            <p>Lat: {formData.lat.toFixed(6)} | Lng: {formData.lng.toFixed(6)}</p>
-                        </div>
-                    )}
-                </div>
+               <div className="bloque">
+    <h3>3. Ubicación del Puesto</h3>
+    <MapaUbicacion onCoordsChange={(coords) => setFormData(prev => ({ ...prev, lat: coords.lat, lng: coords.lng }))} />
+    
+    {formData.lat && (
+        <div className="coordenadas-info">
+            <p><strong>Ubicación fijada correctamente:</strong></p>
+            <p>Lat: {formData.lat.toFixed(6)} | Lng: {formData.lng.toFixed(6)}</p>
+        </div>
+    )}
+    <div className="campo-archivo">
+        <label className="subir-archivo-info">Foto Referencial del Puesto (Obligatorio):</label>
+        <input 
+            type="file" 
+            name="archivo_puesto" 
+            accept="image/png, image/jpeg, image/jpg" 
+            onChange={handleChange} 
+            required 
+        />
+    </div>
+</div>
 
                 <button type="submit" className="btn-enviar" disabled={enviando}>
                     {enviando ? "Enviando..." : "Registrar Solicitud"}
