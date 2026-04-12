@@ -42,7 +42,7 @@ function App() {
           <Route path="/prohibiciones" element={<LayoutFondo><Prohibiciones /></LayoutFondo>} />
           <Route path="/validar" element={<ValidacionPublica />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/registro-solicitud" element={<LayoutFondo><SolicitudComerciante /></LayoutFondo>} />
+          <Route path="/solicitud" element={<LayoutFondo><SolicitudComerciante /></LayoutFondo>} />
           <Route path="/ordenanzas" element={<Ordenanzas />} />
           
 

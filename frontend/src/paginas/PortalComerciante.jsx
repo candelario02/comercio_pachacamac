@@ -195,7 +195,7 @@ const PortalComerciante = () => {
                   };
                 }
 
-                navigate("/solicitud", {
+                navigate("/registro-solicitud", {
                   state: {
                     modoEdicion: true,
                     observaciones: obsFinales,

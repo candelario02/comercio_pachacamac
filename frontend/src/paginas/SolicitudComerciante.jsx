@@ -86,7 +86,6 @@ const SolicitudComerciante = () => {
   }, [formData.actividad_id, todasActividades]);
 
   useEffect(() => {
-    // para una observación, precargamos los datos que ya existen
     if (modoEdicion && location.state?.datosPrecargados) {
       const d = location.state.datosPrecargados;
       setFormData((prev) => ({
@@ -122,8 +121,6 @@ const SolicitudComerciante = () => {
       setFormData((prev) => ({ ...prev, [name]: soloNumeros }));
       return;
     }
-
-    // logica de checkbox
     if (type === "checkbox") {
       setFormData((prev) => ({
         ...prev,
@@ -155,6 +152,7 @@ const SolicitudComerciante = () => {
       });
       return;
     }
+
     if (!formData.archivo_puesto) {
       setModal({
         abierto: true,
@@ -180,23 +178,33 @@ const SolicitudComerciante = () => {
     }
 
     const data = new FormData();
-    Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+    Object.keys(formData).forEach((key) => {
+      if (key === "contrasena" && modoEdicion) return;
+
+      // Solo agregamos al FormData si el valor existe
+      if (formData[key] !== null && formData[key] !== undefined) {
+        data.append(key, formData[key]);
+      }
+    });
 
     setEnviando(true);
     try {
       await registrarSolicitud(data);
+
       setModal({
         abierto: true,
-        mensaje:
-          "¡Solicitud enviada con éxito! Recuerda que para completar el trámite debes acercarte a la Municipalidad con tus documentos físicos para el Visto Bueno y Pago correspondiente.",
+        mensaje: modoEdicion
+          ? "¡Correcciones enviadas con éxito! Tu expediente será revisado nuevamente por la Municipalidad."
+          : "¡Solicitud enviada con éxito! Recuerda que para completar el trámite debes acercarte a la Municipalidad con tus documentos físicos para el Visto Bueno y Pago correspondiente.",
         tipo: "info",
-        accion: () => navigate("/login"),
+        accion: () => navigate(modoEdicion ? "/panel-comerciante" : "/login"),
       });
     } catch (error) {
       setModal({
         abierto: true,
         mensaje:
-          error.response?.data?.mensaje || "Error al enviar tu solicitud.",
+          error.response?.data?.mensaje ||
+          "Error al procesar tu solicitud. Inténtalo de nuevo.",
         tipo: "info",
       });
     } finally {
@@ -275,7 +283,14 @@ const SolicitudComerciante = () => {
 
         <div className="bloque">
           <h3>2. Actividad Comercial</h3>
-          <select name="rubro_id" onChange={handleChange} required>
+
+          <select
+            name="rubro_id"
+            value={formData.rubro_id} // Vinculado para precarga
+            onChange={handleChange}
+            required
+            disabled={modoEdicion && !observaciones.obsActividad} // Bloqueado si no hay observación
+          >
             <option value="">Seleccione Rubro</option>
             {rubros.map((r) => (
               <option key={r.id} value={r.id}>
@@ -286,9 +301,12 @@ const SolicitudComerciante = () => {
 
           <select
             name="actividad_id"
+            value={formData.actividad_id} // Vinculado para precarga
             onChange={handleChange}
             required
-            disabled={!formData.rubro_id}
+            disabled={
+              !formData.rubro_id || (modoEdicion && !observaciones.obsActividad)
+            }
           >
             <option value="">Seleccione Actividad</option>
             {actividadesFiltradas.map((a) => (
@@ -331,7 +349,13 @@ const SolicitudComerciante = () => {
             </div>
           )}
 
-          <select name="sector_id" onChange={handleChange} required>
+          <select
+            name="sector_id"
+            value={formData.sector_id} // Vinculado para precarga
+            onChange={handleChange}
+            required
+            disabled={modoEdicion && !observaciones.obsUbicacion}
+          >
             <option value="">Seleccione Sector</option>
             {sectores.map((s) => (
               <option key={s.id} value={s.id}>
