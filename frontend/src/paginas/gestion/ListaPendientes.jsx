@@ -55,36 +55,40 @@ const ListaPendientes = () => {
   };
   const manejarEnviarObservacion = async (id) => {
     try {
+      if (!id) {
+        alert("Error: El ID del comerciante no es válido.");
+        return;
+      }
+
       const token = localStorage.getItem("token");
 
       const datosEnvio = {
-        estado_tramite: "observado",
+        estado: "observado", 
         observaciones_admin: JSON.stringify({
-          mensaje: mensajeObservacion,
-          obsUbicacion: obsUbicacion,
-          obsCarnet: obsCarnet,
+          mensaje: mensajeObservacion, // 
+          obsUbicacion: obsUbicacion, 
+          obsCarnet: obsCarnet, 
         }),
       };
-
       const resultado = await AdminServicio.actualizarEstadoTramite(
         id,
         token,
         datosEnvio,
       );
-
-      if (resultado.success) {
+      if (resultado.success || resultado) {
         setModalAlerta({
           abierto: true,
           mensaje: "Observación enviada con éxito",
           tipo: "exito",
         });
         setModalAbierto(false);
-        cargarSolicitudes(); // Recarga la tabla
+        cargarSolicitudes(); 
       } else {
-        alert(resultado.mensaje || "Error al actualizar");
+        alert(resultado.mensaje || "Error al actualizar el trámite");
       }
     } catch (error) {
       console.error("Error al enviar observación:", error);
+      alert("Hubo un fallo de conexión con el servidor");
     }
   };
 
@@ -233,8 +237,6 @@ const ListaPendientes = () => {
                   <p>
                     <strong>Sector:</strong> {seleccionado.sector_nombre}
                   </p>
-
-                  {/* --- NUEVO CAMPO DE FOTO DEL PUESTO --- */}
                   <p>
                     <strong>Foto Puesto:</strong>
                     {seleccionado.foto_puesto ? (
@@ -414,8 +416,6 @@ const ListaPendientes = () => {
           </div>
         </div>
       )}
-
-      {/* Modal de Alerta para confirmaciones de éxito/error */}
       <div
         className="modal-alerta-overlay"
         style={{ display: modalAlerta.abierto ? "flex" : "none" }}
