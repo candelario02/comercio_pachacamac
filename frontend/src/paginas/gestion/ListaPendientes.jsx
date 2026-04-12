@@ -53,53 +53,64 @@ const ListaPendientes = () => {
       setCargando(false);
     }
   };
-  const manejarEnviarObservacion = async (idParametro) => {
-    try {
-      // BUSQUEDA DE ID: Primero intentamos con el parámetro,
-      // luego con 'comerciante_id' y finalmente con 'id' (todos de 'seleccionado')
-      const idReal =
-        idParametro || seleccionado?.comerciante_id || seleccionado?.id;
+  const manejarEnviarObservacion = async () => {
+    const id = seleccionado?.comerciante_id;
 
-      if (!idReal) {
-        console.error("DEBUG - Estado de 'seleccionado':", seleccionado);
-        alert("Error: No se pudo obtener el ID del comerciante.");
-        return;
-      }
-
-      const token = localStorage.getItem("token");
-
-      const datosEnvio = {
-        estado: "observado",
-        observaciones_admin: JSON.stringify({
-          mensaje: mensajeObservacion,
-          obsUbicacion: obsUbicacion,
-          obsCarnet: obsCarnet,
-        }),
-      };
-
-      console.log(`Enviando observación al ID: ${idReal}`); // Debug para que lo veas en consola
-
-      const resultado = await AdminServicio.actualizarEstadoTramite(
-        idReal,
-        token,
-        datosEnvio,
-      );
-
-      if (resultado && (resultado.success || !resultado.error)) {
-        setModalAlerta({
-          abierto: true,
-          mensaje: "Observación enviada con éxito",
-          tipo: "exito",
-        });
-        setModalAbierto(false);
-        cargarSolicitudes();
-      } else {
-        alert(resultado.mensaje || "Error al actualizar el trámite");
-      }
-    } catch (error) {
-      console.error("Error al enviar observación:", error);
-      alert("Hubo un fallo de conexión con el servidor");
+    if (!id) {
+      setModalAlerta({
+        abierto: true,
+        mensaje: "Error: No se encontró el ID del comerciante.",
+        tipo: "error",
+        accion: null,
+      });
+      return;
     }
+    setModalAlerta({
+      abierto: true,
+      mensaje: "¿Estás seguro de enviar esta observación al comerciante?",
+      tipo: "confirmar",
+      accion: async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const datosEnvio = {
+            estado: "observado",
+            observaciones_admin: JSON.stringify({
+              mensaje: mensajeObservacion,
+              obsUbicacion: obsUbicacion,
+              obsCarnet: obsCarnet,
+            }),
+          };
+
+          const resultado = await AdminServicio.actualizarEstadoTramite(
+            id,
+            token,
+            datosEnvio,
+          );
+
+          if (resultado.success || resultado) {
+            setModalAlerta({
+              abierto: true,
+              mensaje: "✅ Trámite observado correctamente.",
+              tipo: "exito",
+              accion: () => {
+                setModalAbierto(false);
+                cargarSolicitudes();
+              },
+            });
+          } else {
+            throw new Error("No se pudo actualizar");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          setModalAlerta({
+            abierto: true,
+            mensaje: "❌ Hubo un fallo al conectar con el servidor.",
+            tipo: "error",
+            accion: null,
+          });
+        }
+      },
+    });
   };
 
   const abrirDetalle = (s) => {
@@ -392,8 +403,6 @@ const ListaPendientes = () => {
               >
                 Cerrar
               </button>
-
-              {/* Botón de Observación: Solo aparece si hay algo marcado en la sesión de fiscalización */}
               {(obsUbicacion || obsCarnet) && (
                 <button
                   className="btn-ver-foto"
