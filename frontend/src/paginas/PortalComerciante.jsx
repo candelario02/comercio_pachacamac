@@ -177,14 +177,29 @@ const PortalComerciante = () => {
           </button>
 
           <button
-            className={`action-card color-buzon ${datos?.estado_tramite === "observado" ? "animar-alerta" : ""}`}
+            className={`action-card color-buzon ${
+              datos?.estado_tramite === "observado" ? "animar-alerta" : ""
+            }`}
             onClick={() => {
               if (datos?.estado_tramite === "observado") {
+                let obsFinales = {};
+
+                try {
+                  obsFinales = datos.observaciones_admin
+                    ? JSON.parse(datos.observaciones_admin)
+                    : {};
+                } catch (parseError) {
+                  console.error("Error al procesar observaciones:", parseError);
+                  obsFinales = {
+                    mensaje: "Error al cargar detalles. Contacte soporte.",
+                  };
+                }
+
                 navigate("/solicitud", {
                   state: {
                     modoEdicion: true,
-                    observaciones: JSON.parse(datos.observaciones_admin),
-                    datosPrecargados: datos
+                    observaciones: obsFinales,
+                    datosPrecargados: datos,
                   },
                 });
               }
