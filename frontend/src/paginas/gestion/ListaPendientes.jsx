@@ -54,20 +54,20 @@ const ListaPendientes = () => {
     }
   };
   const manejarEnviarObservacion = async () => {
-    const id = seleccionado?.comerciante_id;
+    const idReal = seleccionado?.comerciante_id;
 
-    if (!id) {
+    if (!idReal) {
       setModalAlerta({
         abierto: true,
-        mensaje: "Error: No se encontró el ID del comerciante.",
+        mensaje: "❌ Error: No se pudo identificar al comerciante.",
         tipo: "error",
-        accion: null,
       });
       return;
     }
+
     setModalAlerta({
       abierto: true,
-      mensaje: "¿Estás seguro de enviar esta observación al comerciante?",
+      mensaje: "¿Estás seguro de enviar esta observación?",
       tipo: "confirmar",
       accion: async () => {
         try {
@@ -80,14 +80,12 @@ const ListaPendientes = () => {
               obsCarnet: obsCarnet,
             }),
           };
-
           const resultado = await AdminServicio.actualizarEstadoTramite(
-            id,
+            idReal,
             token,
             datosEnvio,
           );
-
-          if (resultado.success || resultado) {
+          if (resultado && !resultado.error) {
             setModalAlerta({
               abierto: true,
               mensaje: "✅ Trámite observado correctamente.",
@@ -98,15 +96,14 @@ const ListaPendientes = () => {
               },
             });
           } else {
-            throw new Error("No se pudo actualizar");
+            throw new Error("Respuesta inválida del servidor");
           }
         } catch (error) {
-          console.error("Error:", error);
+          console.error("Error en la petición:", error);
           setModalAlerta({
             abierto: true,
-            mensaje: "❌ Hubo un fallo al conectar con el servidor.",
+            mensaje: "❌ Error al conectar con el servidor.",
             tipo: "error",
-            accion: null,
           });
         }
       },
