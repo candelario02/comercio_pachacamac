@@ -115,7 +115,7 @@ obtenerEstadisticasGraficos: async (token) => {
 
 // Dentro de AdminServicio
 actualizarEstadoTramite: async (id, token, datos) => {
-    const respuesta = await fetch(`${API_URL}/admin/actualizar-estado/${id}`, {
+   const respuesta = await fetch(`${API_URL}/actualizar-estado/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
