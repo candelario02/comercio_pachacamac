@@ -55,23 +55,23 @@ const ListaPendientes = () => {
   };
   const manejarEnviarObservacion = async () => {
     const idReal = seleccionado?.comerciante_id;
+
     if (!idReal) {
       setModalAlerta({
         abierto: true,
-        mensaje:
-          "No se pudo identificar el trámite. Por favor, intenta de nuevo.",
+        mensaje: "No se pudo identificar el trámite.",
         tipo: "error",
       });
       return;
     }
+
     setModalAlerta({
       abierto: true,
-      mensaje: "¿Confirmas el envío de estas observaciones al comerciante?",
+      mensaje: "¿Confirmas el envío de estas observaciones?",
       tipo: "confirmar",
       accion: async () => {
         try {
           const token = localStorage.getItem("token");
-
           const datosEnvio = {
             estado_tramite: "observado",
             observaciones_admin: JSON.stringify({
@@ -86,11 +86,10 @@ const ListaPendientes = () => {
             token,
             datosEnvio,
           );
-
           if (resultado.success) {
             setModalAlerta({
               abierto: true,
-              mensaje: "✅ Trámite observado y notificado correctamente.",
+              mensaje: "✅ Trámite observado correctamente.",
               tipo: "exito",
               accion: () => {
                 setModalAbierto(false);
@@ -99,7 +98,7 @@ const ListaPendientes = () => {
             });
           }
         } catch (error) {
-          console.error("Fallo en observación:", error);
+          console.error("Error capturado:", error);
           setModalAlerta({
             abierto: true,
             mensaje: `❌ Error: ${error.message}`,

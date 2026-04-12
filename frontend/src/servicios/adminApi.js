@@ -115,9 +115,9 @@ export const AdminServicio = {
       body: JSON.stringify(datos),
     });
     if (!respuesta.ok) {
-      const errorData = await respuesta.json();
+      const errorData = await respuesta.json().catch(() => ({}));
       throw new Error(
-        errorData.mensaje || "Error en la comunicación con el servidor",
+        errorData.mensaje || "Error al actualizar en el servidor",
       );
     }
 
