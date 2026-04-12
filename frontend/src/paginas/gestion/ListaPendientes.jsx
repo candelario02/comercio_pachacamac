@@ -53,9 +53,9 @@ const ListaPendientes = () => {
       setCargando(false);
     }
   };
-  const manejarEnviarObservacion = async (id) => {
+  const manejarEnviarObservacion = async (comerciante_id) => {
     try {
-      if (!id) {
+      if (!comerciante_id) {
         alert("Error: El ID del comerciante no es válido.");
         return;
       }
@@ -65,13 +65,13 @@ const ListaPendientes = () => {
       const datosEnvio = {
         estado: "observado", 
         observaciones_admin: JSON.stringify({
-          mensaje: mensajeObservacion, // 
+          mensaje: mensajeObservacion, 
           obsUbicacion: obsUbicacion, 
           obsCarnet: obsCarnet, 
         }),
       };
       const resultado = await AdminServicio.actualizarEstadoTramite(
-        id,
+        comerciante_id,
         token,
         datosEnvio,
       );
@@ -105,7 +105,7 @@ const ListaPendientes = () => {
     (parseFloat(montoActividad) || 0) +
     (incluirCarnet ? parseFloat(montoCarnet) || 0 : 0);
 
-  const prepararAprobacion = (id) => {
+  const prepararAprobacion = (comerciante_id) => {
     const mActividad = parseFloat(montoActividad) || 0;
     const mCarnet = incluirCarnet ? parseFloat(montoCarnet) || 0 : 0;
     const montoFinalCalculado = mActividad + mCarnet;
@@ -122,7 +122,7 @@ const ListaPendientes = () => {
             detalle: { actividad: mActividad, carnet: mCarnet },
           };
           const res = await AdminServicio.aprobarTramiteYGenerarDeuda(
-            id,
+            comerciante_id,
             token,
             datosPago,
           );
