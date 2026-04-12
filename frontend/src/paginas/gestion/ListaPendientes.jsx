@@ -53,36 +53,46 @@ const ListaPendientes = () => {
       setCargando(false);
     }
   };
-  const manejarEnviarObservacion = async (comerciante_id) => {
+  const manejarEnviarObservacion = async (idParametro) => {
     try {
-      if (!comerciante_id) {
-        alert("Error: El ID del comerciante no es válido.");
+      // BUSQUEDA DE ID: Primero intentamos con el parámetro,
+      // luego con 'comerciante_id' y finalmente con 'id' (todos de 'seleccionado')
+      const idReal =
+        idParametro || seleccionado?.comerciante_id || seleccionado?.id;
+
+      if (!idReal) {
+        console.error("DEBUG - Estado de 'seleccionado':", seleccionado);
+        alert("Error: No se pudo obtener el ID del comerciante.");
         return;
       }
 
       const token = localStorage.getItem("token");
 
       const datosEnvio = {
-        estado: "observado", 
+        estado: "observado",
         observaciones_admin: JSON.stringify({
-          mensaje: mensajeObservacion, 
-          obsUbicacion: obsUbicacion, 
-          obsCarnet: obsCarnet, 
+          mensaje: mensajeObservacion,
+          obsUbicacion: obsUbicacion,
+          obsCarnet: obsCarnet,
         }),
       };
+
+      console.log(`Enviando observación al ID: ${idReal}`); // Debug para que lo veas en consola
+
       const resultado = await AdminServicio.actualizarEstadoTramite(
-        comerciante_id,
+        idReal,
         token,
         datosEnvio,
       );
-      if (resultado.success || resultado) {
+
+      if (resultado && (resultado.success || !resultado.error)) {
         setModalAlerta({
           abierto: true,
           mensaje: "Observación enviada con éxito",
           tipo: "exito",
         });
         setModalAbierto(false);
-        cargarSolicitudes(); 
+        cargarSolicitudes();
       } else {
         alert(resultado.mensaje || "Error al actualizar el trámite");
       }
