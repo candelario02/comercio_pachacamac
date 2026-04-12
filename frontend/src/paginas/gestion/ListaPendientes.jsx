@@ -55,49 +55,59 @@ const ListaPendientes = () => {
   };
   const manejarEnviarObservacion = async () => {
     const idReal = seleccionado?.comerciante_id;
-
     if (!idReal) {
-      console.error(
-        "DEBUG: El objeto 'seleccionado' no tiene comerciante_id:",
-        seleccionado,
-      );
       setModalAlerta({
         abierto: true,
-        mensaje: "Error: No se encontró el ID del comerciante.",
+        mensaje:
+          "No se pudo identificar el trámite. Por favor, intenta de nuevo.",
         tipo: "error",
       });
       return;
     }
-    try {
-      const token = localStorage.getItem("token");
-      const datosEnvio = {
-        estado: "observado",
-        observaciones_admin: JSON.stringify({
-          mensaje: mensajeObservacion,
-          obsUbicacion: obsUbicacion,
-          obsCarnet: obsCarnet,
-        }),
-      };
-      const resultado = await AdminServicio.actualizarEstadoTramite(
-        idReal,
-        token,
-        datosEnvio,
-      );
+    setModalAlerta({
+      abierto: true,
+      mensaje: "¿Confirmas el envío de estas observaciones al comerciante?",
+      tipo: "confirmar",
+      accion: async () => {
+        try {
+          const token = localStorage.getItem("token");
 
-      if (resultado && !resultado.error) {
-        setModalAlerta({
-          abierto: true,
-          mensaje: "Trámite observado correctamente",
-          tipo: "exito",
-          accion: () => {
-            setModalAbierto(false);
-            cargarSolicitudes();
-          },
-        });
-      }
-    } catch (error) {
-      console.error("Error en el proceso:", error);
-    }
+          const datosEnvio = {
+            estado_tramite: "observado",
+            observaciones_admin: JSON.stringify({
+              mensaje: mensajeObservacion,
+              obsUbicacion: obsUbicacion,
+              obsCarnet: obsCarnet,
+            }),
+          };
+
+          const resultado = await AdminServicio.actualizarEstadoTramite(
+            idReal,
+            token,
+            datosEnvio,
+          );
+
+          if (resultado.success) {
+            setModalAlerta({
+              abierto: true,
+              mensaje: "✅ Trámite observado y notificado correctamente.",
+              tipo: "exito",
+              accion: () => {
+                setModalAbierto(false);
+                cargarSolicitudes();
+              },
+            });
+          }
+        } catch (error) {
+          console.error("Fallo en observación:", error);
+          setModalAlerta({
+            abierto: true,
+            mensaje: `❌ Error: ${error.message}`,
+            tipo: "error",
+          });
+        }
+      },
+    });
   };
 
   const abrirDetalle = (s) => {
