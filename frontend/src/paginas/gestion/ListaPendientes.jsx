@@ -57,57 +57,47 @@ const ListaPendientes = () => {
     const idReal = seleccionado?.comerciante_id;
 
     if (!idReal) {
+      console.error(
+        "DEBUG: El objeto 'seleccionado' no tiene comerciante_id:",
+        seleccionado,
+      );
       setModalAlerta({
         abierto: true,
-        mensaje: "❌ Error: No se pudo identificar al comerciante.",
+        mensaje: "Error: No se encontró el ID del comerciante.",
         tipo: "error",
       });
       return;
     }
+    try {
+      const token = localStorage.getItem("token");
+      const datosEnvio = {
+        estado: "observado",
+        observaciones_admin: JSON.stringify({
+          mensaje: mensajeObservacion,
+          obsUbicacion: obsUbicacion,
+          obsCarnet: obsCarnet,
+        }),
+      };
+      const resultado = await AdminServicio.actualizarEstadoTramite(
+        idReal,
+        token,
+        datosEnvio,
+      );
 
-    setModalAlerta({
-      abierto: true,
-      mensaje: "¿Estás seguro de enviar esta observación?",
-      tipo: "confirmar",
-      accion: async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const datosEnvio = {
-            estado: "observado",
-            observaciones_admin: JSON.stringify({
-              mensaje: mensajeObservacion,
-              obsUbicacion: obsUbicacion,
-              obsCarnet: obsCarnet,
-            }),
-          };
-          const resultado = await AdminServicio.actualizarEstadoTramite(
-            idReal,
-            token,
-            datosEnvio,
-          );
-          if (resultado && !resultado.error) {
-            setModalAlerta({
-              abierto: true,
-              mensaje: "✅ Trámite observado correctamente.",
-              tipo: "exito",
-              accion: () => {
-                setModalAbierto(false);
-                cargarSolicitudes();
-              },
-            });
-          } else {
-            throw new Error("Respuesta inválida del servidor");
-          }
-        } catch (error) {
-          console.error("Error en la petición:", error);
-          setModalAlerta({
-            abierto: true,
-            mensaje: "❌ Error al conectar con el servidor.",
-            tipo: "error",
-          });
-        }
-      },
-    });
+      if (resultado && !resultado.error) {
+        setModalAlerta({
+          abierto: true,
+          mensaje: "Trámite observado correctamente",
+          tipo: "exito",
+          accion: () => {
+            setModalAbierto(false);
+            cargarSolicitudes();
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error en el proceso:", error);
+    }
   };
 
   const abrirDetalle = (s) => {
