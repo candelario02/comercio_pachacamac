@@ -23,6 +23,8 @@ export const AdminServicio = {
         return await res.json();
     },
 
+
+    
     obtenerPagosPendientes: async (token) => {
         const res = await fetch(`${API_URL}/pagos-pendientes`, {
             headers: { 
@@ -108,5 +110,19 @@ obtenerEstadisticasGraficos: async (token) => {
         }
 
         return await res.json();
-    }
+    },
+
+
+// Dentro de AdminServicio
+actualizarEstadoTramite: async (id, token, datos) => {
+    const respuesta = await fetch(`${API_URL}/admin/actualizar-estado/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(datos)
+    });
+    return await respuesta.json();
+}
 };

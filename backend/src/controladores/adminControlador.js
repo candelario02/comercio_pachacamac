@@ -51,7 +51,7 @@ const obtenerSolicitudesPendientes = async (req, res) => {
     }
 };
 
-// --- Actualizar estado (Cambios manuales de admin) ---
+// --- actualizacion de  estados desde el frotend admin
 const actualizarEstado = async (req, res) => {
     try {
         const { id } = req.params;
@@ -63,14 +63,34 @@ const actualizarEstado = async (req, res) => {
             return res.status(400).json({ success: false, mensaje: "Estado no válido" });
         }
 
-        const query = `UPDATE comerciantes SET estado_tramite = $1, observaciones_admin = $2 WHERE id = $3`;
-        await pool.query(query, [estadoNormalizado, observaciones_admin, id]);
-        res.json({ success: true, mensaje: "Actualizado con éxito" });
+        await pool.query('BEGIN');
+
+        const query = `UPDATE comerciantes SET estado_tramite = $1, observaciones_admin = $2 WHERE id = $3 RETURNING usuario_id`;
+        const resUpdate = await pool.query(query, [estadoNormalizado, observaciones_admin, id]);
+
+        if (estadoNormalizado === 'observado' && resUpdate.rows.length > 0) {
+            const usuario_id = resUpdate.rows[0].usuario_id;
+            await pool.query(
+                `INSERT INTO notificaciones (usuario_id, titulo, mensaje, tipo) 
+                 VALUES ($1, $2, $3, $4)`,
+                [
+                    usuario_id, 
+                    'Solicitud Observada', 
+                    `Tu trámite tiene observaciones: ${observaciones_admin}. Por favor revisa y corrige.`, 
+                    'alerta'
+                ]
+            );
+        }
+
+        await pool.query('COMMIT');
+        res.json({ success: true, mensaje: "Actualizado y notificado con éxito" });
+
     } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error("Error al observar:", error);
         res.status(500).json({ success: false, mensaje: "Error interno" });
     }
 };
-
 
 // --- Listar pagos pendientes ---
 const listarPagosPendientes = async (req, res) => {
