@@ -143,3 +143,9 @@
         box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     }
 }
+.input-readonly {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  border: 1px solid #ced4da;
+  color: #495057;
+}

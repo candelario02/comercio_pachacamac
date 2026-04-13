@@ -5,10 +5,11 @@ const crearSolicitudComerciante = async (data) => {
 
   try {
     await client.query("BEGIN");
+    const correoLimpio = data.correo_electronico.trim().toLowerCase();
 
     const checkUser = await client.query(
       "SELECT id FROM usuarios WHERE correo_electronico = $1",
-      [data.correo_electronico],
+      [correoLimpio],
     );
 
     const usuarioExistente = checkUser.rows[0];
@@ -19,7 +20,7 @@ const crearSolicitudComerciante = async (data) => {
 
       const userRes = await client.query(
         `INSERT INTO usuarios (correo_electronico, contrasena, rol_id) VALUES ($1, $2, $3) RETURNING id`,
-        [data.correo_electronico, data.hashedPassword, 2],
+        [correoLimpio, data.hashedPassword, 2],
       );
       usuarioId = userRes.rows[0].id;
     } else {

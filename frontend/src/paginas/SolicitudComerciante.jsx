@@ -152,15 +152,18 @@ const SolicitudComerciante = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.lat || !formData.lng) {
-      setModal({
-        abierto: true,
-        mensaje: "Por favor, selecciona la ubicación en el mapa.",
-        tipo: "info",
-      });
-      return;
-    }
+  e.preventDefault(); // 1. Siempre primero para detener el envío por defecto
+
+  // 2. Validaciones antes de armar los datos
+  if (!formData.lat || !formData.lng) {
+    setModal({
+      abierto: true,
+      mensaje: "Por favor, selecciona la ubicación en el mapa.",
+      tipo: "info",
+    });
+    return;
+  }
+  
 
     if (!modoEdicion && !formData.archivo_puesto) {
       setModal({
@@ -188,6 +191,7 @@ const SolicitudComerciante = () => {
     }
 
     const data = new FormData();
+    data.append("correo_electronico", formData.correo);
     Object.keys(formData).forEach((key) => {
       if (key === "contrasena" && modoEdicion) return;
 
@@ -242,9 +246,8 @@ const SolicitudComerciante = () => {
 
         <div className="bloque">
           <h3>1. Datos Personales</h3>
-
           <select
-            disabled={modoEdicion}
+            disabled={modoEdicion} 
             onChange={(e) => {
               setTipoDoc(e.target.value);
               setFormData((prev) => ({ ...prev, dni: "" }));
@@ -255,17 +258,15 @@ const SolicitudComerciante = () => {
             <option value="DNI">DNI (8 dígitos)</option>
             <option value="RUC">RUC (11 dígitos)</option>
           </select>
-
           <input
             name="dni"
             value={formData.dni}
             onChange={handleChange}
-            readOnly={modoEdicion}
-            placeholder={`${tipoDoc} (máx ${tipoDoc === "DNI" ? 8 : 11} dígitos)`}
+            readOnly={modoEdicion} 
+            placeholder={`${tipoDoc}`}
             required
             className={modoEdicion ? "input-readonly" : ""}
           />
-
           <input
             name="nombres"
             value={formData.nombres}
@@ -273,8 +274,8 @@ const SolicitudComerciante = () => {
             readOnly={modoEdicion}
             placeholder="Nombres"
             required
+            className={modoEdicion ? "input-readonly" : ""}
           />
-
           <input
             name="apellidos"
             value={formData.apellidos}
@@ -282,7 +283,29 @@ const SolicitudComerciante = () => {
             readOnly={modoEdicion}
             placeholder="Apellidos"
             required
+            className={modoEdicion ? "input-readonly" : ""}
           />
+
+          <input
+            name="celular"
+            value={formData.celular}
+            onChange={handleChange}
+            readOnly={modoEdicion}
+            placeholder="Celular"
+            required
+            className={modoEdicion ? "input-readonly" : ""}
+          />
+
+          <input
+            name="correo"
+            value={formData.correo}
+            onChange={handleChange}
+            readOnly={modoEdicion}
+            placeholder="Correo Electrónico"
+            required
+            className={modoEdicion ? "input-readonly" : ""}
+          />
+
           {!modoEdicion && (
             <input
               name="contrasena"
@@ -302,7 +325,6 @@ const SolicitudComerciante = () => {
             value={formData.rubro_id}
             onChange={handleChange}
             required
-            
           >
             <option value="">Seleccione Rubro</option>
             {rubros.map((r) => (
@@ -361,7 +383,7 @@ const SolicitudComerciante = () => {
 
           <select
             name="sector_id"
-            value={formData.sector_id} // Vinculado para precarga
+            value={formData.sector_id}
             onChange={handleChange}
             required
             disabled={modoEdicion && !observaciones.obsUbicacion}
