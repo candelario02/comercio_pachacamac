@@ -115,7 +115,7 @@ const SolicitudComerciante = () => {
         ),
       );
     }
-  }, [modoEdicion, location.state, todasActividades]); // Agregamos todasActividades a las dependencias
+  }, [modoEdicion, location.state, todasActividades]);
 
   const handleChange = (e) => {
     const { name, value, files, type, checked } = e.target;
@@ -153,7 +153,6 @@ const SolicitudComerciante = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.lat || !formData.lng) {
       setModal({
         abierto: true,
@@ -163,7 +162,7 @@ const SolicitudComerciante = () => {
       return;
     }
 
-    if (!formData.archivo_puesto) {
+    if (!modoEdicion && !formData.archivo_puesto) {
       setModal({
         abierto: true,
         mensaje:
@@ -176,7 +175,8 @@ const SolicitudComerciante = () => {
     if (
       requiereCarnet &&
       !formData.archivo_carnet &&
-      !formData.desea_tramitar_carnet
+      !formData.desea_tramitar_carnet &&
+      !modoEdicion
     ) {
       setModal({
         abierto: true,
@@ -191,11 +191,14 @@ const SolicitudComerciante = () => {
     Object.keys(formData).forEach((key) => {
       if (key === "contrasena" && modoEdicion) return;
 
-      // Solo agregamos al FormData si el valor existe
       if (formData[key] !== null && formData[key] !== undefined) {
         data.append(key, formData[key]);
       }
     });
+
+    if (modoEdicion && location.state?.datosPrecargados?.id) {
+      data.append("id", location.state.datosPrecargados.id);
+    }
 
     setEnviando(true);
     try {
@@ -205,7 +208,7 @@ const SolicitudComerciante = () => {
         abierto: true,
         mensaje: modoEdicion
           ? "¡Correcciones enviadas con éxito! Tu expediente será revisado nuevamente por la Municipalidad."
-          : "¡Solicitud enviada con éxito! Recuerda que para completar el trámite debes acercarte a la Municipalidad con tus documentos físicos para el Visto Bueno y Pago correspondiente.",
+          : "¡Solicitud enviada con éxito! Recuerda que para completar el trámite debes acercarte a la Municipalidad.",
         tipo: "info",
         accion: () => navigate(modoEdicion ? "/panel-comerciante" : "/login"),
       });
@@ -296,10 +299,10 @@ const SolicitudComerciante = () => {
 
           <select
             name="rubro_id"
-            value={formData.rubro_id} // Vinculado para precarga
+            value={formData.rubro_id}
             onChange={handleChange}
             required
-            disabled={modoEdicion && !observaciones.obsActividad} // Bloqueado si no hay observación
+            
           >
             <option value="">Seleccione Rubro</option>
             {rubros.map((r) => (
@@ -311,12 +314,10 @@ const SolicitudComerciante = () => {
 
           <select
             name="actividad_id"
-            value={formData.actividad_id} // Vinculado para precarga
+            value={formData.actividad_id}
             onChange={handleChange}
             required
-            disabled={
-              !formData.rubro_id || (modoEdicion && !observaciones.obsActividad)
-            }
+            disabled={!formData.rubro_id}
           >
             <option value="">Seleccione Actividad</option>
             {actividadesFiltradas.map((a) => (
@@ -351,8 +352,7 @@ const SolicitudComerciante = () => {
                     name="archivo_carnet"
                     accept="image/png, image/jpeg, image/jpg"
                     onChange={handleChange}
-                    required={!modoEdicion || observaciones.obsCarnet}
-                    disabled={modoEdicion && !observaciones.obsCarnet}
+                    required={!modoEdicion && !formData.desea_tramitar_carnet}
                   />
                 </div>
               )}
