@@ -83,6 +83,10 @@ const PortalComerciante = () => {
       formalizado: 3,
     };
     const pasoActual = estadosMapper[datos.estado_tramite] || 0;
+    if (stepName === "Revisión" && datos.estado_tramite === "observado") {
+      return "step current observado-alert";
+    }
+
     if (niveles[stepName] < pasoActual) return "step active";
     if (niveles[stepName] === pasoActual) return "step current";
     return "step";
@@ -146,7 +150,10 @@ const PortalComerciante = () => {
           </h2>
           <div className="stepper">
             <div className={getStepClass("Envío")}>Envío</div>
-            <div className={getStepClass("Revisión")}>Revisión</div>
+            <div className={getStepClass("Revisión")}>
+              {datos?.estado_tramite === "observado" ? "Observado" : "Revisión"}
+            </div>
+
             <div className={getStepClass("Pago")}>Pago</div>
             <div className={getStepClass("Finalizado")}>Finalizado</div>
           </div>
@@ -183,18 +190,15 @@ const PortalComerciante = () => {
             onClick={() => {
               if (datos?.estado_tramite === "observado") {
                 let obsFinales = {};
-
                 try {
                   obsFinales = datos.observaciones_admin
                     ? JSON.parse(datos.observaciones_admin)
                     : {};
-                } catch (parseError) {
-                  console.error("Error al procesar observaciones:", parseError);
+                } catch {
                   obsFinales = {
-                    mensaje: "Error al cargar detalles. Contacte soporte.",
+                    mensaje: "Revisa las observaciones en tu formulario.",
                   };
                 }
-
                 navigate("/solicitud", {
                   state: {
                     modoEdicion: true,
@@ -208,9 +212,24 @@ const PortalComerciante = () => {
             <FaInbox className="card-icon" />
             <div className="card-text">
               <h3>Buzón Electrónico</h3>
-              <p>
+              <p
+                className={
+                  datos?.estado_tramite === "observado"
+                    ? "mensaje-admin-preview"
+                    : ""
+                }
+              >
                 {datos?.estado_tramite === "observado"
-                  ? "Tienes correcciones pendientes"
+                  ? (() => {
+                      try {
+                        const parsed = JSON.parse(datos.observaciones_admin);
+                        return (
+                          parsed.mensaje || "Tienes correcciones pendientes"
+                        );
+                      } catch {
+                        return "Tienes correcciones pendientes";
+                      }
+                    })()
                   : "Consultas oficiales"}
               </p>
             </div>

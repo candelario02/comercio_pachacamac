@@ -86,8 +86,13 @@ const SolicitudComerciante = () => {
   }, [formData.actividad_id, todasActividades]);
 
   useEffect(() => {
-    if (modoEdicion && location.state?.datosPrecargados) {
+    if (
+      modoEdicion &&
+      location.state?.datosPrecargados &&
+      todasActividades.length > 0
+    ) {
       const d = location.state.datosPrecargados;
+
       setFormData((prev) => ({
         ...prev,
         dni: d.dni || "",
@@ -104,8 +109,13 @@ const SolicitudComerciante = () => {
           d.desea_tramitar_carnet === "true" ||
           d.desea_tramitar_carnet === true,
       }));
+      setActividadesFiltradas(
+        todasActividades.filter(
+          (a) => String(a.rubro_id) === String(d.rubro_id),
+        ),
+      );
     }
-  }, [modoEdicion, location.state]);
+  }, [modoEdicion, location.state, todasActividades]); // Agregamos todasActividades a las dependencias
 
   const handleChange = (e) => {
     const { name, value, files, type, checked } = e.target;

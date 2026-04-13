@@ -170,3 +170,32 @@
     filter: brightness(1.1);
     cursor: pointer;
 }
+.mensaje-admin-preview {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #d32f2f; 
+    margin-top: 5px;
+    display: -webkit-box;
+   line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.2;
+}
+
+
+.animar-alerta {
+    border: 2px solid #ff4d4d !important;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+}
+.step.current.observado-alert {
+    background-color: #ff9800;
+    color: white;
+    border-color: #e65100;
+    font-weight: bold;
+}
