@@ -1,0 +1,476 @@
+:root {
+    --cian-institucional: #00bcd4;
+    --verde-pachacamac: #27ae60;
+    --dorado-mun: #f39c12;
+    --blanco: #ffffff;
+    --gris-fondo: #f4f7f6;
+    --texto-oscuro: #2c3e50;
+}
+
+.gestion-contenedor { 
+    padding: 20px; 
+    background-color: var(--gris-fondo); 
+    min-height: 100vh; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.gestion-header-pro { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px; 
+    background: var(--blanco); 
+    padding: 15px 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+}
+
+.header-acciones {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gestion-tabs {
+    display: flex;
+    background: #eeeeee;
+    padding: 4px;
+    border-radius: 8px;
+    gap: 4px;
+    width: 100%;
+    max-width: 400px; 
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tab-btn.active {
+    background: var(--cian-institucional);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 188, 212, 0.2);
+}
+
+.tabla-card { 
+    background: var(--blanco); 
+    border-radius: 12px; 
+    overflow: hidden; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.tabla-gestion { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+/* estilos para etiquetas de formulario */
+.label-standard {
+    display: block;
+    display: flex;
+    margin-bottom: 5px;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 600;
+    gap: 5px;
+    
+}
+.input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+/* para el detalle de liquidacion */
+.input-standard {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; 
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-standard:focus {
+    border-color: var(--cian-institucional);
+}
+
+.input-standard:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+
+.check-inline {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+
+.total-liquidacion {
+    margin-top: 15px;
+    text-align: right;
+    font-size: 1.2rem;
+    color: var(--azul-oscuro);
+    border-top: 1px dashed #ccc;
+    padding-top: 10px;
+}
+.tabla-gestion th { 
+    background: #fcfcfc; 
+    padding: 16px; 
+    text-transform: uppercase; 
+    font-size: 0.85rem; 
+    border-bottom: 2px solid var(--gris-fondo); 
+    text-align: left;
+}
+
+.tabla-gestion td { 
+    padding: 16px; 
+    border-bottom: 1px solid var(--gris-fondo); 
+}
+
+.tabla-gestion tr:hover { 
+    background-color: rgba(0, 188, 212, 0.05); 
+}
+
+.modal-overlay { 
+    position: fixed; 
+    top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.6); 
+    display: flex; justify-content: center; align-items: center; 
+    z-index: 1000; 
+    padding: 10px; 
+}
+/* para el vsiro de imagen encima del nodal princiapal */
+.modal-alerta-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  z-index: 2000; 
+}
+
+.modal-contenido { 
+    background: var(--blanco); 
+    width: 100%; max-width: 700px; 
+    border-radius: 15px; 
+    overflow: hidden; 
+    display: flex; flex-direction: column; 
+    max-height: 95vh; 
+}
+
+.modal-header { 
+    padding: 15px 20px; 
+    background: var(--cian-institucional); 
+    color: white; 
+    flex-shrink: 0; 
+}
+
+.modal-body { 
+    padding: 20px; 
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.modal-footer { 
+    display: flex; justify-content: center; gap: 10px; 
+    padding: 15px; 
+    border-top: 1px solid #ddd; 
+    background: #fff; flex-shrink: 0;
+}
+
+
+.detalle-seccion { 
+    margin-bottom: 15px; 
+    padding: 15px; 
+    background: #f9f9f9; 
+    border-radius: 8px; 
+}
+.btn-ver-foto {
+    background-color: var(--cian-institucional);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s;
+}
+
+.btn-ver-foto:hover {
+    filter: brightness(1.1);
+}
+
+.actividad-box { border-left: 5px solid var(--cian-institucional); }
+
+.info-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+    margin-top: 15px;
+    align-items: end;
+
+}
+.buscador-caja {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 25px; 
+    padding: 5px 15px;
+    width: 100%;
+    max-width: 300px; 
+}
+
+.buscador-caja input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    width: 100%;
+    font-size: 14px;
+    background: transparent;
+}
+
+.btn-actualizar-circular {
+    background-color: #00bcd4 !important; 
+    color: white !important;
+    border: none !important;
+    
+    width: 45px !important; 
+    height: 45px !important;
+    min-width: 45px !important; 
+    
+    border-radius: 50% !important;
+    
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 0 !important;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.btn-actualizar-circular svg {
+    font-size: 1.2rem !important;
+}
+
+.btn-actualizar-circular:active {
+    transform: scale(0.9);
+    background-color: #008ba3 !important;
+}
+
+.btn-emitir.carnet-comercio {
+    background-color: #00A9BF !important;
+    color: white !important;
+}
+.btn-emitir.carnet-sanidad {
+    background-color: #00bf92 !important;
+    color: white !important;
+}
+.fecha-badge.fecha-vigente { background-color: #28a745; color: white; }
+.fecha-badge.fecha-proxima { background-color: #ffc107; color: #000; } 
+.fecha-badge.fecha-vencida { background-color: #dc3545; color: white; }
+.fecha-badge.fecha-pendiente { background-color: #6c757d; color: white; }
+
+.btn-footer { background: #95a5a6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;}
+.btn-orden-pago { background: var(--dorado-mun); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;}
+.btn-aprobar { background: var(--verde-pachacamac); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;}
+
+.select-mes {
+    width: 140px !important;
+    cursor: pointer;
+    background-color: white;
+}
+.btn-excel-formalizados {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    height: 45px; 
+    background-color: #ffffff;
+    border: 1px solid #1D6F42;
+    color: #1D6F42;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-excel-formalizados svg {
+    font-size: 1.2rem;
+}
+
+.btn-excel-formalizados:hover {
+    background-color: #1D6F42;
+    color: white;
+    box-shadow: 0 4px 8px rgba(29, 111, 66, 0.2);
+}
+
+/* estilos para el visor de imagen */
+.visor-imagen-contenedor {
+  position: relative;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2001; 
+}
+
+.imagen-preview-full {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.btn-cerrar-visor {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+@media (max-width: 768px) {
+    .gestion-contenedor { padding: 10px; }
+
+    .gestion-header-pro {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px 10px;
+        text-align: center;
+    }
+   
+    .btn-actualizar-circular {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+    }
+
+    
+    .header-acciones {
+        display: flex !important;
+        flex-direction: row !important; 
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header-acciones {
+        width: 100%;
+    }
+
+    .gestion-tabs {
+        max-width: 100%; 
+        border-radius: 8px;
+    }
+
+    .tab-btn {
+        padding: 12px 5px; 
+        font-size: 0.8rem;
+    }
+
+    .tabla-card {
+        overflow-x: auto; 
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tabla-gestion {
+        min-width: 750px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-footer button {
+        width: 100% !important;
+        margin-bottom: 5px;
+        padding: 12px;
+    }
+
+    input, select {
+        font-size: 16px !important;
+    }
+}
+/*para mensajes de tablas vacías o cargando */
+.tabla-estado-mensaje {
+    text-align: center;
+    padding: 40px !important; 
+    color: var(--texto-oscuro);
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #fafafa;
+}
+
+.comerciante-nombre {
+    text-transform: capitalize; 
+    font-weight: 600;
+    color: var(--texto-oscuro);
+}
+.contador-notificacion {
+    background-color: #2563eb; /* Azul profesional */
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    vertical-align: middle;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+/* para la fila de fechas */
+.vencimientos-columna {
+    display: flex;
+    flex-direction: column; 
+    gap: 6px;               
+    align-items: flex-start; 
+}
+.fecha-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    white-space: nowrap; 
+}

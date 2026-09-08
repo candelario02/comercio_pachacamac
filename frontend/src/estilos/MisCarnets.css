@@ -1,0 +1,91 @@
+.lista-documentos {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.documento-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.documento-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #00bcd4;
+}
+
+.doc-info {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.pdf-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+}
+
+.doc-nombre {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    margin: 0 0 4px 0;
+}
+
+.doc-fecha {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 0;
+}
+
+.btn-descargar {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-comercio { background-color: #0066cc; color: white; }
+.color-comercio:hover { background-color: #004a99; }
+
+.color-sanidad { background-color: #228b22; color: white; }
+.color-sanidad:hover { background-color: #1a6b1a; }
+.btn-regresar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.btn-regresar:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    transform: translateX(-3px);
+}
+
+.btn-regresar svg {
+    font-size: 1rem;
+}

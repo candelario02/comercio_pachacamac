@@ -1,0 +1,22 @@
+
+
+.mapa-contenedor {
+    width: 100%;
+    margin-bottom: 20px;
+   border: 2px solid var(--cian-institucional);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 10px;
+   
+
+}
+
+.leaflet-container {
+    height: 300px;
+    width: 100%;
+}
+
+.leaflet-marker-icon {
+    filter: hue-rotate(90deg); 
+}

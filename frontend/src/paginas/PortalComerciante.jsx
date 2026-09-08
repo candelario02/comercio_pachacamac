@@ -1,0 +1,355 @@
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../api/apiConfig";
+import {
+  FaBell,
+  FaInbox,
+  FaFileUpload,
+  FaFileDownload,
+  FaHistory,
+  FaClock,
+  FaTimes,
+} from "react-icons/fa";
+import "../estilos/PortalComerciante.css";
+import { generarOrdenPagoPDF } from "../herramientas/generadorDocumentos";
+import ModalAlerta from "../componentes/comunes/ModalAlerta";
+
+const PortalComerciante = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [datos, setDatos] = useState(null);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modal, setModal] = useState({
+    abierto: false,
+    mensaje: "",
+    tipo: "info",
+    accion: null,
+  });
+  const ejecutarDescargaOrden = () => {
+    if (datos) {
+      generarOrdenPagoPDF(datos, {
+        total: datos.monto_pendiente || 0,
+        derecho: datos.monto_derecho || 60,
+        carnet: datos.monto_carnet || 25,
+      });
+      setModal({ abierto: false, mensaje: "", tipo: "info", accion: null });
+    }
+  };
+  const cargarInformacionPortal = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const [resPerfil, resNotif] = await Promise.all([
+        axios.get(`${BASE_URL}/comerciante/perfil`, config),
+        axios.get(`${BASE_URL}/comerciante/notificaciones`, config),
+      ]);
+
+      setDatos(resPerfil.data.data);
+      setNotificaciones(resNotif.data);
+      if (
+        resPerfil.data.estado_tramite === "observado" &&
+        resPerfil.data.observaciones_admin
+      ) {
+        try {
+          const obsObj = JSON.parse(resPerfil.data.observaciones_admin);
+          console.log("Observaciones del Admin detectadas:", obsObj);
+        } catch (e) {
+          console.error("Error al parsear observaciones:", e);
+        }
+      }
+
+      setLoading(false);
+      setError(null);
+    } catch (err) {
+      console.error("Error cargando el portal:", err);
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        setError("Error de conexión. Intenta recargar la página.");
+        setLoading(false);
+      }
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
+
+  const getStepClass = (stepName) => {
+    if (!datos) return "step";
+    const niveles = { Envío: 0, Revisión: 1, Pago: 2, Finalizado: 3 };
+    const estadosMapper = {
+      pendiente: 1,
+      observado: 1,
+      aprobado: 2,
+      pago_en_revision: 2,
+      formalizado: 3,
+    };
+    const pasoActual = estadosMapper[datos.estado_tramite] || 0;
+    if (stepName === "Revisión" && datos.estado_tramite === "observado") {
+      return "step current observado-alert";
+    }
+
+    if (niveles[stepName] < pasoActual) return "step active";
+    if (niveles[stepName] === pasoActual) return "step current";
+    return "step";
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      setLoading(true);
+
+      await cargarInformacionPortal();
+
+      if (isMounted && location.state?.refresh) {
+        window.history.replaceState({}, document.title);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [cargarInformacionPortal, location.state?.refresh]);
+  if (loading)
+    return (
+      <div className="loading-container">
+        <p>Cargando tu portal comercial...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+        <button className="btn-retry" onClick={() => window.location.reload()}>
+          Reintentar
+        </button>
+      </div>
+    );
+
+  return (
+    <div className="portal-container">
+      <header className="portal-header">
+        <div className="header-info">
+          <h1>Portal Comercial Pachacámac</h1>
+          <span className="user-badge">
+            {datos?.nombres} {datos?.apellidos}
+          </span>
+        </div>
+        <button
+          className="btn-logout-x"
+          onClick={handleLogout}
+          title="Cerrar Sesión"
+        >
+          <FaTimes />
+        </button>
+      </header>
+
+      <div className="portal-content">
+        <section className="status-section card">
+          <h2>
+            <FaClock className="icon-status" /> Estado de mi Solicitud
+          </h2>
+          <div className="stepper">
+            <div className={getStepClass("Envío")}>Envío</div>
+            <div className={getStepClass("Revisión")}>
+              {datos?.estado_tramite === "observado" ? "Observado" : "Revisión"}
+            </div>
+
+            <div className={getStepClass("Pago")}>Pago</div>
+            <div className={getStepClass("Finalizado")}>Finalizado</div>
+          </div>
+          <div className="status-msg">
+            <strong>Estado actual: </strong>
+            <span>
+              {datos?.estado_tramite === "pendiente" &&
+                "En revisión por la Municipalidad."}
+              {datos?.estado_tramite === "observado" &&
+                "Trámite con observaciones. Revisa notificaciones."}
+              {datos?.estado_tramite === "aprobado" &&
+                "¡Aprobado! Pendiente de pago."}
+              {datos?.estado_tramite === "pago_en_revision" &&
+                "Pago enviado. Esperando validación administrativa."}
+              {datos?.estado_tramite === "formalizado" &&
+                "¡Felicidades! Trámite Finalizado."}
+            </span>
+          </div>
+        </section>
+
+        <section className="action-grid">
+          <button className="action-card color-notif">
+            <FaBell className="card-icon" />
+            <div className="card-text">
+              <h3>Notificaciones</h3>
+              <p>{notificaciones.length} mensajes nuevos</p>
+            </div>
+          </button>
+
+          <button
+            className={`action-card color-buzon ${
+              datos?.estado_tramite === "observado" ? "animar-alerta" : ""
+            }`}
+            onClick={() => {
+              if (datos?.estado_tramite === "observado") {
+                let obsFinales = {};
+                try {
+                  obsFinales = datos.observaciones_admin
+                    ? JSON.parse(datos.observaciones_admin)
+                    : {};
+                } catch {
+                  obsFinales = {
+                    mensaje: "Revisa las observaciones en tu formulario.",
+                  };
+                }
+                navigate("/solicitud", {
+                  state: {
+                    modoEdicion: true,
+                    observaciones: obsFinales,
+                    datosPrecargados: datos,
+                  },
+                });
+              }
+            }}
+          >
+            <FaInbox className="card-icon" />
+            <div className="card-text">
+              <h3>Buzón Electrónico</h3>
+              <p
+                className={
+                  datos?.estado_tramite === "observado"
+                    ? "mensaje-admin-preview"
+                    : ""
+                }
+              >
+                {datos?.estado_tramite === "observado"
+                  ? (() => {
+                      try {
+                        const parsed = JSON.parse(datos.observaciones_admin);
+                        return (
+                          parsed.mensaje || "Tienes correcciones pendientes"
+                        );
+                      } catch {
+                        return "Tienes correcciones pendientes";
+                      }
+                    })()
+                  : "Consultas oficiales"}
+              </p>
+            </div>
+          </button>
+          {/**boton tipo fila subir comporbante o descargar */}
+          <div className="contenedor-accion-fila">
+            <div
+              className={`action-card color-upload flex-1 ${
+                datos?.estado_tramite !== "aprobado" ||
+                datos?.estado_tramite === "pago_en_revision"
+                  ? "disabled"
+                  : ""
+              }`}
+              onClick={() => {
+                if (
+                  datos?.estado_tramite === "aprobado" &&
+                  datos?.estado_tramite !== "pago_en_revision"
+                ) {
+                  navigate("/subir-pago", {
+                    state: {
+                      ordenId: datos.orden_id,
+                      codigoOrden: datos.codigo_orden,
+                      monto: datos.monto_pendiente,
+                      mes: datos.mes_correspondiente,
+                    },
+                  });
+                }
+              }}
+            >
+              <FaFileUpload className="card-icon" />
+              <div className="card-text">
+                <h3>Subir Comprobantes</h3>
+                <p>
+                  {datos?.estado_tramite === "pago_en_revision"
+                    ? "✅ Pago en revisión"
+                    : `Monto: S/ ${datos?.monto_pendiente || "0.00"}`}
+                </p>
+              </div>
+            </div>
+
+            {datos?.estado_tramite === "aprobado" && (
+              <div
+                className="card-descarga-separada"
+                onClick={() => {
+                  setModal({
+                    abierto: true,
+                    mensaje: "¿Desea descargar su orden de pago ahora?",
+                    tipo: "confirmar",
+                    accion: ejecutarDescargaOrden,
+                  });
+                }}
+              >
+                <FaFileDownload className="card-icon-small" />
+                <span>Descargar Orden</span>
+              </div>
+            )}
+          </div>
+
+          <button
+            className={`action-card color-download ${datos?.estado_tramite !== "formalizado" ? "disabled" : ""}`}
+            onClick={() =>
+              datos?.estado_tramite === "formalizado" &&
+              navigate("/mis-carnets")
+            }
+            disabled={datos?.estado_tramite !== "formalizado"}
+          >
+            <FaFileDownload className="card-icon" />
+            <div className="card-text">
+              <h3>Descargar Documentos</h3>
+              <p>
+                {datos?.estado_tramite === "formalizado"
+                  ? "Carnets listos"
+                  : "No disponible"}
+              </p>
+            </div>
+          </button>
+
+          <button className="action-card color-history">
+            <FaHistory className="card-icon" />
+            <div className="card-text">
+              <h3>Historial</h3>
+              <p>Trámites anteriores</p>
+            </div>
+          </button>
+        </section>
+
+        <ModalAlerta
+          modal={modal}
+          cerrar={() =>
+            setModal({
+              abierto: false,
+              mensaje: "",
+              tipo: "info",
+              accion: null,
+            })
+          }
+        />
+      </div>
+    </div>
+  );
+};
+
+export default PortalComerciante;

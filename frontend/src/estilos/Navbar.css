@@ -1,0 +1,86 @@
+.navbar-turquesa {
+    background-color: var(--cian-institucional); 
+    width: 100%;
+    z-index: 1000;
+    position: relative;
+    padding: 12px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.navbar-logo img {
+    height: 45px;
+    width: auto;
+}
+
+.navbar-logo span {
+    color: var(--blanco);
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 5px 0;
+}
+
+.navbar-links::-webkit-scrollbar {
+    display: none;
+}
+
+.navbar-links a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.btn-acceso {
+    background-color: var(--blanco) !important;
+    color: var(--cian-institucional) !important;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 800;
+}
+
+.btn-solicitud {
+    background-color: #FFD700;
+    color: #004b5a;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .navbar-logo span {
+        display: none;
+    }
+}

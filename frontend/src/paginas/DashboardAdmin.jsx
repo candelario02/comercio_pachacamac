@@ -1,0 +1,130 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; 
+import { FaUsers, FaClock, FaCheckCircle } from 'react-icons/fa'; 
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BASE_URL } from '../api/apiConfig';
+import '../estilos/DashboardAdmin.css';
+
+// constantes para dibujar el grafico
+const COLORES_RUBROS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#ff4444'];
+const COLOR_SANIDAD_OK = '#00C49F';
+const COLOR_SANIDAD_FALTA = '#D1D5DB';
+
+const DashboardAdmin = () => {
+    const navigate = useNavigate();
+    const [stats, setStats] = useState({ total: 0, pendientes: 0, formalizados: 0 });
+    const [graficos, setGraficos] = useState({ datosRubros: [], datosSanidad: [] });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const cargarDatosDashboard = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const headers = { Authorization: `Bearer ${token}` };
+                
+                const [resStats, resGraficos] = await Promise.all([
+                    axios.get(`${BASE_URL}/admin/estadisticas`, { headers }),
+                    axios.get(`${BASE_URL}/admin/estadisticas-graficos`, { headers })
+                ]);
+
+                setStats(resStats.data.data);
+                if (resGraficos.data.success) {
+                    const g = resGraficos.data.data || {};
+                    setGraficos({
+                        datosRubros: g.datosRubros || [],
+                        datosSanidad: g.datosSanidad || [],
+                    });
+                }
+            } catch (error) {
+                console.error("Error cargando dashboard:", error);
+                if (error.response?.status === 401) navigate('/login');
+            } finally {
+                setLoading(false);
+            }
+        };
+        cargarDatosDashboard();
+    }, [navigate]);
+
+    if (loading) return <div className="dashboard-container">Cargando datos...</div>;
+
+    return (
+        <div className="dashboard-container">
+            <h1 className="dashboard-title">Panel de Administración Municipal</h1>
+            
+            <div className="kpi-container">
+                <div className="kpi-card">
+                    <FaUsers className="kpi-icon" />
+                    <h3>Total Comerciantes</h3>
+                    <p>{stats.total}</p>
+                </div>
+                <div className="kpi-card">
+                    <FaClock className="kpi-icon" />
+                    <h3>Pendientes</h3>
+                    <p>{stats.pendientes}</p>
+                </div>
+                <div className="kpi-card">
+                    <FaCheckCircle className="kpi-icon" />
+                    <h3>Formalizados</h3>
+                    <p>{stats.formalizados}</p>
+                </div>
+            </div>
+
+            <div className="graficos-grid">
+                <div className="grafico-card">
+                    <h3>Distribución por Rubros</h3>
+                    <div className="contenedor-grafico-dona">
+                        {graficos.datosRubros.length > 0 && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={graficos.datosRubros}
+                                        cx="50%" cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                        dataKey="valor"
+                                        nameKey="etiqueta"
+                                    >
+                                        {graficos.datosRubros.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORES_RUBROS[index % COLORES_RUBROS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        )}
+                    </div>
+                </div>
+
+                <div className="grafico-card">
+                    <h3>Control de Carnets de Sanidad</h3>
+                    <div className="contenedor-grafico-dona">
+                        {graficos.datosSanidad.length > 0 && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={graficos.datosSanidad}
+                                        cx="50%" cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        dataKey="valor"
+                                        nameKey="etiqueta"
+                                    >
+                                        <Cell fill={COLOR_SANIDAD_OK} />
+                                        <Cell fill={COLOR_SANIDAD_FALTA} />
+                                    </Pie>
+                                    <Tooltip />
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default DashboardAdmin;

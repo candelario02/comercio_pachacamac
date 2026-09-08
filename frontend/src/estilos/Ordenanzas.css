@@ -1,0 +1,150 @@
+/*contenedor principal*/
+.ordenanzas-main {
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/*titulo */
+.titulo-cabecera {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+}
+
+/* grid doc */
+.grid-documentos {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* tarjetas pdf*/
+.tarjeta-pdf {
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.tarjeta-pdf:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* deseno de tarejtas */
+.tarjeta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.icono-pdf-rojo {
+  color: #ff4d4d;
+  font-size: 2.5rem;
+}
+
+.anio-badge {
+  background: #2d5a27;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* texto */
+.tarjeta-pdf h3 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.tarjeta-pdf p {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/*botones*/
+.botones-contenedor {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-accion {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.btn-accion.leer {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.btn-accion.bajar {
+  background: #2d5a27;
+  color: white;
+}
+
+.btn-accion:hover {
+  opacity: 0.85;
+}
+
+/* pdf nodal sobre las tarjetas*/
+.visor-pdf {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* no tocado */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* contenido del visor pdf*/
+.visor-contenido {
+  width: 80%;
+  height: 80%;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+/* visor pdf*/
+.visor-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background: #f5f5f5;
+}
+
+.btn-cerrar {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}

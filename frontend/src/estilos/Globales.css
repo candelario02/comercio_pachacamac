@@ -1,0 +1,85 @@
+
+:root {
+  --cian-institucional: #00bcd4;
+  --verde-pachacamac: #2d5a27;
+  --dorado-mun: #b8860b; 
+  --blanco: #ffffff;
+  --gris-fondo: #f4f7f7;
+  --texto-oscuro: #333333;
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+body, html { 
+    height: 100%; 
+    width: 100%; 
+    overflow-x: hidden; 
+    font-family: Arial, sans-serif;
+    background-color: var(--gris-fondo);
+    color: var(--texto-oscuro);
+}
+
+.main-container {
+    width: 100%;
+    max-width: 1400px; 
+    margin: 0 auto;
+    padding: 0 15px; 
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; 
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+
+@media (max-width: 768px) {
+    h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.3rem; }
+
+    
+    .dashboard-grid, .flex-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px;
+    }
+
+    
+    input:not([type="checkbox"]):not([type="radio"]), 
+    select, 
+    button:not(.btn-logout-x):not(.btn-notificacion):not(.icon-btn) {
+        width: 100% !important; 
+        min-height: 46px; 
+        font-size: 16px !important; 
+        margin-bottom: 8px;
+    }
+    .btn-logout-x, .badge-notificacion, .icon-btn {
+        width: auto !important; 
+        min-height: auto !important;
+    }
+
+    .main-container, .admin-content, .portal-content {
+        padding: 15px 10px !important;
+    }
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+}
