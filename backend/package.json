@@ -2,10 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Servidor Municipal de Pachacámac",
-  "main": "src/servidor.js",
+  "main": "servidor.js",
   "scripts": {
-    "start": "node src/servidor.js",
-    "dev": "nodemon src/servidor.js"
+    "start": "node servidor.js",
+    "dev": "nodemon servidor.js"
   },
   "type": "commonjs",
   "dependencies": {
